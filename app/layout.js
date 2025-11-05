@@ -5,7 +5,8 @@ export const metadata = {
   description: 'Track your Land Cruiser restoration parts',
   icons: {
     icon: '/icon.png',
-    apple: '/icon.png',  // Critical for Safari!
+    shortcut: '/icon.png',
+    apple: '/icon.png',
   },
 }
 
