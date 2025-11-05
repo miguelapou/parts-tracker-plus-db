@@ -144,6 +144,9 @@ const LandCruiserTracker = () => {
   const [trackingInput, setTrackingInput] = useState('');
   const [editingPart, setEditingPart] = useState(null);
   const [darkMode, setDarkMode] = useState(() => {
+    // Only access localStorage in the browser
+    if (typeof window === 'undefined') return false;
+    
     // Check localStorage or system preference
     const saved = localStorage.getItem('darkMode');
     if (saved !== null) return JSON.parse(saved);
@@ -152,7 +155,9 @@ const LandCruiserTracker = () => {
 
   // Save dark mode preference to localStorage
   useEffect(() => {
-    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('darkMode', JSON.stringify(darkMode));
+    }
   }, [darkMode]);
 
   const [newPart, setNewPart] = useState({
@@ -717,7 +722,7 @@ const LandCruiserTracker = () => {
             <div>
               <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 ${
                 darkMode ? 'text-gray-100' : 'text-slate-800'
-              }`} style={{ fontFamily: "'FoundationOne', 'Courier New', monospace" }}>🗺️ LAND CRUISER PARTS</h1>
+              }`} style={{ fontFamily: "'FoundationOne', 'Courier New', monospace" }}>🛻 LAND CRUISER PARTS TRACKER</h1>
             </div>
             <div className="flex items-center gap-3">
               <button
