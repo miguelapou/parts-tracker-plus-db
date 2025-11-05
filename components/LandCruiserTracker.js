@@ -121,7 +121,7 @@ const LandCruiserTracker = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [vendorFilter, setVendorFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('part');
+  const [sortBy, setSortBy] = useState('status');
   const [sortOrder, setSortOrder] = useState('asc');
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
