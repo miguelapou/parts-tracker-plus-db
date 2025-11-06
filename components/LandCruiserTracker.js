@@ -668,12 +668,11 @@ const LandCruiserTracker = () => {
         <select
           value={uniqueVendors.includes(value) ? value : ''}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
             darkMode 
               ? 'bg-gray-700 border-gray-600 text-gray-100' 
               : 'bg-white border-gray-300 text-gray-900'
           }`}
-          style={{ minHeight: '42px' }}
         >
           <option value="">Select a vendor...</option>
           {uniqueVendors.map(vendor => (
@@ -886,7 +885,7 @@ const LandCruiserTracker = () => {
                       step="0.01"
                       value={newPart.price}
                       onChange={(e) => setNewPart({ ...newPart, price: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -906,7 +905,7 @@ const LandCruiserTracker = () => {
                       step="0.01"
                       value={newPart.shipping}
                       onChange={(e) => setNewPart({ ...newPart, shipping: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -926,7 +925,7 @@ const LandCruiserTracker = () => {
                       step="0.01"
                       value={newPart.duties}
                       onChange={(e) => setNewPart({ ...newPart, duties: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -976,7 +975,7 @@ const LandCruiserTracker = () => {
                     </select>
                   </div>
                   
-                  <div className="md:col-span-2">
+                  <div>
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-gray-700'
                     }`}>
@@ -1184,7 +1183,7 @@ const LandCruiserTracker = () => {
                       step="0.01"
                       value={editingPart.price}
                       onChange={(e) => setEditingPart({ ...editingPart, price: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -1204,7 +1203,7 @@ const LandCruiserTracker = () => {
                       step="0.01"
                       value={editingPart.shipping}
                       onChange={(e) => setEditingPart({ ...editingPart, shipping: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -1224,7 +1223,7 @@ const LandCruiserTracker = () => {
                       step="0.01"
                       value={editingPart.duties}
                       onChange={(e) => setEditingPart({ ...editingPart, duties: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -1274,7 +1273,7 @@ const LandCruiserTracker = () => {
                     </select>
                   </div>
                   
-                  <div className="md:col-span-2">
+                  <div>
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-gray-700'
                     }`}>
