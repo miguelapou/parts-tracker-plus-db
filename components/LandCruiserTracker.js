@@ -668,11 +668,12 @@ const LandCruiserTracker = () => {
         <select
           value={uniqueVendors.includes(value) ? value : ''}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+          className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
             darkMode 
               ? 'bg-gray-700 border-gray-600 text-gray-100' 
               : 'bg-white border-gray-300 text-gray-900'
           }`}
+          style={{ minHeight: '42px' }}
         >
           <option value="">Select a vendor...</option>
           {uniqueVendors.map(vendor => (
@@ -878,19 +879,6 @@ const LandCruiserTracker = () => {
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-gray-700'
                     }`}>
-                      Vendor
-                    </label>
-                    <VendorSelect 
-                      value={newPart.vendor}
-                      onChange={(value) => setNewPart({ ...newPart, vendor: value })}
-                      darkMode={darkMode}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
-                    }`}>
                       Price ($)
                     </label>
                     <input
@@ -986,6 +974,19 @@ const LandCruiserTracker = () => {
                       <option value="shipped">Shipped</option>
                       <option value="delivered">Delivered</option>
                     </select>
+                  </div>
+                  
+                  <div className="md:col-span-2">
+                    <label className={`block text-sm font-medium mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      Vendor
+                    </label>
+                    <VendorSelect 
+                      value={newPart.vendor}
+                      onChange={(value) => setNewPart({ ...newPart, vendor: value })}
+                      darkMode={darkMode}
+                    />
                   </div>
                   
                   {(newPart.price || newPart.shipping || newPart.duties) && (
@@ -1176,19 +1177,6 @@ const LandCruiserTracker = () => {
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-gray-700'
                     }`}>
-                      Vendor
-                    </label>
-                    <VendorSelect 
-                      value={editingPart.vendor}
-                      onChange={(value) => setEditingPart({ ...editingPart, vendor: value })}
-                      darkMode={darkMode}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
-                    }`}>
                       Price ($)
                     </label>
                     <input
@@ -1284,6 +1272,19 @@ const LandCruiserTracker = () => {
                       <option value="shipped">Shipped</option>
                       <option value="delivered">Delivered</option>
                     </select>
+                  </div>
+                  
+                  <div className="md:col-span-2">
+                    <label className={`block text-sm font-medium mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      Vendor
+                    </label>
+                    <VendorSelect 
+                      value={editingPart.vendor}
+                      onChange={(value) => setEditingPart({ ...editingPart, vendor: value })}
+                      darkMode={darkMode}
+                    />
                   </div>
                   
                   <div className={`md:col-span-2 border rounded-lg p-4 ${
