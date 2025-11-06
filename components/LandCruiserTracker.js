@@ -659,10 +659,10 @@ const LandCruiserTracker = () => {
             e.stopPropagation();
             setOpenDropdown(isOpen ? null : part.id);
           }}
-          className={`flex items-center justify-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full border transition-all hover:shadow-md w-32 ${getStatusColor(part)}`}
+          className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full border transition-all hover:shadow-md w-36 ${getStatusColor(part)}`}
         >
           {getStatusIcon(part)}
-          <span className="truncate">{getStatusText(part)}</span>
+          <span className="flex-1 text-left">{getStatusText(part)}</span>
           <ChevronDown className={`w-3 h-3 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
         </button>
         
