@@ -1339,17 +1339,17 @@ const LandCruiserTracker = () => {
           {/* Statistics Cards - order-1 on mobile, contains search on desktop */}
           <div className="space-y-4 order-1 lg:order-none">
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              <div className={`rounded-lg shadow-md p-3 sm:p-4 lg:p-6 border-l-4 border-green-500 relative overflow-hidden ${
+              <div className={`rounded-lg shadow-md p-3 sm:p-4 lg:p-6 border-l-4 border-yellow-500 relative overflow-hidden ${
                 darkMode ? 'bg-gray-800' : 'bg-white'
               }`}>
-                <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
+                <Package className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
                 <div>
                   <p className={`text-xs sm:text-sm mb-1 sm:mb-2 lg:mb-3 ${
                     darkMode ? 'text-gray-400' : 'text-gray-600'
-                  }`}>Delivered</p>
+                  }`}>Order Placed</p>
                   <p className={`text-xl sm:text-2xl lg:text-3xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
-                  }`}>{stats.delivered}</p>
+                  }`}>{stats.purchased}</p>
                 </div>
               </div>
 
@@ -1367,17 +1367,17 @@ const LandCruiserTracker = () => {
                 </div>
               </div>
 
-              <div className={`rounded-lg shadow-md p-3 sm:p-4 lg:p-6 border-l-4 border-yellow-500 relative overflow-hidden ${
+              <div className={`rounded-lg shadow-md p-3 sm:p-4 lg:p-6 border-l-4 border-green-500 relative overflow-hidden ${
                 darkMode ? 'bg-gray-800' : 'bg-white'
               }`}>
-                <Package className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
+                <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
                 <div>
                   <p className={`text-xs sm:text-sm mb-1 sm:mb-2 lg:mb-3 ${
                     darkMode ? 'text-gray-400' : 'text-gray-600'
-                  }`}>Purchased</p>
+                  }`}>Delivered</p>
                   <p className={`text-xl sm:text-2xl lg:text-3xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
-                  }`}>{stats.purchased}</p>
+                  }`}>{stats.delivered}</p>
                 </div>
               </div>
 
