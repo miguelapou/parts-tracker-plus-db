@@ -2105,7 +2105,7 @@ const LandCruiserTracker = () => {
         </div>
 
         {/* Mobile Card View - Visible only on mobile */}
-        <div className="md:hidden grid grid-cols-1 gap-6 p-6">
+        <div className="md:hidden grid grid-cols-1 gap-6">
             {filteredParts.map((part) => (
               <div 
                 key={part.id}
