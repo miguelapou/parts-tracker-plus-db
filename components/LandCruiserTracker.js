@@ -1274,10 +1274,16 @@ const LandCruiserTracker = () => {
           <>
         {/* Add New Part Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
-            <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
-              darkMode ? 'bg-gray-800' : 'bg-white'
-            }`}>
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter"
+            onClick={() => setShowAddModal(false)}
+          >
+            <div 
+              className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
+                darkMode ? 'bg-gray-800' : 'bg-white'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
                 darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
               }`}>
@@ -1520,10 +1526,20 @@ const LandCruiserTracker = () => {
 
         {/* Tracking Info Modal */}
         {showTrackingModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
-            <div className={`rounded-lg shadow-xl max-w-md w-full modal-genie-enter ${
-              darkMode ? 'bg-gray-800' : 'bg-white'
-            }`}>
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter"
+            onClick={() => {
+              setShowTrackingModal(false);
+              setTrackingModalPartId(null);
+              setTrackingInput('');
+            }}
+          >
+            <div 
+              className={`rounded-lg shadow-xl max-w-md w-full modal-genie-enter ${
+                darkMode ? 'bg-gray-800' : 'bg-white'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className={`border-b px-6 py-4 flex items-center justify-between rounded-t-lg ${
                 darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
               }`}>
@@ -1594,10 +1610,19 @@ const LandCruiserTracker = () => {
 
         {/* Edit Part Modal */}
         {showEditModal && editingPart && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
-            <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
-              darkMode ? 'bg-gray-800' : 'bg-white'
-            }`}>
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter"
+            onClick={() => {
+              setShowEditModal(false);
+              setEditingPart(null);
+            }}
+          >
+            <div 
+              className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
+                darkMode ? 'bg-gray-800' : 'bg-white'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
                 darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
               }`}>
@@ -2665,10 +2690,16 @@ const LandCruiserTracker = () => {
 
             {/* Add Project Modal */}
             {showAddProjectModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
-                <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
-                  darkMode ? 'bg-gray-800' : 'bg-white'
-                }`}>
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter"
+                onClick={() => setShowAddProjectModal(false)}
+              >
+                <div 
+                  className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
+                    darkMode ? 'bg-gray-800' : 'bg-white'
+                  }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
                     darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
                   }`}>
@@ -2869,10 +2900,19 @@ const LandCruiserTracker = () => {
 
             {/* Edit Project Modal */}
             {showEditProjectModal && editingProject && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
-                <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
-                  darkMode ? 'bg-gray-800' : 'bg-white'
-                }`}>
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter"
+                onClick={() => {
+                  setShowEditProjectModal(false);
+                  setEditingProject(null);
+                }}
+              >
+                <div 
+                  className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
+                    darkMode ? 'bg-gray-800' : 'bg-white'
+                  }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
                     darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
                   }`}>
@@ -3131,10 +3171,19 @@ const LandCruiserTracker = () => {
 
             {/* Project Detail Modal */}
             {showProjectDetailModal && viewingProject && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
-                <div className={`rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
-                  darkMode ? 'bg-gray-800' : 'bg-white'
-                }`}>
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter"
+                onClick={() => {
+                  setShowProjectDetailModal(false);
+                  setViewingProject(null);
+                }}
+              >
+                <div 
+                  className={`rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
+                    darkMode ? 'bg-gray-800' : 'bg-white'
+                  }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between rounded-t-lg ${
                     darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
                   }`} style={{ zIndex: 10 }}>
