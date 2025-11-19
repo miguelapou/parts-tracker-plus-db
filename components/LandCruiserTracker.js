@@ -1666,13 +1666,6 @@ const LandCruiserTracker = () => {
                 
                 <div className="flex gap-3 mt-6">
                   <button
-                    onClick={saveEditedPart}
-                    disabled={!editingPart.part}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    Save Changes
-                  </button>
-                  <button
                     onClick={() => {
                       setShowEditModal(false);
                       setEditingPart(null);
@@ -1684,6 +1677,27 @@ const LandCruiserTracker = () => {
                     }`}
                   >
                     Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      deletePart(editingPart.id);
+                      setShowEditModal(false);
+                      setEditingPart(null);
+                    }}
+                    className={`px-6 py-3 border rounded-lg font-medium transition-colors ${
+                      darkMode 
+                        ? 'border-gray-600 text-gray-400 hover:text-red-400 hover:bg-gray-700 hover:border-red-500' 
+                        : 'border-gray-300 text-gray-600 hover:text-red-600 hover:bg-red-50 hover:border-red-300'
+                    }`}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={saveEditedPart}
+                    disabled={!editingPart.part}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                  >
+                    Save Changes
                   </button>
                 </div>
               </div>
@@ -1970,18 +1984,19 @@ const LandCruiserTracker = () => {
                   <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${
                     darkMode ? 'text-gray-300' : 'text-slate-700'
                   }`}>Tracking</th>
-                  <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
-                    darkMode ? 'text-gray-300' : 'text-slate-700'
-                  }`}>Actions</th>
                 </tr>
               </thead>
               <tbody className={`divide-y ${
                 darkMode ? 'divide-gray-700' : 'divide-slate-200'
               }`}>
                 {filteredParts.map((part) => (
-                  <tr key={part.id} className={`transition-colors ${
-                    darkMode ? 'hover:bg-gray-700' : 'hover:bg-slate-50'
-                  }`}>
+                  <tr 
+                    key={part.id} 
+                    onClick={() => openEditModal(part)}
+                    className={`transition-colors cursor-pointer ${
+                      darkMode ? 'hover:bg-gray-700' : 'hover:bg-slate-50'
+                    }`}
+                  >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <StatusDropdown part={part} />
                     </td>
@@ -2072,32 +2087,6 @@ const LandCruiserTracker = () => {
                         }`}>—</div>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-2">
-                        <button
-                          onClick={() => openEditModal(part)}
-                          className={`inline-flex items-center justify-center p-2 border rounded-md transition-colors ${
-                            darkMode 
-                              ? 'text-gray-400 hover:text-blue-400 hover:bg-gray-700 border-gray-600 hover:border-blue-500' 
-                              : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50 border-gray-300 hover:border-blue-300'
-                          }`}
-                          title="Edit part"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => deletePart(part.id)}
-                          className={`inline-flex items-center justify-center p-2 border rounded-md transition-colors ${
-                            darkMode 
-                              ? 'text-gray-400 hover:text-red-400 hover:bg-gray-700 border-gray-600 hover:border-red-500' 
-                              : 'text-gray-600 hover:text-red-600 hover:bg-red-50 border-gray-300 hover:border-red-300'
-                          }`}
-                          title="Delete part"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -2109,7 +2098,8 @@ const LandCruiserTracker = () => {
             {filteredParts.map((part) => (
               <div 
                 key={part.id}
-                className={`rounded-lg shadow-lg p-6 transition-all hover:shadow-xl ${
+                onClick={() => openEditModal(part)}
+                className={`rounded-lg shadow-lg p-6 transition-all hover:shadow-xl cursor-pointer ${
                   darkMode 
                     ? 'bg-gray-800' 
                     : 'bg-white'
@@ -2123,27 +2113,9 @@ const LandCruiserTracker = () => {
                     }`}>
                       {part.part}
                     </h3>
-                    <StatusDropdown part={part} />
-                  </div>
-                  <div className="flex gap-2 ml-3" onClick={(e) => e.stopPropagation()}>
-                    <button
-                      onClick={() => openEditModal(part)}
-                      className={`p-2 rounded-lg transition-colors ${
-                        darkMode ? 'hover:bg-gray-700 text-gray-400 hover:text-blue-400' : 'hover:bg-gray-100 text-gray-600 hover:text-blue-600'
-                      }`}
-                      title="Edit part"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => deletePart(part.id)}
-                      className={`p-2 rounded-lg transition-colors ${
-                        darkMode ? 'hover:bg-gray-700 text-gray-400 hover:text-red-400' : 'hover:bg-gray-100 text-gray-600 hover:text-red-600'
-                      }`}
-                      title="Delete part"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <StatusDropdown part={part} />
+                    </div>
                   </div>
                 </div>
 
@@ -2175,7 +2147,9 @@ const LandCruiserTracker = () => {
                     <p className={`text-xs mb-1 ${
                       darkMode ? 'text-gray-400' : 'text-gray-600'
                     }`}>Project</p>
-                    <ProjectDropdown part={part} />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <ProjectDropdown part={part} />
+                    </div>
                   </div>
                 </div>
 
