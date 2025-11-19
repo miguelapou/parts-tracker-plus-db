@@ -2861,7 +2861,7 @@ const LandCruiserTracker = () => {
                             }`}>
                               Linked Parts ({linkedParts.length})
                             </h3>
-                            <div className="space-y-2 max-h-60 overflow-y-auto">
+                            <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
                               {linkedParts.map((part) => (
                                 <div 
                                   key={part.id}
@@ -2890,10 +2890,10 @@ const LandCruiserTracker = () => {
                                   </div>
                                   <button
                                     onClick={() => unlinkPartFromProject(part.id)}
-                                    className={`ml-3 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                                    className={`ml-3 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
                                       darkMode 
-                                        ? 'bg-red-900/30 hover:bg-red-900/50 text-red-400 border border-red-700' 
-                                        : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-200'
+                                        ? 'text-gray-400 hover:text-red-400 hover:bg-gray-600 border-gray-600 hover:border-red-500' 
+                                        : 'text-gray-600 hover:text-red-600 hover:bg-red-50 border-gray-300 hover:border-red-300'
                                     }`}
                                     title="Unlink from project"
                                   >
