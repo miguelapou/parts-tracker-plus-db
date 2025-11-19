@@ -966,7 +966,6 @@ const LandCruiserTracker = () => {
           }`}
           style={{ minWidth: '8.25rem', maxWidth: '10rem' }}
         >
-          <List className="w-3 h-3 flex-shrink-0" />
           <span className="flex-1 text-left truncate">{selectedProject ? selectedProject.name : 'None'}</span>
           <ChevronDown className={`w-3 h-3 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
         </button>
