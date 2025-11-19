@@ -13,6 +13,40 @@ const fontStyles = `
     font-style: normal;
     font-display: swap;
   }
+
+  @keyframes genieIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.2) translateY(100%);
+      transform-origin: bottom center;
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(0.8) translateY(20%);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      transform-origin: center center;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .modal-genie-enter {
+    animation: genieIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .modal-backdrop-enter {
+    animation: fadeIn 0.3s ease-out;
+  }
 `;
 
 const LandCruiserTracker = () => {
@@ -1244,8 +1278,8 @@ const LandCruiserTracker = () => {
           <>
         {/* Add New Part Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto ${
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
+            <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
               darkMode ? 'bg-gray-800' : 'bg-white'
             }`}>
               <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
@@ -1490,8 +1524,8 @@ const LandCruiserTracker = () => {
 
         {/* Tracking Info Modal */}
         {showTrackingModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className={`rounded-lg shadow-xl max-w-md w-full ${
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
+            <div className={`rounded-lg shadow-xl max-w-md w-full modal-genie-enter ${
               darkMode ? 'bg-gray-800' : 'bg-white'
             }`}>
               <div className={`border-b px-6 py-4 flex items-center justify-between rounded-t-lg ${
@@ -1564,8 +1598,8 @@ const LandCruiserTracker = () => {
 
         {/* Edit Part Modal */}
         {showEditModal && editingPart && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto ${
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
+            <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
               darkMode ? 'bg-gray-800' : 'bg-white'
             }`}>
               <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
@@ -2635,8 +2669,8 @@ const LandCruiserTracker = () => {
 
             {/* Add Project Modal */}
             {showAddProjectModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto ${
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
+                <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
                   darkMode ? 'bg-gray-800' : 'bg-white'
                 }`}>
                   <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
@@ -2839,8 +2873,8 @@ const LandCruiserTracker = () => {
 
             {/* Edit Project Modal */}
             {showEditProjectModal && editingProject && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto ${
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
+                <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
                   darkMode ? 'bg-gray-800' : 'bg-white'
                 }`}>
                   <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
@@ -3101,8 +3135,8 @@ const LandCruiserTracker = () => {
 
             {/* Project Detail Modal */}
             {showProjectDetailModal && viewingProject && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <div className={`rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto ${
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop-enter">
+                <div className={`rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto modal-genie-enter ${
                   darkMode ? 'bg-gray-800' : 'bg-white'
                 }`}>
                   <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between rounded-t-lg ${
