@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Package, DollarSign, TrendingUp, Truck, CheckCircle, Clock, XCircle, ChevronDown, Plus, X, ExternalLink, ChevronUp, Edit2, Trash2, Moon, Sun, Folder, List, Target, Calendar } from 'lucide-react';
+import { Search, Package, DollarSign, TrendingUp, Truck, CheckCircle, Clock, XCircle, ChevronDown, Plus, X, ExternalLink, ChevronUp, Edit2, Trash2, Moon, Sun, Wrench, List, Target, Calendar } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 // Add Foundation One font
@@ -978,7 +978,7 @@ const LandCruiserTracker = () => {
                     : 'text-gray-600 hover:text-gray-800'
               }`}
             >
-              <Folder className="w-5 h-5" />
+              <Wrench className="w-5 h-5" />
               <span>Projects</span>
               {activeTab === 'projects' && (
                 <div className={`absolute bottom-0 left-0 right-0 h-0.5 ${
@@ -2096,7 +2096,7 @@ const LandCruiserTracker = () => {
                   on_hold: darkMode ? 'bg-yellow-600 text-yellow-100' : 'bg-yellow-100 text-yellow-800'
                 };
                 const priorityColors = {
-                  low: darkMode ? 'text-gray-400' : 'text-gray-600',
+                  low: darkMode ? 'text-green-400' : 'text-green-600',
                   medium: darkMode ? 'text-yellow-400' : 'text-yellow-600',
                   high: darkMode ? 'text-red-400' : 'text-red-600'
                 };
@@ -2261,7 +2261,7 @@ const LandCruiserTracker = () => {
               <div className={`text-center py-12 rounded-lg ${
                 darkMode ? 'bg-gray-800' : 'bg-white'
               }`}>
-                <Folder className={`w-16 h-16 mx-auto mb-4 ${
+                <Wrench className={`w-16 h-16 mx-auto mb-4 ${
                   darkMode ? 'text-gray-600' : 'text-gray-400'
                 }`} />
                 <h3 className={`text-xl font-semibold mb-2 ${
