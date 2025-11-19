@@ -158,7 +158,6 @@ const LandCruiserTracker = () => {
   const initializeDefaultProjects = async () => {
     const defaultProjects = [
       { 
-        id: 1, 
         name: "Interior Restoration", 
         description: "Complete interior refurbishment including seats, dashboard, and trim",
         status: "in_progress",
@@ -169,7 +168,6 @@ const LandCruiserTracker = () => {
         priority: "high"
       },
       { 
-        id: 2, 
         name: "Engine Maintenance", 
         description: "Regular maintenance and upgrades to engine components",
         status: "in_progress",
@@ -180,7 +178,6 @@ const LandCruiserTracker = () => {
         priority: "medium"
       },
       { 
-        id: 3, 
         name: "Exterior Body Work", 
         description: "Rust repair, paint, and body panel replacement",
         status: "planning",
@@ -2216,18 +2213,16 @@ const LandCruiserTracker = () => {
 
                     {/* Dates and Priority */}
                     <div className="space-y-2">
-                      {project.start_date && (
-                        <div className="flex items-center gap-2">
-                          <Calendar className={`w-4 h-4 ${
-                            darkMode ? 'text-gray-400' : 'text-gray-600'
-                          }`} />
-                          <span className={`text-sm ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
-                          }`}>
-                            Started: {new Date(project.start_date).toLocaleDateString()}
-                          </span>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-2">
+                        <Calendar className={`w-4 h-4 ${
+                          darkMode ? 'text-gray-400' : 'text-gray-600'
+                        }`} />
+                        <span className={`text-sm ${
+                          darkMode ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
+                          Started: {project.start_date ? new Date(project.start_date).toLocaleDateString() : 'TBD'}
+                        </span>
+                      </div>
                       {project.target_date && (
                         <div className="flex items-center gap-2">
                           <Target className={`w-4 h-4 ${
@@ -2360,7 +2355,7 @@ const LandCruiserTracker = () => {
                           step="0.01"
                           value={newProject.budget}
                           onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -2564,7 +2559,7 @@ const LandCruiserTracker = () => {
                           step="0.01"
                           value={editingProject.budget}
                           onChange={(e) => setEditingProject({ ...editingProject, budget: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -2583,7 +2578,7 @@ const LandCruiserTracker = () => {
                           step="0.01"
                           value={editingProject.spent}
                           onChange={(e) => setEditingProject({ ...editingProject, spent: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
