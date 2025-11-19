@@ -1542,7 +1542,6 @@ const LandCruiserTracker = () => {
                 </div>
               </div>
             </div>
-          </div>
           </>
         )}
 
@@ -1907,7 +1906,6 @@ const LandCruiserTracker = () => {
                 </div>
               </div>
             </div>
-          </div>
           </>
         )}
 
@@ -2935,8 +2933,7 @@ const LandCruiserTracker = () => {
                   </div>
                 </div>
               </div>
-            </div>
-            </>
+              </>
             )}
 
             {/* Edit Project Modal */}
@@ -3534,7 +3531,6 @@ const LandCruiserTracker = () => {
                   </div>
                 </div>
               </div>
-            </div>
             </>
             )}
           </>
