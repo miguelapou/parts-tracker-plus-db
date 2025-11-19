@@ -3249,12 +3249,11 @@ const LandCruiserTracker = () => {
                         setShowEditProjectModal(true);
                         setViewingProject(null);
                       }}
-                      className={`p-1.5 rounded-md transition-colors ${
-                        darkMode ? 'hover:bg-gray-700 text-gray-500 hover:text-blue-400' : 'hover:bg-gray-100 text-gray-500 hover:text-blue-600'
-                      }`}
+                      className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
                       title="Edit project"
                     >
-                      <Edit2 className="w-3.5 h-3.5" />
+                      <Edit2 className="w-4 h-4" />
+                      Edit
                     </button>
                   </div>
                   
