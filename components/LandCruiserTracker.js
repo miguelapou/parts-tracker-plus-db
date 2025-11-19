@@ -1912,11 +1912,11 @@ const LandCruiserTracker = () => {
         </div>
 
         {/* Parts Table */}
-        <div className={`rounded-lg shadow-md overflow-hidden ${
+        {/* Desktop Table View - Hidden on mobile */}
+        <div className={`hidden md:block rounded-lg shadow-md overflow-hidden ${
           darkMode ? 'bg-gray-800' : 'bg-white'
         }`}>
-          {/* Desktop Table View - Hidden on mobile */}
-          <div className="hidden md:block overflow-x-auto">
+          <div className="overflow-x-auto">
             <table className="w-full">
               <thead className={`border-b ${
                 darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-100 border-slate-200'
@@ -2092,9 +2092,20 @@ const LandCruiserTracker = () => {
               </tbody>
             </table>
           </div>
+          
+          <div className={`px-6 py-4 border-t ${
+            darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-50 border-slate-200'
+          }`}>
+            <p className={`text-sm ${
+              darkMode ? 'text-gray-400' : 'text-slate-600'
+            }`}>
+              Showing <span className="font-semibold">{filteredParts.length}</span> of <span className="font-semibold">{stats.total}</span> parts
+            </p>
+          </div>
+        </div>
 
-          {/* Mobile Card View - Visible only on mobile */}
-          <div className="md:hidden grid grid-cols-1 gap-6 p-6">
+        {/* Mobile Card View - Visible only on mobile */}
+        <div className="md:hidden grid grid-cols-1 gap-6 p-6">
             {filteredParts.map((part) => (
               <div 
                 key={part.id}
@@ -2225,18 +2236,6 @@ const LandCruiserTracker = () => {
               </div>
             ))}
           </div>
-          
-          
-          <div className={`px-6 py-4 border-t ${
-            darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-50 border-slate-200'
-          }`}>
-            <p className={`text-sm ${
-              darkMode ? 'text-gray-400' : 'text-slate-600'
-            }`}>
-              Showing <span className="font-semibold">{filteredParts.length}</span> of <span className="font-semibold">{stats.total}</span> parts
-            </p>
-          </div>
-        </div>
         </>
         )}
 
