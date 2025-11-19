@@ -275,8 +275,8 @@ const LandCruiserTracker = () => {
           status: projectData.status || 'planning',
           budget: parseFloat(projectData.budget) || 0,
           spent: 0,
-          start_date: projectData.start_date || null,
-          target_date: projectData.target_date || null,
+          start_date: projectData.start_date && projectData.start_date.trim() !== '' ? projectData.start_date : null,
+          target_date: projectData.target_date && projectData.target_date.trim() !== '' ? projectData.target_date : null,
           priority: projectData.priority || 'medium'
         }])
         .select();
@@ -2632,7 +2632,7 @@ const LandCruiserTracker = () => {
                           <span className={`text-sm ${
                             darkMode ? 'text-gray-300' : 'text-gray-700'
                           }`}>
-                            Started: {project.start_date ? new Date(project.start_date).toLocaleDateString() : 'TBD'}
+                            Started: {project.start_date ? new Date(project.start_date + 'T00:00:00').toLocaleDateString() : 'TBD'}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -2642,7 +2642,7 @@ const LandCruiserTracker = () => {
                           <span className={`text-sm ${
                             darkMode ? 'text-gray-300' : 'text-gray-700'
                           }`}>
-                            Target: {project.target_date ? new Date(project.target_date).toLocaleDateString() : 'Not set'}
+                            Target: {project.target_date ? new Date(project.target_date + 'T00:00:00').toLocaleDateString() : 'Not set'}
                           </span>
                         </div>
                       </div>
@@ -3197,8 +3197,8 @@ const LandCruiserTracker = () => {
                             description: editingProject.description,
                             budget: parseFloat(editingProject.budget),
                             priority: editingProject.priority,
-                            start_date: editingProject.start_date || null,
-                            target_date: editingProject.target_date || null,
+                            start_date: editingProject.start_date && editingProject.start_date.trim() !== '' ? editingProject.start_date : null,
+                            target_date: editingProject.target_date && editingProject.target_date.trim() !== '' ? editingProject.target_date : null,
                             status: editingProject.status
                           });
                           setShowEditProjectModal(false);
@@ -3356,7 +3356,7 @@ const LandCruiserTracker = () => {
                               <p className={`text-sm font-medium ${
                                 darkMode ? 'text-gray-300' : 'text-gray-700'
                               }`}>
-                                {viewingProject.start_date ? new Date(viewingProject.start_date).toLocaleDateString() : 'TBD'}
+                                {viewingProject.start_date ? new Date(viewingProject.start_date + 'T00:00:00').toLocaleDateString() : 'TBD'}
                               </p>
                             </div>
                             <div>
@@ -3366,7 +3366,7 @@ const LandCruiserTracker = () => {
                               <p className={`text-sm font-medium ${
                                 darkMode ? 'text-gray-300' : 'text-gray-700'
                               }`}>
-                                {viewingProject.target_date ? new Date(viewingProject.target_date).toLocaleDateString() : 'Not set'}
+                                {viewingProject.target_date ? new Date(viewingProject.target_date + 'T00:00:00').toLocaleDateString() : 'Not set'}
                               </p>
                             </div>
                           </div>
