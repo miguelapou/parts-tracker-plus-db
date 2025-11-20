@@ -126,10 +126,11 @@ const LandCruiserTracker = () => {
       const activeTabElement = tabRefs.current[activeTab];
       if (activeTabElement) {
         const { offsetLeft, offsetWidth } = activeTabElement;
-        // No padding - let underline extend fully from edge to edge of the button
+        // Add padding only for vehicles tab to prevent overflow on mobile
+        const padding = activeTab === 'vehicles' ? 12 : 0;
         setUnderlineStyle({
-          left: offsetLeft,
-          width: offsetWidth
+          left: offsetLeft + padding,
+          width: offsetWidth - (padding * 2)
         });
       }
     };
