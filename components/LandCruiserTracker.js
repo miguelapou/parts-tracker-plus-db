@@ -4129,13 +4129,13 @@ const LandCruiserTracker = () => {
                     {/* Project Badges */}
                     {(() => {
                       const vehicleProjects = getVehicleProjects(vehicle.id);
-                      const getPriorityColor = (priority) => {
+                      const getPriorityBorderColor = (priority) => {
                         const priorityColors = {
-                          low: darkMode ? 'bg-green-900/40 text-green-300 border-green-700' : 'bg-green-50 text-green-700 border-green-200',
-                          medium: darkMode ? 'bg-yellow-900/40 text-yellow-300 border-yellow-700' : 'bg-yellow-50 text-yellow-700 border-yellow-200',
-                          high: darkMode ? 'bg-red-900/40 text-red-300 border-red-700' : 'bg-red-50 text-red-700 border-red-200',
+                          low: '#10b981',    // green
+                          medium: '#f59e0b', // yellow/amber
+                          high: '#ef4444',   // red
                         };
-                        return priorityColors[priority] || (darkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-700 border-gray-300');
+                        return priorityColors[priority] || '#6b7280'; // gray fallback
                       };
                       return vehicleProjects.length > 0 && (
                         <div className={`mt-4 pt-4 border-t ${
@@ -4150,12 +4150,16 @@ const LandCruiserTracker = () => {
                             {vehicleProjects.slice(0, 4).map((project) => (
                               <span
                                 key={project.id}
-                                className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border ${
-                                  getPriorityColor(project.priority)
+                                className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border w-32 ${
+                                  darkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-700 border-gray-300'
                                 }`}
+                                style={{ 
+                                  borderLeftWidth: '3px', 
+                                  borderLeftColor: getPriorityBorderColor(project.priority)
+                                }}
                               >
-                                <Wrench className="w-3 h-3 mr-1" />
-                                {project.name}
+                                <Wrench className="w-3 h-3 mr-1 flex-shrink-0" />
+                                <span className="truncate">{project.name}</span>
                               </span>
                             ))}
                             {vehicleProjects.length > 4 && (
