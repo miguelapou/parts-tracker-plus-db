@@ -5052,76 +5052,85 @@ const LandCruiserTracker = () => {
 
                   {/* Content */}
                   <div className="p-6 space-y-6">
-                    {/* Vehicle Image */}
-                    {viewingVehicle.image_url && (
-                      <div className="rounded-lg overflow-hidden">
-                        <img 
-                          src={viewingVehicle.image_url} 
-                          alt={viewingVehicle.nickname || viewingVehicle.name}
-                          className="w-full h-64 object-cover"
-                        />
-                      </div>
-                    )}
-
-                    {/* Basic Info */}
-                    <div>
-                      <h3 className={`text-lg font-semibold mb-3 ${
-                        darkMode ? 'text-gray-200' : 'text-gray-800'
+                    {/* Top Section: Basic Info Card (left) and Image (right) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Basic Info Card */}
+                      <div className={`rounded-lg p-6 ${
+                        darkMode ? 'bg-gray-700' : 'bg-gray-50'
                       }`}>
-                        Basic Information
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {viewingVehicle.year && (
-                          <div>
-                            <p className={`text-sm font-medium mb-1 ${
-                              darkMode ? 'text-gray-400' : 'text-gray-600'
-                            }`}>Year</p>
-                            <p className={`text-base ${
-                              darkMode ? 'text-gray-100' : 'text-gray-900'
-                            }`}>{viewingVehicle.year}</p>
-                          </div>
-                        )}
-                        {viewingVehicle.name && (
-                          <div>
-                            <p className={`text-sm font-medium mb-1 ${
-                              darkMode ? 'text-gray-400' : 'text-gray-600'
-                            }`}>Model</p>
-                            <p className={`text-base ${
-                              darkMode ? 'text-gray-100' : 'text-gray-900'
-                            }`}>{viewingVehicle.name}</p>
-                          </div>
-                        )}
-                        {viewingVehicle.license_plate && (
-                          <div>
-                            <p className={`text-sm font-medium mb-1 ${
-                              darkMode ? 'text-gray-400' : 'text-gray-600'
-                            }`}>License Plate</p>
-                            <p className={`text-base ${
-                              darkMode ? 'text-gray-100' : 'text-gray-900'
-                            }`}>{viewingVehicle.license_plate}</p>
-                          </div>
-                        )}
-                        {viewingVehicle.vin && (
-                          <div>
-                            <p className={`text-sm font-medium mb-1 ${
-                              darkMode ? 'text-gray-400' : 'text-gray-600'
-                            }`}>VIN</p>
-                            <p className={`text-base font-mono ${
-                              darkMode ? 'text-gray-100' : 'text-gray-900'
-                            }`}>{viewingVehicle.vin}</p>
-                          </div>
-                        )}
-                        {viewingVehicle.insurance_policy && (
-                          <div className="md:col-span-2">
-                            <p className={`text-sm font-medium mb-1 ${
-                              darkMode ? 'text-gray-400' : 'text-gray-600'
-                            }`}>Insurance Policy</p>
-                            <p className={`text-base ${
-                              darkMode ? 'text-gray-100' : 'text-gray-900'
-                            }`}>{viewingVehicle.insurance_policy}</p>
-                          </div>
-                        )}
+                        <h3 className={`text-lg font-semibold mb-4 ${
+                          darkMode ? 'text-gray-200' : 'text-gray-800'
+                        }`}>
+                          Basic Information
+                        </h3>
+                        <div className="space-y-4">
+                          {viewingVehicle.year && (
+                            <div>
+                              <p className={`text-sm font-medium mb-1 ${
+                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>Year</p>
+                              <p className={`text-base ${
+                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                              }`}>{viewingVehicle.year}</p>
+                            </div>
+                          )}
+                          {viewingVehicle.name && (
+                            <div>
+                              <p className={`text-sm font-medium mb-1 ${
+                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>Model</p>
+                              <p className={`text-base ${
+                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                              }`}>{viewingVehicle.name}</p>
+                            </div>
+                          )}
+                          {viewingVehicle.license_plate && (
+                            <div>
+                              <p className={`text-sm font-medium mb-2 ${
+                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>License Plate</p>
+                              <span className={`inline-block px-3 py-1 rounded text-sm font-medium ${
+                                darkMode ? 'bg-blue-600 text-blue-100' : 'bg-blue-100 text-blue-800'
+                              }`}>
+                                {viewingVehicle.license_plate}
+                              </span>
+                            </div>
+                          )}
+                          {viewingVehicle.vin && (
+                            <div>
+                              <p className={`text-sm font-medium mb-2 ${
+                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>VIN</p>
+                              <span className={`inline-block px-3 py-1 rounded-full text-xs font-mono ${
+                                darkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+                              }`}>
+                                {viewingVehicle.vin}
+                              </span>
+                            </div>
+                          )}
+                          {viewingVehicle.insurance_policy && (
+                            <div>
+                              <p className={`text-sm font-medium mb-1 ${
+                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>Insurance Policy</p>
+                              <p className={`text-base ${
+                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                              }`}>{viewingVehicle.insurance_policy}</p>
+                            </div>
+                          )}
+                        </div>
                       </div>
+
+                      {/* Vehicle Image */}
+                      {viewingVehicle.image_url && (
+                        <div className="rounded-lg overflow-hidden">
+                          <img 
+                            src={viewingVehicle.image_url} 
+                            alt={viewingVehicle.nickname || viewingVehicle.name}
+                            className="w-full h-full object-cover min-h-[300px]"
+                          />
+                        </div>
+                      )}
                     </div>
 
                     {/* Filters Section */}
