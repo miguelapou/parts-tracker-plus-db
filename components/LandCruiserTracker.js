@@ -2464,103 +2464,102 @@ const LandCruiserTracker = () => {
         </div>
 
         {/* Mobile Card View - Visible only on mobile */}
-        <div className="md:hidden grid grid-cols-1 gap-6">
+        <div className="md:hidden grid grid-cols-1 gap-4">
             {filteredParts.map((part) => (
               <div 
                 key={part.id}
                 onClick={() => openEditModal(part)}
-                className={`rounded-lg shadow-lg p-6 transition-all hover:shadow-xl cursor-pointer ${
+                className={`rounded-lg shadow-lg p-4 transition-all hover:shadow-xl cursor-pointer ${
                   darkMode 
                     ? 'bg-gray-800' 
                     : 'bg-white'
                 }`}
               >
-                {/* Card Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className={`text-lg font-bold mb-2 ${
-                      darkMode ? 'text-gray-100' : 'text-gray-900'
-                    }`}>
-                      {part.part}
-                    </h3>
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <StatusDropdown part={part} />
-                    </div>
+                {/* Card Header - Part Name and Status */}
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <h3 className={`text-base font-bold flex-1 ${
+                    darkMode ? 'text-gray-100' : 'text-gray-900'
+                  }`}>
+                    {part.part}
+                  </h3>
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <StatusDropdown part={part} />
                   </div>
                 </div>
 
-                {/* Part Details */}
-                {part.partNumber && part.partNumber !== '-' && (
-                  <div className="mb-4">
-                    <p className={`text-xs mb-1 ${
-                      darkMode ? 'text-gray-400' : 'text-gray-600'
-                    }`}>Part Number</p>
-                    <p className={`text-sm font-mono ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
-                    }`}>{part.partNumber}</p>
-                  </div>
-                )}
-
-                {/* Vendor & Project */}
-                <div className="space-y-3 mb-4">
-                  {part.vendor && (
-                    <div>
-                      <p className={`text-xs mb-1 ${
+                {/* Part Number + Vendor + Project - All on one or two lines */}
+                <div className="space-y-2 mb-3">
+                  {part.partNumber && part.partNumber !== '-' && (
+                    <div className="flex items-center gap-2">
+                      <p className={`text-xs ${
                         darkMode ? 'text-gray-400' : 'text-gray-600'
-                      }`}>Vendor</p>
-                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium text-center ${getVendorColor(part.vendor)}`}>
-                        {part.vendor}
-                      </span>
+                      }`}>Part #:</p>
+                      <p className={`text-xs font-mono ${
+                        darkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>{part.partNumber}</p>
                     </div>
                   )}
-                  <div>
-                    <p className={`text-xs mb-1 ${
-                      darkMode ? 'text-gray-400' : 'text-gray-600'
-                    }`}>Project</p>
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <ProjectDropdown part={part} />
+                  
+                  <div className="flex items-center gap-3 flex-wrap">
+                    {part.vendor && (
+                      <div className="flex items-center gap-2">
+                        <p className={`text-xs ${
+                          darkMode ? 'text-gray-400' : 'text-gray-600'
+                        }`}>Vendor:</p>
+                        <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${getVendorColor(part.vendor)}`}>
+                          {part.vendor}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <p className={`text-xs ${
+                        darkMode ? 'text-gray-400' : 'text-gray-600'
+                      }`}>Project:</p>
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <ProjectDropdown part={part} />
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Price Breakdown */}
-                <div className={`p-4 rounded-lg mb-4 ${
+                {/* Price Breakdown - More compact grid */}
+                <div className={`p-3 rounded-lg mb-3 ${
                   darkMode ? 'bg-gray-700' : 'bg-gray-50'
                 }`}>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-3 gap-2">
                     <div>
-                      <p className={`text-xs mb-1 ${
+                      <p className={`text-xs mb-0.5 ${
                         darkMode ? 'text-gray-400' : 'text-gray-600'
                       }`}>Price</p>
-                      <p className={`text-base font-semibold ${
+                      <p className={`text-sm font-semibold ${
                         darkMode ? 'text-gray-100' : 'text-gray-900'
                       }`}>${part.price.toFixed(2)}</p>
                     </div>
                     {part.shipping > 0 && (
                       <div>
-                        <p className={`text-xs mb-1 ${
+                        <p className={`text-xs mb-0.5 ${
                           darkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>Shipping</p>
-                        <p className={`text-base font-semibold ${
+                        }`}>Ship</p>
+                        <p className={`text-sm font-semibold ${
                           darkMode ? 'text-gray-100' : 'text-gray-900'
                         }`}>${part.shipping.toFixed(2)}</p>
                       </div>
                     )}
                     {part.duties > 0 && (
                       <div>
-                        <p className={`text-xs mb-1 ${
+                        <p className={`text-xs mb-0.5 ${
                           darkMode ? 'text-gray-400' : 'text-gray-600'
                         }`}>Duties</p>
-                        <p className={`text-base font-semibold ${
+                        <p className={`text-sm font-semibold ${
                           darkMode ? 'text-gray-100' : 'text-gray-900'
                         }`}>${part.duties.toFixed(2)}</p>
                       </div>
                     )}
-                    <div>
-                      <p className={`text-xs mb-1 ${
+                    <div className={part.shipping > 0 || part.duties > 0 ? '' : 'col-span-2'}>
+                      <p className={`text-xs mb-0.5 ${
                         darkMode ? 'text-gray-400' : 'text-gray-600'
                       }`}>Total</p>
-                      <p className={`text-lg font-bold ${
+                      <p className={`text-base font-bold ${
                         darkMode ? 'text-gray-100' : 'text-gray-900'
                       }`}>${part.total.toFixed(2)}</p>
                     </div>
@@ -2570,21 +2569,19 @@ const LandCruiserTracker = () => {
                 {/* Tracking */}
                 {part.tracking && (
                   <div>
-                    <p className={`text-xs mb-2 ${
-                      darkMode ? 'text-gray-400' : 'text-gray-600'
-                    }`}>Tracking</p>
                     {getTrackingUrl(part.tracking) ? (
                       <a
                         href={getTrackingUrl(part.tracking)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        {getCarrierName(part.tracking)}
-                        <ExternalLink className="w-4 h-4" />
+                        Track: {getCarrierName(part.tracking)}
+                        <ExternalLink className="w-3 h-3" />
                       </a>
                     ) : (
-                      <div className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg ${
+                      <div className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg ${
                         darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'
                       }`}>
                         {getCarrierName(part.tracking)}
@@ -3439,11 +3436,7 @@ const LandCruiserTracker = () => {
                                 setShowEditProjectModal(true);
                                 setViewingProject(null);
                               }}
-                              className={`p-2 rounded-lg transition-colors ${
-                                darkMode 
-                                  ? 'hover:bg-gray-700 text-gray-400 hover:text-blue-400' 
-                                  : 'hover:bg-gray-100 text-gray-500 hover:text-blue-600'
-                              }`}
+                              className="p-2 rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white"
                               title="Edit project"
                             >
                               <Edit2 className="w-5 h-5" />
