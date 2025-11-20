@@ -1790,10 +1790,14 @@ const LandCruiserTracker = () => {
                     </div>
                   )}
                 </div>
-                
-                <div className={`flex gap-3 mt-6 pt-6 border-t ${
-                  darkMode ? 'border-gray-700' : 'border-gray-200'
-                }`}>
+              </div>
+              
+              <div className={`border-t ${
+                darkMode ? 'border-gray-700' : 'border-gray-200'
+              }`}></div>
+              
+              <div className="p-6">
+                <div className="flex gap-3">
                   <button
                     onClick={addNewPart}
                     disabled={!newPart.part}
@@ -2138,10 +2142,14 @@ const LandCruiserTracker = () => {
                     </div>
                   </div>
                 </div>
-                
-                <div className={`flex gap-3 mt-6 pt-6 border-t ${
-                  darkMode ? 'border-gray-700' : 'border-gray-200'
-                }`}>
+              </div>
+              
+              <div className={`border-t ${
+                darkMode ? 'border-gray-700' : 'border-gray-200'
+              }`}></div>
+              
+              <div className="p-6">
+                <div className="flex gap-3">
                   <button
                     onClick={() => {
                       setShowEditModal(false);
@@ -3169,10 +3177,14 @@ const LandCruiserTracker = () => {
                         </select>
                       </div>
                     </div>
-
-                    <div className={`flex gap-3 mt-6 pt-6 border-t ${
-                      darkMode ? 'border-gray-700' : 'border-gray-200'
-                    }`}>
+                  </div>
+                  
+                  <div className={`border-t ${
+                    darkMode ? 'border-gray-700' : 'border-gray-200'
+                  }`}></div>
+                  
+                  <div className="p-6">
+                    <div className="flex gap-3">
                       <button
                         onClick={() => setShowAddProjectModal(false)}
                         className={`flex-1 px-6 py-3 rounded-lg font-medium transition-colors ${
@@ -3450,10 +3462,14 @@ const LandCruiserTracker = () => {
                       }
                       return null;
                     })()}
-
-                    <div className={`flex gap-3 mt-6 pt-6 border-t ${
-                      darkMode ? 'border-gray-700' : 'border-gray-200'
-                    }`}>
+                  </div>
+                  
+                  <div className={`border-t ${
+                    darkMode ? 'border-gray-700' : 'border-gray-200'
+                  }`}></div>
+                  
+                  <div className="p-6">
+                    <div className="flex gap-3">
                       <button
                         onClick={() => {
                           setShowEditProjectModal(false);
@@ -4380,10 +4396,14 @@ const LandCruiserTracker = () => {
                         </div>
                       </div>
                     </div>
-
-                    <div className={`flex gap-3 mt-6 pt-6 border-t ${
-                      darkMode ? 'border-gray-700' : 'border-gray-200'
-                    }`}>
+                  </div>
+                  
+                  <div className={`border-t ${
+                    darkMode ? 'border-gray-700' : 'border-gray-200'
+                  }`}></div>
+                  
+                  <div className="p-6">
+                    <div className="flex gap-3">
                       <button
                         onClick={() => setShowAddVehicleModal(false)}
                         className={`flex-1 px-6 py-3 rounded-lg font-medium transition-colors ${
@@ -4778,10 +4798,14 @@ const LandCruiserTracker = () => {
                         </div>
                       </div>
                     </div>
-
-                    <div className={`flex gap-3 mt-6 pt-6 border-t ${
-                      darkMode ? 'border-gray-700' : 'border-gray-200'
-                    }`}>
+                  </div>
+                  
+                  <div className={`border-t ${
+                    darkMode ? 'border-gray-700' : 'border-gray-200'
+                  }`}></div>
+                  
+                  <div className="p-6">
+                    <div className="flex gap-3">
                       <button
                         onClick={() => {
                           setShowEditVehicleModal(false);
