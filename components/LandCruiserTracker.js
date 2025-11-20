@@ -1524,7 +1524,7 @@ const LandCruiserTracker = () => {
             <button
               ref={(el) => (tabRefs.current['vehicles'] = el)}
               onClick={() => handleTabChange('vehicles')}
-              className={`flex items-center gap-2 px-6 py-3 font-medium transition-all relative ${
+              className={`flex items-center gap-2 pl-5 pr-7 py-3 font-medium transition-all relative ${
                 activeTab === 'vehicles'
                   ? darkMode
                     ? 'text-blue-400'
