@@ -1353,7 +1353,7 @@ const LandCruiserTracker = () => {
                 className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-md transition-colors font-medium text-sm sm:text-base whitespace-nowrap"
               >
                 <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-                {activeTab === 'parts' ? 'Add New Part' : activeTab === 'projects' ? 'Add New Project' : 'Add Vehicle'}
+                Add New
               </button>
             </div>
           </div>
