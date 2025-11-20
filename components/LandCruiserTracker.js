@@ -2688,47 +2688,47 @@ const LandCruiserTracker = () => {
                       <GripVertical className="w-5 h-5" />
                     </div>
 
+                    {/* Edit and Delete Buttons - Top Right */}
+                    <div className="absolute top-2 right-2 flex gap-1" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        onClick={() => {
+                          setEditingProject({
+                            ...project,
+                            start_date: project.start_date ? project.start_date.split('T')[0] : '',
+                            target_date: project.target_date ? project.target_date.split('T')[0] : ''
+                          });
+                          setShowEditProjectModal(true);
+                        }}
+                        className={`p-1.5 rounded-md transition-colors ${
+                          darkMode ? 'hover:bg-gray-700 text-gray-500 hover:text-blue-400' : 'hover:bg-gray-100 text-gray-500 hover:text-blue-600'
+                        }`}
+                        title="Edit project"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => deleteProject(project.id)}
+                        className={`p-1.5 rounded-md transition-colors ${
+                          darkMode ? 'hover:bg-gray-700 text-gray-500 hover:text-red-400' : 'hover:bg-gray-100 text-gray-500 hover:text-red-600'
+                        }`}
+                        title="Delete project"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
                     {/* Project Header */}
-                    <div className="flex items-start justify-between mb-4 ml-6">
-                      <div className="flex-1">
-                        <h3 className={`text-xl font-bold mb-2 ${
-                          darkMode ? 'text-gray-100' : 'text-gray-900'
-                        }`}>
-                          {project.name}
-                        </h3>
-                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                          statusColors[project.status]
-                        }`}>
-                          {project.status.replace('_', ' ').toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={() => {
-                            setEditingProject({
-                              ...project,
-                              start_date: project.start_date ? project.start_date.split('T')[0] : '',
-                              target_date: project.target_date ? project.target_date.split('T')[0] : ''
-                            });
-                            setShowEditProjectModal(true);
-                          }}
-                          className={`p-2 rounded-lg transition-colors ${
-                            darkMode ? 'hover:bg-gray-700 text-gray-400 hover:text-blue-400' : 'hover:bg-gray-100 text-gray-600 hover:text-blue-600'
-                          }`}
-                          title="Edit project"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => deleteProject(project.id)}
-                          className={`p-2 rounded-lg transition-colors ${
-                            darkMode ? 'hover:bg-gray-700 text-gray-400 hover:text-red-400' : 'hover:bg-gray-100 text-gray-600 hover:text-red-600'
-                          }`}
-                          title="Delete project"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+                    <div className="mb-4 ml-6">
+                      <h3 className={`text-xl font-bold mb-2 ${
+                        darkMode ? 'text-gray-100' : 'text-gray-900'
+                      }`}>
+                        {project.name}
+                      </h3>
+                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                        statusColors[project.status]
+                      }`}>
+                        {project.status.replace('_', ' ').toUpperCase()}
+                      </span>
                     </div>
 
                     {/* Description */}
@@ -3711,20 +3711,48 @@ const LandCruiserTracker = () => {
                     darkMode ? 'bg-gray-800' : 'bg-white'
                   }`}
                 >
-                  {/* Edit Button - Top Right */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditingVehicle(vehicle);
-                      setShowEditVehicleModal(true);
-                    }}
-                    className={`absolute top-2 right-2 p-1.5 rounded-md transition-colors ${
-                      darkMode ? 'hover:bg-gray-700 text-gray-500 hover:text-blue-400' : 'hover:bg-gray-100 text-gray-500 hover:text-blue-600'
-                    }`}
-                    title="Edit vehicle"
-                  >
-                    <Edit2 className="w-3.5 h-3.5" />
-                  </button>
+                  {/* Edit and Delete Buttons - Top Right */}
+                  <div className="absolute top-2 right-2 flex gap-1">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingVehicle(vehicle);
+                        setShowEditVehicleModal(true);
+                      }}
+                      className={`p-1.5 rounded-md transition-colors ${
+                        darkMode ? 'hover:bg-gray-700 text-gray-500 hover:text-blue-400' : 'hover:bg-gray-100 text-gray-500 hover:text-blue-600'
+                      }`}
+                      title="Edit vehicle"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (window.confirm(`Are you sure you want to delete ${vehicle.name}?`)) {
+                          try {
+                            const { error } = await supabase
+                              .from('vehicles')
+                              .delete()
+                              .eq('id', vehicle.id);
+                            
+                            if (error) throw error;
+                            
+                            await loadVehicles();
+                          } catch (error) {
+                            console.error('Error deleting vehicle:', error);
+                            alert('Error deleting vehicle');
+                          }
+                        }
+                      }}
+                      className={`p-1.5 rounded-md transition-colors ${
+                        darkMode ? 'hover:bg-gray-700 text-gray-500 hover:text-red-400' : 'hover:bg-gray-100 text-gray-500 hover:text-red-600'
+                      }`}
+                      title="Delete vehicle"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
 
                   {/* Vehicle Header */}
                   <div className="mb-4">
