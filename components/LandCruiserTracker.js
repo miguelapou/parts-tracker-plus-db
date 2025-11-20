@@ -2262,19 +2262,6 @@ const LandCruiserTracker = () => {
                 <div className="flex gap-3">
                   <button
                     onClick={() => {
-                      setShowEditModal(false);
-                      setEditingPart(null);
-                    }}
-                    className={`flex-1 px-6 py-3 rounded-lg font-medium transition-colors ${
-                      darkMode 
-                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-100' 
-                        : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
-                    }`}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => {
                       deletePart(editingPart.id);
                       setShowEditModal(false);
                       setEditingPart(null);
@@ -2286,6 +2273,19 @@ const LandCruiserTracker = () => {
                     }`}
                   >
                     Delete
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowEditModal(false);
+                      setEditingPart(null);
+                    }}
+                    className={`flex-1 px-6 py-3 rounded-lg font-medium transition-colors ${
+                      darkMode 
+                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-100' 
+                        : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+                    }`}
+                  >
+                    Cancel
                   </button>
                   <button
                     onClick={saveEditedPart}
