@@ -104,8 +104,8 @@ const LandCruiserTracker = () => {
   const [projects, setProjects] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('projects'); // 'parts', 'projects', or 'vehicles'
-  const [previousTab, setPreviousTab] = useState('projects');
+  const [activeTab, setActiveTab] = useState('vehicles'); // 'parts', 'projects', or 'vehicles'
+  const [previousTab, setPreviousTab] = useState('vehicles');
   const [draggedProject, setDraggedProject] = useState(null);
   const [dragOverProject, setDragOverProject] = useState(null);
   const [draggedVehicle, setDraggedVehicle] = useState(null);
@@ -1559,6 +1559,22 @@ const LandCruiserTracker = () => {
         }`}>
           <div className="flex relative">
             <button
+              ref={(el) => (tabRefs.current['vehicles'] = el)}
+              onClick={() => handleTabChange('vehicles')}
+              className={`flex items-center gap-2 px-6 py-3 font-medium transition-all relative ${
+                activeTab === 'vehicles'
+                  ? darkMode
+                    ? 'text-blue-400'
+                    : 'text-blue-600'
+                  : darkMode
+                    ? 'text-gray-400 hover:text-gray-300'
+                    : 'text-gray-600 hover:text-gray-800'
+              }`}
+            >
+              <Car className="w-5 h-5" />
+              <span>Vehicles</span>
+            </button>
+            <button
               ref={(el) => (tabRefs.current['projects'] = el)}
               onClick={() => handleTabChange('projects')}
               className={`flex items-center gap-2 px-6 py-3 font-medium transition-all relative ${
@@ -1577,7 +1593,7 @@ const LandCruiserTracker = () => {
             <button
               ref={(el) => (tabRefs.current['parts'] = el)}
               onClick={() => handleTabChange('parts')}
-              className={`flex items-center gap-2 px-6 py-3 font-medium transition-all relative ${
+              className={`flex items-center gap-2 pl-5 pr-7 py-3 font-medium transition-all relative ${
                 activeTab === 'parts'
                   ? darkMode
                     ? 'text-blue-400'
@@ -1589,22 +1605,6 @@ const LandCruiserTracker = () => {
             >
               <Package className="w-5 h-5" />
               <span>Parts</span>
-            </button>
-            <button
-              ref={(el) => (tabRefs.current['vehicles'] = el)}
-              onClick={() => handleTabChange('vehicles')}
-              className={`flex items-center gap-2 pl-5 pr-7 py-3 font-medium transition-all relative ${
-                activeTab === 'vehicles'
-                  ? darkMode
-                    ? 'text-blue-400'
-                    : 'text-blue-600'
-                  : darkMode
-                    ? 'text-gray-400 hover:text-gray-300'
-                    : 'text-gray-600 hover:text-gray-800'
-              }`}
-            >
-              <Car className="w-5 h-5" />
-              <span>Vehicles</span>
             </button>
             {/* Animated underline */}
             <div
@@ -2267,7 +2267,7 @@ const LandCruiserTracker = () => {
 
         {/* PARTS TAB CONTENT */}
         {activeTab === 'parts' && (
-          <div className={previousTab === 'projects' ? 'slide-in-right' : 'slide-in-left'}>
+          <div className="slide-in-left">
           <>
         {/* Statistics and Cost Breakdown - Side by Side */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 mb-6">
@@ -2525,12 +2525,6 @@ const LandCruiserTracker = () => {
                       {getSortIcon('price')}
                     </div>
                   </th>
-                  <th className={`px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider ${
-                    darkMode ? 'text-gray-300' : 'text-slate-700'
-                  }`}>Shipping</th>
-                  <th className={`px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider ${
-                    darkMode ? 'text-gray-300' : 'text-slate-700'
-                  }`}>Duties</th>
                   <th 
                     onClick={() => handleSort('total')}
                     className={`px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider cursor-pointer transition-colors ${
@@ -2595,28 +2589,6 @@ const LandCruiserTracker = () => {
                       <div className={`text-sm ${
                         darkMode ? 'text-gray-100' : 'text-slate-900'
                       }`}>${part.price.toFixed(2)}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      {part.shipping > 0 ? (
-                        <div className={`text-sm text-right ${
-                          darkMode ? 'text-gray-300' : 'text-slate-600'
-                        }`}>${part.shipping.toFixed(2)}</div>
-                      ) : (
-                        <div className={`text-sm text-center ${
-                          darkMode ? 'text-gray-600' : 'text-slate-400'
-                        }`}>—</div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      {part.duties > 0 ? (
-                        <div className={`text-sm text-right ${
-                          darkMode ? 'text-gray-300' : 'text-slate-600'
-                        }`}>${part.duties.toFixed(2)}</div>
-                      ) : (
-                        <div className={`text-sm text-center ${
-                          darkMode ? 'text-gray-600' : 'text-slate-400'
-                        }`}>—</div>
-                      )}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className={`text-sm font-semibold ${
@@ -2800,7 +2772,7 @@ const LandCruiserTracker = () => {
 
         {/* PROJECTS TAB CONTENT */}
         {activeTab === 'projects' && (
-          <div className={previousTab === 'parts' ? 'slide-in-left' : 'slide-in-right'}>
+          <div className={previousTab === 'vehicles' ? 'slide-in-left' : 'slide-in-right'}>
           <>
             {/* Projects Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -3892,7 +3864,7 @@ const LandCruiserTracker = () => {
 
         {/* VEHICLES TAB CONTENT */}
         {activeTab === 'vehicles' && (
-          <div className={previousTab === 'parts' ? 'slide-in-left' : previousTab === 'projects' ? 'slide-in-right' : 'slide-in-left'}>
+          <div className="slide-in-right">
           <>
             {/* Vehicles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
