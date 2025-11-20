@@ -1341,7 +1341,7 @@ const LandCruiserTracker = () => {
         <div className={`mb-6 border-b ${
           darkMode ? 'border-gray-700' : 'border-gray-200'
         }`}>
-          <div className="flex gap-1">
+          <div className="flex">
             <button
               onClick={() => handleTabChange('projects')}
               className={`flex items-center gap-2 px-6 py-3 font-medium transition-all relative ${
