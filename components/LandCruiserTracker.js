@@ -110,6 +110,11 @@ const LandCruiserTracker = () => {
   const [dragOverProject, setDragOverProject] = useState(null);
   const [draggedVehicle, setDraggedVehicle] = useState(null);
   const [dragOverVehicle, setDragOverVehicle] = useState(null);
+  
+  // Touch event handling for mobile drag and drop
+  const touchStartY = useRef(0);
+  const touchCurrentY = useRef(0);
+  const scrollInterval = useRef(null);
 
   // Refs for tab underline animation
   const tabRefs = useRef({});
@@ -626,6 +631,116 @@ const LandCruiserTracker = () => {
   const handleVehicleDragEnd = () => {
     setDraggedVehicle(null);
     setDragOverVehicle(null);
+  };
+
+  // Touch event handlers for projects (mobile support)
+  const handleProjectTouchStart = (e, project) => {
+    const touch = e.touches[0];
+    touchStartY.current = touch.clientY;
+    setDraggedProject(project);
+  };
+
+  const handleProjectTouchMove = (e) => {
+    if (!draggedProject) return;
+    
+    e.preventDefault(); // Prevent scrolling while dragging
+    const touch = e.touches[0];
+    touchCurrentY.current = touch.clientY;
+    
+    // Get the element under the touch point
+    const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+    const projectCard = elementAtPoint?.closest('[data-project-id]');
+    
+    if (projectCard && draggedProject) {
+      const projectId = parseInt(projectCard.getAttribute('data-project-id'));
+      const project = projects.find(p => p.id === projectId);
+      if (project && project.id !== draggedProject.id) {
+        setDragOverProject(project);
+      }
+    }
+  };
+
+  const handleProjectTouchEnd = async () => {
+    if (!draggedProject || !dragOverProject) {
+      setDraggedProject(null);
+      setDragOverProject(null);
+      return;
+    }
+
+    if (draggedProject.id === dragOverProject.id) {
+      setDraggedProject(null);
+      setDragOverProject(null);
+      return;
+    }
+
+    const draggedIndex = projects.findIndex(p => p.id === draggedProject.id);
+    const targetIndex = projects.findIndex(p => p.id === dragOverProject.id);
+
+    const newProjects = [...projects];
+    const [removed] = newProjects.splice(draggedIndex, 1);
+    newProjects.splice(targetIndex, 0, removed);
+
+    setProjects(newProjects);
+    setDraggedProject(null);
+    setDragOverProject(null);
+
+    // Update display_order in database
+    updateProjectsOrder(newProjects);
+  };
+
+  // Touch event handlers for vehicles (mobile support)
+  const handleVehicleTouchStart = (e, vehicle) => {
+    const touch = e.touches[0];
+    touchStartY.current = touch.clientY;
+    setDraggedVehicle(vehicle);
+  };
+
+  const handleVehicleTouchMove = (e) => {
+    if (!draggedVehicle) return;
+    
+    e.preventDefault(); // Prevent scrolling while dragging
+    const touch = e.touches[0];
+    touchCurrentY.current = touch.clientY;
+    
+    // Get the element under the touch point
+    const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+    const vehicleCard = elementAtPoint?.closest('[data-vehicle-id]');
+    
+    if (vehicleCard && draggedVehicle) {
+      const vehicleId = parseInt(vehicleCard.getAttribute('data-vehicle-id'));
+      const vehicle = vehicles.find(v => v.id === vehicleId);
+      if (vehicle && vehicle.id !== draggedVehicle.id) {
+        setDragOverVehicle(vehicle);
+      }
+    }
+  };
+
+  const handleVehicleTouchEnd = async () => {
+    if (!draggedVehicle || !dragOverVehicle) {
+      setDraggedVehicle(null);
+      setDragOverVehicle(null);
+      return;
+    }
+
+    if (draggedVehicle.id === dragOverVehicle.id) {
+      setDraggedVehicle(null);
+      setDragOverVehicle(null);
+      return;
+    }
+
+    const draggedIndex = vehicles.findIndex(v => v.id === draggedVehicle.id);
+    const targetIndex = vehicles.findIndex(v => v.id === dragOverVehicle.id);
+
+    const newVehicles = [...vehicles];
+    const [removed] = newVehicles.splice(draggedIndex, 1);
+    newVehicles.splice(targetIndex, 0, removed);
+
+    setVehicles(newVehicles);
+    setDraggedVehicle(null);
+    setDragOverVehicle(null);
+
+    // Update display_order in database
+    updateVehiclesOrder(newVehicles);
   };
 
   // Tab change handler to track animation direction
@@ -2825,12 +2940,16 @@ const LandCruiserTracker = () => {
                 return (
                   <div
                     key={project.id}
+                    data-project-id={project.id}
                     draggable
                     onDragStart={(e) => handleDragStart(e, project)}
                     onDragOver={(e) => handleDragOver(e, project)}
                     onDragLeave={handleDragLeave}
                     onDrop={(e) => handleDrop(e, project)}
                     onDragEnd={handleDragEnd}
+                    onTouchStart={(e) => handleProjectTouchStart(e, project)}
+                    onTouchMove={handleProjectTouchMove}
+                    onTouchEnd={handleProjectTouchEnd}
                     onClick={() => {
                       setViewingProject(project);
                       setShowProjectDetailModal(true);
@@ -3898,12 +4017,16 @@ const LandCruiserTracker = () => {
               {vehicles.map((vehicle) => (
                 <div
                   key={vehicle.id}
+                  data-vehicle-id={vehicle.id}
                   draggable
                   onDragStart={(e) => handleVehicleDragStart(e, vehicle)}
                   onDragOver={(e) => handleVehicleDragOver(e, vehicle)}
                   onDragLeave={handleVehicleDragLeave}
                   onDrop={(e) => handleVehicleDrop(e, vehicle)}
                   onDragEnd={handleVehicleDragEnd}
+                  onTouchStart={(e) => handleVehicleTouchStart(e, vehicle)}
+                  onTouchMove={handleVehicleTouchMove}
+                  onTouchEnd={handleVehicleTouchEnd}
                   className={`relative rounded-lg shadow-lg pt-3 pb-6 px-6 transition-all hover:shadow-xl cursor-move ${
                     draggedVehicle?.id === vehicle.id 
                       ? 'opacity-50' 
