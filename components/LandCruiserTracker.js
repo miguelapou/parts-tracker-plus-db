@@ -3353,12 +3353,11 @@ const LandCruiserTracker = () => {
                           type="date"
                           value={newProject.start_date}
                           onChange={(e) => setNewProject({ ...newProject, start_date: e.target.value })}
-                          className={`w-full max-w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full md:max-w-md h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
                           }`}
-                          style={{ maxWidth: '100%' }}
                         />
                       </div>
 
@@ -3372,12 +3371,11 @@ const LandCruiserTracker = () => {
                           type="date"
                           value={newProject.target_date}
                           onChange={(e) => setNewProject({ ...newProject, target_date: e.target.value })}
-                          className={`w-full max-w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full md:max-w-md h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
                           }`}
-                          style={{ maxWidth: '100%' }}
                         />
                       </div>
 
@@ -3609,12 +3607,11 @@ const LandCruiserTracker = () => {
                           type="date"
                           value={editingProject.start_date || ''}
                           onChange={(e) => setEditingProject({ ...editingProject, start_date: e.target.value })}
-                          className={`w-full max-w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full md:max-w-md h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
                           }`}
-                          style={{ maxWidth: '100%' }}
                         />
                       </div>
 
@@ -3628,12 +3625,11 @@ const LandCruiserTracker = () => {
                           type="date"
                           value={editingProject.target_date || ''}
                           onChange={(e) => setEditingProject({ ...editingProject, target_date: e.target.value })}
-                          className={`w-full max-w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full md:max-w-md h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
                           }`}
-                          style={{ maxWidth: '100%' }}
                         />
                       </div>
 
@@ -4440,7 +4436,7 @@ const LandCruiserTracker = () => {
                           type="text"
                           value={newVehicle.nickname}
                           onChange={(e) => setNewVehicle({ ...newVehicle, nickname: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full md:max-w-md px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -4560,7 +4556,7 @@ const LandCruiserTracker = () => {
                           type="text"
                           value={newVehicle.insurance_policy}
                           onChange={(e) => setNewVehicle({ ...newVehicle, insurance_policy: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full md:max-w-md px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -4636,7 +4632,7 @@ const LandCruiserTracker = () => {
                             type="text"
                             value={newVehicle.battery}
                             onChange={(e) => setNewVehicle({ ...newVehicle, battery: e.target.value })}
-                            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                            className={`w-full md:max-w-md px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                               darkMode 
                                 ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                                 : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -4665,7 +4661,7 @@ const LandCruiserTracker = () => {
                               type="text"
                               value={newVehicle.oil_filter}
                               onChange={(e) => setNewVehicle({ ...newVehicle, oil_filter: e.target.value })}
-                              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                              className={`w-full md:max-w-md px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                                 darkMode 
                                   ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                                   : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -4946,7 +4942,7 @@ const LandCruiserTracker = () => {
                           type="text"
                           value={editingVehicle.nickname || ''}
                           onChange={(e) => setEditingVehicle({ ...editingVehicle, nickname: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full md:max-w-md px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -5066,7 +5062,7 @@ const LandCruiserTracker = () => {
                           type="text"
                           value={editingVehicle.insurance_policy || ''}
                           onChange={(e) => setEditingVehicle({ ...editingVehicle, insurance_policy: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full md:max-w-md px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -5142,7 +5138,7 @@ const LandCruiserTracker = () => {
                             type="text"
                             value={editingVehicle.battery || ''}
                             onChange={(e) => setEditingVehicle({ ...editingVehicle, battery: e.target.value })}
-                            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                            className={`w-full md:max-w-md px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                               darkMode 
                                 ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                                 : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -5171,7 +5167,7 @@ const LandCruiserTracker = () => {
                               type="text"
                               value={editingVehicle.oil_filter || ''}
                               onChange={(e) => setEditingVehicle({ ...editingVehicle, oil_filter: e.target.value })}
-                              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                              className={`w-full md:max-w-md px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                                 darkMode 
                                   ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                                   : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -5389,35 +5385,6 @@ const LandCruiserTracker = () => {
                           Basic Info
                         </h3>
                         <div className="space-y-4">
-                          {/* Total Spent on Linked Projects */}
-                          {(() => {
-                            const vehicleProjects = projects.filter(p => p.vehicle_id === viewingVehicle.id);
-                            const totalSpent = vehicleProjects.reduce((sum, project) => {
-                              const projectParts = parts.filter(part => part.projectId === project.id);
-                              return sum + projectParts.reduce((partSum, part) => partSum + (part.total || 0), 0);
-                            }, 0);
-                            
-                            return (
-                              <div className={`pb-4 mb-4 border-b ${
-                                darkMode ? 'border-gray-600' : 'border-gray-300'
-                              }`}>
-                                <p className={`text-sm font-medium mb-2 ${
-                                  darkMode ? 'text-gray-400' : 'text-gray-600'
-                                }`}>Total Spent</p>
-                                <p className={`text-2xl font-bold ${
-                                  darkMode ? 'text-green-400' : 'text-green-600'
-                                }`}>${totalSpent.toFixed(2)}</p>
-                                {vehicleProjects.length > 0 && (
-                                  <p className={`text-xs mt-1 ${
-                                    darkMode ? 'text-gray-500' : 'text-gray-500'
-                                  }`}>
-                                    {vehicleProjects.length} project{vehicleProjects.length !== 1 ? 's' : ''}
-                                  </p>
-                                )}
-                              </div>
-                            );
-                          })()}
-                          
                           {viewingVehicle.year && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
@@ -5472,6 +5439,35 @@ const LandCruiserTracker = () => {
                               }`}>{viewingVehicle.insurance_policy}</p>
                             </div>
                           )}
+                          
+                          {/* Total Spent on Linked Projects */}
+                          {(() => {
+                            const vehicleProjects = projects.filter(p => p.vehicle_id === viewingVehicle.id);
+                            const totalSpent = vehicleProjects.reduce((sum, project) => {
+                              const projectParts = parts.filter(part => part.projectId === project.id);
+                              return sum + projectParts.reduce((partSum, part) => partSum + (part.total || 0), 0);
+                            }, 0);
+                            
+                            return (
+                              <div className={`pt-4 mt-4 border-t ${
+                                darkMode ? 'border-gray-600' : 'border-gray-300'
+                              }`}>
+                                <p className={`text-sm font-medium mb-2 ${
+                                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                                }`}>Total Spent</p>
+                                <p className={`text-2xl font-bold ${
+                                  darkMode ? 'text-green-400' : 'text-green-600'
+                                }`}>${totalSpent.toFixed(2)}</p>
+                                {vehicleProjects.length > 0 && (
+                                  <p className={`text-xs mt-1 ${
+                                    darkMode ? 'text-gray-500' : 'text-gray-500'
+                                  }`}>
+                                    {vehicleProjects.length} project{vehicleProjects.length !== 1 ? 's' : ''}
+                                  </p>
+                                )}
+                              </div>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>
