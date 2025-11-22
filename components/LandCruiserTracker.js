@@ -79,7 +79,7 @@ const inputClasses = (darkMode, additionalClasses = '') => {
 
 // Common select field classes
 const selectClasses = (darkMode, additionalClasses = '') => {
-  const base = `w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${additionalClasses}`;
+  const base = `w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${additionalClasses}`;
   const theme = darkMode 
     ? 'bg-gray-700 border-gray-600 text-gray-100' 
     : 'bg-white border-gray-300 text-gray-900';
@@ -134,6 +134,28 @@ const fontStyles = `
     -webkit-overflow-scrolling: touch;
     overflow-y: auto;
     transition: transform 0.2s cubic-bezier(0.4, 0, 1, 1), opacity 0.2s ease-out;
+  }
+
+  /* Constrain date inputs to prevent full-width on Safari/mobile */
+  input[type="date"] {
+    max-width: 100%;
+  }
+  
+  @media (min-width: 768px) {
+    input[type="date"] {
+      max-width: 300px;
+    }
+  }
+
+  /* Better select dropdown styling */
+  select {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
   }
 
   @keyframes popUpCenter {
@@ -1026,11 +1048,19 @@ const LandCruiserTracker = () => {
   };
 
   const openEditModal = (part) => {
+    // Store current scroll position before opening modal
+    const scrollPosition = window.scrollY || window.pageYOffset;
+    
     setEditingPart({
       ...part,
       status: part.delivered ? 'delivered' : (part.shipped ? 'shipped' : (part.purchased ? 'purchased' : 'pending'))
     });
     setShowEditModal(true);
+    
+    // Restore scroll position after modal opens
+    requestAnimationFrame(() => {
+      window.scrollTo(0, scrollPosition);
+    });
   };
 
   const saveEditedPart = async () => {
@@ -1815,7 +1845,7 @@ const LandCruiserTracker = () => {
                       type="text"
                       value={newPart.part}
                       onChange={(e) => setNewPart({ ...newPart, part: e.target.value })}
-                      className={`w-full md:w-1/2 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -1968,7 +1998,7 @@ const LandCruiserTracker = () => {
                     <select
                       value={newPart.projectId || ''}
                       onChange={(e) => setNewPart({ ...newPart, projectId: e.target.value ? parseInt(e.target.value) : null })}
-                      className={`w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100' 
                           : 'bg-white border-gray-300 text-gray-900'
@@ -2187,7 +2217,7 @@ const LandCruiserTracker = () => {
                       type="text"
                       value={editingPart.part}
                       onChange={(e) => setEditingPart({ ...editingPart, part: e.target.value })}
-                      className={`w-full md:w-1/2 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -2340,7 +2370,7 @@ const LandCruiserTracker = () => {
                     <select
                       value={editingPart.projectId || ''}
                       onChange={(e) => setEditingPart({ ...editingPart, projectId: e.target.value ? parseInt(e.target.value) : null })}
-                      className={`w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100' 
                           : 'bg-white border-gray-300 text-gray-900'
@@ -3341,7 +3371,7 @@ const LandCruiserTracker = () => {
                           type="text"
                           value={newProject.name}
                           onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
-                          className={`w-full md:w-1/2 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
@@ -3399,7 +3429,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={newProject.priority}
                           onChange={(e) => setNewProject({ ...newProject, priority: e.target.value })}
-                          className={`w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3456,7 +3486,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={newProject.status}
                           onChange={(e) => setNewProject({ ...newProject, status: e.target.value })}
-                          className={`w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3481,7 +3511,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={newProject.vehicle_id || ''}
                           onChange={(e) => setNewProject({ ...newProject, vehicle_id: e.target.value ? parseInt(e.target.value) : null })}
-                          className={`w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3653,7 +3683,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={editingProject.priority}
                           onChange={(e) => setEditingProject({ ...editingProject, priority: e.target.value })}
-                          className={`w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3710,7 +3740,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={editingProject.status}
                           onChange={(e) => setEditingProject({ ...editingProject, status: e.target.value })}
-                          className={`w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3735,7 +3765,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={editingProject.vehicle_id || ''}
                           onChange={(e) => setEditingProject({ ...editingProject, vehicle_id: e.target.value ? parseInt(e.target.value) : null })}
-                          className={`w-full h-[42px] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -4056,7 +4086,7 @@ const LandCruiserTracker = () => {
                               }`}>
                                 Linked Parts ({linkedParts.length})
                               </h3>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {linkedParts.map((part) => (
                                   <div 
                                     key={part.id}
