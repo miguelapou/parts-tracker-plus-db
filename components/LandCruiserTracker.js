@@ -2901,14 +2901,14 @@ const LandCruiserTracker = () => {
               <div 
                 key={part.id}
                 onClick={() => openEditModal(part)}
-                className={`rounded-lg shadow-lg p-4 transition-all hover:shadow-xl cursor-pointer flex flex-col min-h-[320px] ${
+                className={`rounded-lg shadow-lg pt-4 px-4 transition-all hover:shadow-xl cursor-pointer flex flex-col min-h-[320px] ${
                   darkMode 
                     ? 'bg-gray-800' 
                     : 'bg-white'
                 }`}
               >
                 {/* Main content wrapper - grows to push price breakdown down */}
-                <div className="flex-grow">
+                <div className="flex-grow pb-4">
                   {/* Card Header - Part Name and Status */}
                   <div className="flex items-center justify-between gap-3 mb-3">
                   <h3 className={`text-base font-bold flex-1 ${
@@ -2999,7 +2999,7 @@ const LandCruiserTracker = () => {
                 </div>
 
                 {/* Price Breakdown - flex container with Total at bottom */}
-                <div className={`p-3 rounded-lg flex flex-col min-h-[120px] ${
+                <div className={`p-4 rounded-b-lg flex flex-col min-h-[120px] ${
                   darkMode ? 'bg-gray-700' : 'bg-gray-50'
                 }`}>
                   {/* Top section - Part Price, Shipping, Duties */}
