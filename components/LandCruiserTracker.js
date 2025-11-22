@@ -1836,25 +1836,23 @@ const LandCruiserTracker = () => {
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
-                    <div className="md:w-1/2 md:pr-2">
-                      <label className={`block text-sm font-medium mb-2 ${
-                        darkMode ? 'text-gray-300' : 'text-gray-700'
-                      }`}>
-                        Part Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={newPart.part}
-                        onChange={(e) => setNewPart({ ...newPart, part: e.target.value })}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          darkMode 
-                            ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                        }`}
-                        placeholder="e.g., Front Bumper"
-                        required
-                      />
-                    </div>
+                    <label className={`block text-sm font-medium mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      Part Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={newPart.part}
+                      onChange={(e) => setNewPart({ ...newPart, part: e.target.value })}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        darkMode 
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                      }`}
+                      placeholder="e.g., Front Bumper"
+                      required
+                    />
                   </div>
                   
                   <div>
@@ -2210,25 +2208,23 @@ const LandCruiserTracker = () => {
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
-                    <div className="md:w-1/2 md:pr-2">
-                      <label className={`block text-sm font-medium mb-2 ${
-                        darkMode ? 'text-gray-300' : 'text-gray-700'
-                      }`}>
-                        Part Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={editingPart.part}
-                        onChange={(e) => setEditingPart({ ...editingPart, part: e.target.value })}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          darkMode 
-                            ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                        }`}
-                        placeholder="e.g., Front Bumper"
-                        required
-                      />
-                    </div>
+                    <label className={`block text-sm font-medium mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      Part Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={editingPart.part}
+                      onChange={(e) => setEditingPart({ ...editingPart, part: e.target.value })}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        darkMode 
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                      }`}
+                      placeholder="e.g., Front Bumper"
+                      required
+                    />
                   </div>
                   
                   <div>
@@ -2901,16 +2897,14 @@ const LandCruiserTracker = () => {
               <div 
                 key={part.id}
                 onClick={() => openEditModal(part)}
-                className={`rounded-lg shadow-lg pt-4 px-4 transition-all hover:shadow-xl cursor-pointer flex flex-col min-h-[320px] ${
+                className={`rounded-lg shadow-lg p-4 transition-all hover:shadow-xl cursor-pointer ${
                   darkMode 
                     ? 'bg-gray-800' 
                     : 'bg-white'
                 }`}
               >
-                {/* Main content wrapper - grows to push price breakdown down */}
-                <div className="flex-grow pb-4">
-                  {/* Card Header - Part Name and Status */}
-                  <div className="flex items-center justify-between gap-3 mb-3">
+                {/* Card Header - Part Name and Status */}
+                <div className="flex items-center justify-between gap-3 mb-3">
                   <h3 className={`text-base font-bold flex-1 ${
                     darkMode ? 'text-gray-100' : 'text-gray-900'
                   }`}>
@@ -2964,6 +2958,50 @@ const LandCruiserTracker = () => {
                   })()}
                 </div>
 
+                {/* Price Breakdown - More compact grid */}
+                <div className={`p-3 rounded-lg mb-3 ${
+                  darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                }`}>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <p className={`text-xs mb-0.5 ${
+                        darkMode ? 'text-gray-400' : 'text-gray-600'
+                      }`}>Price</p>
+                      <p className={`text-sm font-semibold ${
+                        darkMode ? 'text-gray-100' : 'text-gray-900'
+                      }`}>${part.price.toFixed(2)}</p>
+                    </div>
+                    {part.shipping > 0 && (
+                      <div>
+                        <p className={`text-xs mb-0.5 ${
+                          darkMode ? 'text-gray-400' : 'text-gray-600'
+                        }`}>Ship</p>
+                        <p className={`text-sm font-semibold ${
+                          darkMode ? 'text-gray-100' : 'text-gray-900'
+                        }`}>${part.shipping.toFixed(2)}</p>
+                      </div>
+                    )}
+                    {part.duties > 0 && (
+                      <div>
+                        <p className={`text-xs mb-0.5 ${
+                          darkMode ? 'text-gray-400' : 'text-gray-600'
+                        }`}>Duties</p>
+                        <p className={`text-sm font-semibold ${
+                          darkMode ? 'text-gray-100' : 'text-gray-900'
+                        }`}>${part.duties.toFixed(2)}</p>
+                      </div>
+                    )}
+                    <div className={part.shipping > 0 || part.duties > 0 ? '' : 'col-span-2'}>
+                      <p className={`text-xs mb-0.5 ${
+                        darkMode ? 'text-gray-400' : 'text-gray-600'
+                      }`}>Total</p>
+                      <p className={`text-base font-bold ${
+                        darkMode ? 'text-gray-100' : 'text-gray-900'
+                      }`}>${part.total.toFixed(2)}</p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Tracking */}
                 {part.tracking && (
                   <div onClick={(e) => e.stopPropagation()}>
@@ -2988,70 +3026,14 @@ const LandCruiserTracker = () => {
                   </div>
                 )}
                 
-                {/* Part Number - Bottom Right Corner - always reserve space */}
-                <div className="flex justify-end mt-2 min-h-[14px]">
-                  {part.partNumber && part.partNumber !== '-' && (
+                {/* Part Number - Bottom Right Corner */}
+                {part.partNumber && part.partNumber !== '-' && (
+                  <div className="flex justify-end mt-2">
                     <p className={`text-[10px] font-mono ${
                       darkMode ? 'text-gray-500' : 'text-gray-400'
                     }`}>{part.partNumber}</p>
-                  )}
-                </div>
-                </div>
-
-                {/* Price Breakdown - flex container with Total at bottom */}
-                <div className={`p-4 rounded-b-lg flex flex-col h-[140px] ${
-                  darkMode ? 'bg-gray-700' : 'bg-gray-50'
-                }`}>
-                  {/* Top section - Part Price, Shipping, Duties */}
-                  <div className="space-y-2 mb-2">
-                    {/* Part Price - always shown */}
-                    <div className="flex justify-between items-center">
-                      <p className={`text-xs ${
-                        darkMode ? 'text-gray-400' : 'text-gray-600'
-                      }`}>Part Price:</p>
-                      <p className={`text-sm font-semibold ${
-                        darkMode ? 'text-gray-100' : 'text-gray-900'
-                      }`}>${part.price.toFixed(2)}</p>
-                    </div>
-                    
-                    {/* Shipping - only if > 0 */}
-                    {part.shipping > 0 && (
-                      <div className="flex justify-between items-center">
-                        <p className={`text-xs ${
-                          darkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>Shipping:</p>
-                        <p className={`text-sm font-semibold ${
-                          darkMode ? 'text-gray-100' : 'text-gray-900'
-                        }`}>${part.shipping.toFixed(2)}</p>
-                      </div>
-                    )}
-                    
-                    {/* Duties - only if > 0 */}
-                    {part.duties > 0 && (
-                      <div className="flex justify-between items-center">
-                        <p className={`text-xs ${
-                          darkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>Duties:</p>
-                        <p className={`text-sm font-semibold ${
-                          darkMode ? 'text-gray-100' : 'text-gray-900'
-                        }`}>${part.duties.toFixed(2)}</p>
-                      </div>
-                    )}
                   </div>
-                  
-                  {/* Total - always at bottom with divider */}
-                  <div className={`flex justify-between items-center pt-2 mt-auto border-t ${
-                    darkMode ? 'border-gray-600' : 'border-gray-300'
-                  }`}>
-                    <p className={`text-sm font-semibold ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
-                    }`}>Total:</p>
-                    <p className={`text-base font-bold ${
-                      darkMode ? 'text-gray-100' : 'text-gray-900'
-                    }`}>${part.total.toFixed(2)}</p>
-                  </div>
-                </div>
-
+                )}
               </div>
             ))}
           </div>
@@ -3083,7 +3065,7 @@ const LandCruiserTracker = () => {
                       setViewingProject(project);
                       setShowProjectDetailModal(true);
                     }}
-                    className={`relative rounded-lg shadow-lg pt-3 pb-6 px-6 transition-all hover:shadow-xl cursor-pointer flex flex-col ${
+                    className={`relative rounded-lg shadow-lg pt-3 pb-6 px-6 transition-all hover:shadow-xl cursor-pointer ${
                       draggedProject?.id === project.id 
                         ? 'opacity-50' 
                         : dragOverProject?.id === project.id
@@ -3136,10 +3118,8 @@ const LandCruiserTracker = () => {
                       </button>
                     </div>
 
-                    {/* Main Content - grows to push linked parts to bottom */}
-                    <div className="flex-grow">
-                      {/* Project Header */}
-                      <div className="mb-4 mt-8">
+                    {/* Project Header */}
+                    <div className="mb-4 mt-8">
                       <div className="mb-2">
                         <h3 className={`text-xl font-bold mb-2 ${
                           darkMode ? 'text-gray-100' : 'text-gray-900'
@@ -3271,7 +3251,6 @@ const LandCruiserTracker = () => {
                         </span>
                       </div>
                     </div>
-                    </div>
 
                     {/* Linked Parts */}
                     {(() => {
@@ -3382,7 +3361,7 @@ const LandCruiserTracker = () => {
 
                   <div className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
+                      <div className="md:col-span-2">
                         <label className={`block text-sm font-medium mb-2 ${
                           darkMode ? 'text-gray-300' : 'text-gray-700'
                         }`}>
@@ -3401,8 +3380,6 @@ const LandCruiserTracker = () => {
                           required
                         />
                       </div>
-
-                      <div></div>
 
                       <div className="md:col-span-2">
                         <label className={`block text-sm font-medium mb-2 ${
@@ -3452,7 +3429,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={newProject.priority}
                           onChange={(e) => setNewProject({ ...newProject, priority: e.target.value })}
-                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none min-h-[42px] ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3474,7 +3451,7 @@ const LandCruiserTracker = () => {
                           type="date"
                           value={newProject.start_date}
                           onChange={(e) => setNewProject({ ...newProject, start_date: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[42px] ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3492,7 +3469,7 @@ const LandCruiserTracker = () => {
                           type="date"
                           value={newProject.target_date}
                           onChange={(e) => setNewProject({ ...newProject, target_date: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[42px] ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3509,7 +3486,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={newProject.status}
                           onChange={(e) => setNewProject({ ...newProject, status: e.target.value })}
-                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none min-h-[42px] ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3534,7 +3511,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={newProject.vehicle_id || ''}
                           onChange={(e) => setNewProject({ ...newProject, vehicle_id: e.target.value ? parseInt(e.target.value) : null })}
-                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none min-h-[42px] ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3642,7 +3619,7 @@ const LandCruiserTracker = () => {
 
                   <div className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
+                      <div className="md:col-span-2">
                         <label className={`block text-sm font-medium mb-2 ${
                           darkMode ? 'text-gray-300' : 'text-gray-700'
                         }`}>
@@ -3659,8 +3636,6 @@ const LandCruiserTracker = () => {
                           }`}
                         />
                       </div>
-
-                      <div></div>
 
                       <div className="md:col-span-2">
                         <label className={`block text-sm font-medium mb-2 ${
@@ -3708,7 +3683,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={editingProject.priority}
                           onChange={(e) => setEditingProject({ ...editingProject, priority: e.target.value })}
-                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none min-h-[42px] ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3730,7 +3705,7 @@ const LandCruiserTracker = () => {
                           type="date"
                           value={editingProject.start_date || ''}
                           onChange={(e) => setEditingProject({ ...editingProject, start_date: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[42px] ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3748,7 +3723,7 @@ const LandCruiserTracker = () => {
                           type="date"
                           value={editingProject.target_date || ''}
                           onChange={(e) => setEditingProject({ ...editingProject, target_date: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[42px] ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3765,7 +3740,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={editingProject.status}
                           onChange={(e) => setEditingProject({ ...editingProject, status: e.target.value })}
-                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none min-h-[42px] ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
@@ -3790,7 +3765,7 @@ const LandCruiserTracker = () => {
                         <select
                           value={editingProject.vehicle_id || ''}
                           onChange={(e) => setEditingProject({ ...editingProject, vehicle_id: e.target.value ? parseInt(e.target.value) : null })}
-                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none min-h-[42px] ${
+                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
                             darkMode 
                               ? 'bg-gray-700 border-gray-600 text-gray-100' 
                               : 'bg-white border-gray-300 text-gray-900'
