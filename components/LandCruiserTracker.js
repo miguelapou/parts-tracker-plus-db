@@ -1835,24 +1835,26 @@ const LandCruiserTracker = () => {
               
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
-                    }`}>
-                      Part Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={newPart.part}
-                      onChange={(e) => setNewPart({ ...newPart, part: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        darkMode 
-                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
-                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                      }`}
-                      placeholder="e.g., Front Bumper"
-                      required
-                    />
+                  <div className="md:col-span-2">
+                    <div className="md:w-1/2 md:pr-2">
+                      <label className={`block text-sm font-medium mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        Part Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={newPart.part}
+                        onChange={(e) => setNewPart({ ...newPart, part: e.target.value })}
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          darkMode 
+                            ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                        }`}
+                        placeholder="e.g., Front Bumper"
+                        required
+                      />
+                    </div>
                   </div>
                   
                   <div>
@@ -2207,24 +2209,26 @@ const LandCruiserTracker = () => {
               
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
-                    }`}>
-                      Part Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={editingPart.part}
-                      onChange={(e) => setEditingPart({ ...editingPart, part: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        darkMode 
-                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
-                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                      }`}
-                      placeholder="e.g., Front Bumper"
-                      required
-                    />
+                  <div className="md:col-span-2">
+                    <div className="md:w-1/2 md:pr-2">
+                      <label className={`block text-sm font-medium mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        Part Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editingPart.part}
+                        onChange={(e) => setEditingPart({ ...editingPart, part: e.target.value })}
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          darkMode 
+                            ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                        }`}
+                        placeholder="e.g., Front Bumper"
+                        required
+                      />
+                    </div>
                   </div>
                   
                   <div>
@@ -2897,14 +2901,16 @@ const LandCruiserTracker = () => {
               <div 
                 key={part.id}
                 onClick={() => openEditModal(part)}
-                className={`rounded-lg shadow-lg p-4 transition-all hover:shadow-xl cursor-pointer ${
+                className={`rounded-lg shadow-lg p-4 transition-all hover:shadow-xl cursor-pointer flex flex-col ${
                   darkMode 
                     ? 'bg-gray-800' 
                     : 'bg-white'
                 }`}
               >
-                {/* Card Header - Part Name and Status */}
-                <div className="flex items-center justify-between gap-3 mb-3">
+                {/* Main content wrapper - grows to push price breakdown down */}
+                <div className="flex-grow">
+                  {/* Card Header - Part Name and Status */}
+                  <div className="flex items-center justify-between gap-3 mb-3">
                   <h3 className={`text-base font-bold flex-1 ${
                     darkMode ? 'text-gray-100' : 'text-gray-900'
                   }`}>
@@ -2956,6 +2962,7 @@ const LandCruiserTracker = () => {
                       </div>
                     );
                   })()}
+                </div>
                 </div>
 
                 {/* Price Breakdown - More compact grid */}
