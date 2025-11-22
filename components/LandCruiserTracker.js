@@ -956,28 +956,24 @@ const LandCruiserTracker = () => {
                           showPartDetailModal;
     
     if (isAnyModalOpen) {
-      // Store current scroll position only if not transitioning
-      if (!isTransitioningModals.current) {
+      // Store current scroll position when opening a modal
+      if (savedScrollPosition.current === 0) {
         savedScrollPosition.current = window.scrollY;
       }
       document.body.style.position = 'fixed';
       document.body.style.top = `-${savedScrollPosition.current}px`;
       document.body.style.width = '100%';
     } else {
-      // Restore scroll position only if not transitioning to another modal
-      const scrollY = savedScrollPosition.current;
+      // Remove fixed positioning but maintain scroll position
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
       
-      if (!isTransitioningModals.current && scrollY) {
-        window.scrollTo(0, scrollY);
+      // Restore scroll position
+      if (savedScrollPosition.current > 0) {
+        window.scrollTo(0, savedScrollPosition.current);
+        savedScrollPosition.current = 0; // Reset for next modal
       }
-      
-      // Reset transition flag after a brief delay
-      setTimeout(() => {
-        isTransitioningModals.current = false;
-      }, 100);
     }
     
     // Cleanup on unmount
