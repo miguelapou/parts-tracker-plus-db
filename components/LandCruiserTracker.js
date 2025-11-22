@@ -3126,11 +3126,11 @@ const LandCruiserTracker = () => {
                       onDragStart={(e) => {
                         e.stopPropagation();
                         handleDragStart(e, project);
-                        // Set the entire card as the drag image
+                        // Set the entire card as the drag image, positioned at top-left
                         const card = e.currentTarget.closest('[data-project-id]');
                         if (card) {
-                          const rect = card.getBoundingClientRect();
-                          e.dataTransfer.setDragImage(card, rect.width / 2, rect.height / 2);
+                          // Position the drag image so cursor is at the grip icon location (top-left area)
+                          e.dataTransfer.setDragImage(card, 20, 20);
                         }
                       }}
                       onDragEnd={handleDragEnd}
@@ -4293,11 +4293,11 @@ const LandCruiserTracker = () => {
                     onDragStart={(e) => {
                       e.stopPropagation();
                       handleVehicleDragStart(e, vehicle);
-                      // Set the entire card as the drag image
+                      // Set the entire card as the drag image, positioned at top-left
                       const card = e.currentTarget.closest('[data-vehicle-id]');
                       if (card) {
-                        const rect = card.getBoundingClientRect();
-                        e.dataTransfer.setDragImage(card, rect.width / 2, rect.height / 2);
+                        // Position the drag image so cursor is at the grip icon location (top-left area)
+                        e.dataTransfer.setDragImage(card, 20, 20);
                       }
                     }}
                     onDragEnd={handleVehicleDragEnd}
