@@ -4490,16 +4490,16 @@ const LandCruiserTracker = () => {
                   </div>
                   
                   {/* Content - with slide animation */}
-                  <div className="flex-1 relative overflow-hidden">
+                  <div className="flex-1 relative overflow-hidden min-h-0">
                     {/* Project Details View */}
                     <div 
-                      className={`w-full h-full transition-all duration-500 ease-in-out ${
+                      className={`absolute inset-0 transition-all duration-500 ease-in-out overflow-y-auto ${
                         projectModalEditMode
-                          ? 'absolute opacity-0 pointer-events-none -translate-x-full' 
-                          : 'relative opacity-100'
+                          ? 'opacity-0 pointer-events-none -translate-x-full' 
+                          : 'opacity-100'
                       }`}
                     >
-                      <div className="p-6 h-full overflow-y-auto">
+                      <div className="p-6">
                     {(() => {
                       const linkedParts = parts.filter(part => part.projectId === viewingProject.id);
                       const linkedPartsTotal = calculateProjectTotal(viewingProject.id, parts);
@@ -4733,13 +4733,13 @@ const LandCruiserTracker = () => {
 
                     {/* Edit Project View - Slides in for editing */}
                     <div 
-                      className={`w-full transition-all duration-500 ease-in-out ${
+                      className={`absolute inset-0 transition-all duration-500 ease-in-out overflow-y-auto ${
                         projectModalEditMode
-                          ? 'relative opacity-100 translate-x-0' 
-                          : 'absolute opacity-0 translate-x-full pointer-events-none'
+                          ? 'opacity-100 translate-x-0' 
+                          : 'opacity-0 translate-x-full pointer-events-none'
                       }`}
                     >
-                      <div className="p-6 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto">
+                      <div className="p-6 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
