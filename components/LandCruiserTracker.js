@@ -5843,7 +5843,7 @@ const LandCruiserTracker = () => {
                     {/* Vehicle Details View */}
                     <div 
                       className={`w-full transition-all duration-500 ease-in-out ${
-                        vehicleModalProjectView 
+                        vehicleModalProjectView || vehicleModalEditMode
                           ? 'absolute opacity-0 pointer-events-none -translate-x-full' 
                           : 'relative opacity-100'
                       }`}
@@ -6150,10 +6150,10 @@ const LandCruiserTracker = () => {
                     </div>
 
                     {/* Project Details View - Slides in from right */}
-                    {vehicleModalProjectView && (
+                    {vehicleModalProjectView && !vehicleModalEditMode && (
                       <div 
                         className={`w-full transition-all duration-500 ease-in-out ${
-                          vehicleModalProjectView 
+                          vehicleModalProjectView && !vehicleModalEditMode
                             ? 'relative opacity-100 translate-x-0' 
                             : 'absolute opacity-0 translate-x-full pointer-events-none'
                         }`}
@@ -6409,7 +6409,31 @@ const LandCruiserTracker = () => {
                           
                           {/* Edit form will go here - for now just a placeholder */}
                           <p className={darkMode ? 'text-gray-300' : 'text-gray-700'}>
-                            Edit form coming soon...
+                            Project edit form coming soon...
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Edit Vehicle View - Slides in for editing */}
+                    {vehicleModalEditMode === 'vehicle' && viewingVehicle && (
+                      <div 
+                        className={`w-full transition-all duration-500 ease-in-out ${
+                          vehicleModalEditMode === 'vehicle'
+                            ? 'relative opacity-100 translate-x-0' 
+                            : 'absolute opacity-0 translate-x-full pointer-events-none'
+                        }`}
+                      >
+                        <div className="p-6 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto">
+                          <div className={`text-sm mb-4 ${
+                            darkMode ? 'text-gray-400' : 'text-gray-600'
+                          }`}>
+                            Editing: {viewingVehicle.nickname || viewingVehicle.name}
+                          </div>
+                          
+                          {/* Edit form will go here - for now just a placeholder */}
+                          <p className={darkMode ? 'text-gray-300' : 'text-gray-700'}>
+                            Vehicle edit form coming soon...
                           </p>
                         </div>
                       </div>
