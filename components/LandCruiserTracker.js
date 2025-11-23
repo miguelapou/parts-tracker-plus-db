@@ -4695,7 +4695,10 @@ const LandCruiserTracker = () => {
                                     </button>
                                     
                                     {/* Todo Text - Click to edit inline */}
-                                    {editingTodoId === todo.id ? (
+                                    {(() => {
+                                      const isEditing = editingTodoId === todo.id;
+                                      console.log('Rendering todo:', todo.id, 'isEditing:', isEditing, 'editingTodoId:', editingTodoId);
+                                      return isEditing ? (
                                       <input
                                         type="text"
                                         value={editingTodoText}
@@ -4758,8 +4761,11 @@ const LandCruiserTracker = () => {
                                       <span 
                                         onClick={(e) => {
                                           e.stopPropagation();
+                                          console.log('Clicked todo:', todo.id, todo.text);
+                                          console.log('Before state:', editingTodoId, editingTodoText);
                                           setEditingTodoId(todo.id);
                                           setEditingTodoText(todo.text);
+                                          console.log('After setters called');
                                         }}
                                         className={`flex-1 text-sm cursor-pointer hover:opacity-70 transition-opacity ${
                                           todo.completed
@@ -4774,7 +4780,8 @@ const LandCruiserTracker = () => {
                                       >
                                         {todo.text}
                                       </span>
-                                    )}
+                                      );
+                                    })()}
                                     
                                     {/* Delete Button */}
                                     <button
@@ -5248,6 +5255,7 @@ const LandCruiserTracker = () => {
                                     <span 
                                       onClick={(e) => {
                                         e.stopPropagation();
+                                        console.log('[EDIT MODE] Clicked todo:', todo.id, todo.text);
                                         setEditingTodoId(todo.id);
                                         setEditingTodoText(todo.text);
                                       }}
