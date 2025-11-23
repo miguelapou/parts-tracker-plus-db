@@ -4490,16 +4490,16 @@ const LandCruiserTracker = () => {
                   </div>
                   
                   {/* Content - with slide animation */}
-                  <div className="flex-1 overflow-y-auto relative">
+                  <div className="flex-1 relative overflow-hidden">
                     {/* Project Details View */}
                     <div 
-                      className={`w-full transition-all duration-500 ease-in-out ${
+                      className={`w-full h-full transition-all duration-500 ease-in-out ${
                         projectModalEditMode
                           ? 'absolute opacity-0 pointer-events-none -translate-x-full' 
                           : 'relative opacity-100'
                       }`}
                     >
-                      <div className="p-6">
+                      <div className="p-6 h-full overflow-y-auto">
                     {(() => {
                       const linkedParts = parts.filter(part => part.projectId === viewingProject.id);
                       const linkedPartsTotal = calculateProjectTotal(viewingProject.id, parts);
