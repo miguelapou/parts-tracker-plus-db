@@ -135,8 +135,17 @@ const fontStyles = `
   /* Enable smooth scrolling on modal content */
   .modal-content {
     -webkit-overflow-scrolling: touch;
-    overflow-y: auto;
     transition: transform 0.2s cubic-bezier(0.4, 0, 1, 1), opacity 0.2s ease-out;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  /* Scrollable area for modal body - use this class on the middle content div */
+  .modal-scrollable {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
   }
 
   /* Constrain date inputs to prevent full-width on Safari/mobile */
@@ -1633,28 +1642,37 @@ const LandCruiserTracker = () => {
 
   const StatusDropdown = ({ part }) => {
     const isOpen = openDropdown === part.id;
-    const dropdownRef = useRef(null);
+    const buttonRef = useRef(null);
     const [dropdownPosition, setDropdownPosition] = useState('bottom');
+    const [isPositioned, setIsPositioned] = useState(false);
     
     useEffect(() => {
-      if (isOpen && dropdownRef.current) {
-        const rect = dropdownRef.current.getBoundingClientRect();
-        const dropdownHeight = 180; // Approximate height of the status dropdown with 4 items
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const spaceAbove = rect.top;
+      if (isOpen && buttonRef.current) {
+        // Calculate position immediately when opening
+        const rect = buttonRef.current.getBoundingClientRect();
+        const dropdownHeight = 180; // Height of 4-item dropdown
+        const viewportHeight = window.innerHeight;
+        const spaceBelow = viewportHeight - rect.bottom - 10; // 10px margin
+        const spaceAbove = rect.top - 10; // 10px margin
         
-        // Show above if there's not enough space below AND there's more space above
-        if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
+        // Prefer bottom, but switch to top if not enough space below AND enough space above
+        if (spaceBelow < dropdownHeight && spaceAbove >= dropdownHeight) {
           setDropdownPosition('top');
         } else {
           setDropdownPosition('bottom');
         }
+        
+        // Mark as positioned to show the dropdown
+        setIsPositioned(true);
+      } else {
+        setIsPositioned(false);
       }
     }, [isOpen]);
     
     return (
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative">
         <button
+          ref={buttonRef}
           onClick={(e) => {
             e.stopPropagation();
             setOpenDropdown(isOpen ? null : part.id);
@@ -1667,7 +1685,7 @@ const LandCruiserTracker = () => {
           <ChevronDown className={`w-3 h-3 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
         </button>
         
-        {isOpen && (
+        {isOpen && isPositioned && (
           <>
             <div 
               className="fixed inset-0 z-10" 
@@ -1747,33 +1765,42 @@ const LandCruiserTracker = () => {
   const ProjectDropdown = ({ part }) => {
     const isOpen = openDropdown === `project-${part.id}`;
     const selectedProject = part.projectId ? projects.find(p => p.id === part.projectId) : null;
-    const dropdownRef = useRef(null);
+    const buttonRef = useRef(null);
     const [dropdownPosition, setDropdownPosition] = useState('bottom');
+    const [isPositioned, setIsPositioned] = useState(false);
     
     useEffect(() => {
-      if (isOpen && dropdownRef.current) {
-        const rect = dropdownRef.current.getBoundingClientRect();
-        // Calculate actual dropdown height based on number of projects (each item is ~40px + padding)
+      if (isOpen && buttonRef.current) {
+        // Calculate position immediately when opening
+        const rect = buttonRef.current.getBoundingClientRect();
+        // Calculate dropdown height based on number of projects
         const itemHeight = 40;
         const maxVisibleItems = 6; // max-h-60 = 240px / 40px per item
         const actualItems = Math.min(projects.length + 1, maxVisibleItems); // +1 for "None" option
         const dropdownHeight = actualItems * itemHeight;
         
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const spaceAbove = rect.top;
+        const viewportHeight = window.innerHeight;
+        const spaceBelow = viewportHeight - rect.bottom - 10; // 10px margin
+        const spaceAbove = rect.top - 10; // 10px margin
         
-        // Show above if there's not enough space below AND there's enough space above
-        if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
+        // Prefer bottom, but switch to top if not enough space below AND enough space above
+        if (spaceBelow < dropdownHeight && spaceAbove >= dropdownHeight) {
           setDropdownPosition('top');
         } else {
           setDropdownPosition('bottom');
         }
+        
+        // Mark as positioned to show the dropdown
+        setIsPositioned(true);
+      } else {
+        setIsPositioned(false);
       }
     }, [isOpen, projects.length]);
     
     return (
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative">
         <button
+          ref={buttonRef}
           onClick={(e) => {
             e.stopPropagation();
             setOpenDropdown(isOpen ? null : `project-${part.id}`);
@@ -1789,7 +1816,7 @@ const LandCruiserTracker = () => {
           <ChevronDown className={`w-3 h-3 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
         </button>
         
-        {isOpen && (
+        {isOpen && isPositioned && (
           <>
             <div 
               className="fixed inset-0 z-10" 
@@ -2006,7 +2033,7 @@ const LandCruiserTracker = () => {
                 </button>
               </div>
               
-              <div className="p-6">
+              <div className="p-6 modal-scrollable">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-1">
                     <label className={`block text-sm font-medium mb-2 ${
@@ -2280,7 +2307,7 @@ const LandCruiserTracker = () => {
                 </button>
               </div>
               
-              <div className="p-6">
+              <div className="p-6 modal-scrollable">
                 <p className={`text-sm mb-4 ${
                   darkMode ? 'text-gray-400' : 'text-gray-600'
                 }`}>
@@ -2380,7 +2407,7 @@ const LandCruiserTracker = () => {
                 </div>
               </div>
               
-              <div className="p-6">
+              <div className="p-6 modal-scrollable">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-1">
                     <label className={`block text-sm font-medium mb-2 ${
@@ -3851,7 +3878,7 @@ const LandCruiserTracker = () => {
                     </button>
                   </div>
 
-                  <div className="p-6">
+                  <div className="p-6 modal-scrollable">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className={`block text-sm font-medium mb-2 ${
@@ -4111,7 +4138,7 @@ const LandCruiserTracker = () => {
                     </button>
                   </div>
 
-                  <div className="p-6">
+                  <div className="p-6 modal-scrollable">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className={`block text-sm font-medium mb-2 ${
@@ -5224,7 +5251,7 @@ const LandCruiserTracker = () => {
                     </button>
                   </div>
                   
-                  <div className="p-6">
+                  <div className="p-6 modal-scrollable">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Left Column - Basic Information */}
                       <div className="space-y-4">
@@ -5737,7 +5764,7 @@ const LandCruiserTracker = () => {
                     </button>
                   </div>
                   
-                  <div className="p-6">
+                  <div className="p-6 modal-scrollable">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Left Column - Basic Information */}
                       <div className="space-y-4">
