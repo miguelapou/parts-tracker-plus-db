@@ -3593,6 +3593,10 @@ const LandCruiserTracker = () => {
                     onClick={() => {
                       setViewingProject(project);
                       setShowProjectDetailModal(true);
+                      // Reset todo input state
+                      setShowTodoInput(false);
+                      setTodoInputText('');
+                      setEditingTodoId(null);
                     }}
                     className={`relative rounded-lg shadow-lg pt-3 pb-6 px-6 transition-all hover:shadow-xl cursor-pointer ${
                       draggedProject?.id === project.id 
@@ -4448,6 +4452,10 @@ const LandCruiserTracker = () => {
                   setShowProjectDetailModal(false);
                   setViewingProject(null);
                   setProjectModalEditMode(false);
+                  // Reset todo input state
+                  setShowTodoInput(false);
+                  setTodoInputText('');
+                  setEditingTodoId(null);
                 })}
               >
                 <div 
@@ -4483,6 +4491,10 @@ const LandCruiserTracker = () => {
                         setShowProjectDetailModal(false);
                         setViewingProject(null);
                         setProjectModalEditMode(false);
+                        // Reset todo input state
+                        setShowTodoInput(false);
+                        setTodoInputText('');
+                        setEditingTodoId(null);
                       })}
                       className={`p-2 rounded-md transition-colors flex-shrink-0 ${
                         darkMode ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
@@ -5591,6 +5603,10 @@ const LandCruiserTracker = () => {
                       <button
                         onClick={() => {
                           setProjectModalEditMode(false);
+                          // Reset todo input state
+                          setShowTodoInput(false);
+                          setTodoInputText('');
+                          setEditingTodoId(null);
                         }}
                         className={`flex items-center gap-2 p-2 rounded-lg font-medium transition-colors border ${
                           darkMode 
@@ -5619,6 +5635,10 @@ const LandCruiserTracker = () => {
                             todos: viewingProject.todos || []
                           });
                           setProjectModalEditMode(false);
+                          // Reset todo input state
+                          setShowTodoInput(false);
+                          setTodoInputText('');
+                          setEditingTodoId(null);
                         }}
                         className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
                       >
@@ -5628,6 +5648,10 @@ const LandCruiserTracker = () => {
                       <button
                         onClick={() => {
                           setProjectModalEditMode(true);
+                          // Reset todo input state
+                          setShowTodoInput(false);
+                          setTodoInputText('');
+                          setEditingTodoId(null);
                         }}
                         className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
                       >
