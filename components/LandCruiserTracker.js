@@ -4444,14 +4444,14 @@ const LandCruiserTracker = () => {
                 })}
               >
                 <div 
-                  className={`rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-hidden modal-content ${
+                  className={`rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] flex flex-col modal-content ${
                     isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
                   } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className={`sticky top-0 border-b px-6 py-4 rounded-t-lg ${
+                  <div className={`flex-shrink-0 border-b px-6 py-4 rounded-t-lg ${
                     darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-                  }`} style={{ zIndex: 10 }}>
+                  }`}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3 flex-wrap flex-1 min-w-0">
                         <h2 className={`text-2xl font-bold ${
@@ -4490,7 +4490,7 @@ const LandCruiserTracker = () => {
                   </div>
                   
                   {/* Content - with slide animation */}
-                  <div className="relative" style={{ minHeight: '500px' }}>
+                  <div className="flex-1 overflow-y-auto relative">
                     {/* Project Details View */}
                     <div 
                       className={`w-full transition-all duration-500 ease-in-out ${
@@ -4499,7 +4499,7 @@ const LandCruiserTracker = () => {
                           : 'relative opacity-100'
                       }`}
                     >
-                      <div className="p-6 max-h-[calc(90vh-164px)] overflow-y-auto">
+                      <div className="p-6">
                     {(() => {
                       const linkedParts = parts.filter(part => part.projectId === viewingProject.id);
                       const linkedPartsTotal = calculateProjectTotal(viewingProject.id, parts);
@@ -4973,7 +4973,7 @@ const LandCruiserTracker = () => {
                   </div>
 
                   {/* Footer with conditional buttons */}
-                  <div className={`border-t p-4 flex items-center justify-between ${
+                  <div className={`flex-shrink-0 border-t p-4 flex items-center justify-between ${
                     darkMode ? 'border-gray-700' : 'border-gray-200'
                   }`}>
                     {projectModalEditMode ? (
