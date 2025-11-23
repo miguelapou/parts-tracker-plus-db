@@ -6426,22 +6426,15 @@ const LandCruiserTracker = () => {
                     ) : (
                       <button
                         onClick={() => {
-                          const projectToEdit = {
+                          setEditingProject({
                             ...vehicleModalProjectView,
                             start_date: vehicleModalProjectView.start_date ? vehicleModalProjectView.start_date.split('T')[0] : '',
                             target_date: vehicleModalProjectView.target_date ? vehicleModalProjectView.target_date.split('T')[0] : ''
-                          };
-                          
-                          // Close vehicle modal first
+                          });
                           setShowVehicleDetailModal(false);
+                          setShowEditProjectModal(true);
                           setVehicleModalProjectView(null);
                           setViewingVehicle(null);
-                          
-                          // Open edit modal after a brief delay
-                          setTimeout(() => {
-                            setEditingProject(projectToEdit);
-                            setShowEditProjectModal(true);
-                          }, 100);
                         }}
                         className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
                       >
