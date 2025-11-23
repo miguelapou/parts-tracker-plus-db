@@ -1652,7 +1652,8 @@ const LandCruiserTracker = () => {
         const rect = buttonRef.current.getBoundingClientRect();
         const dropdownHeight = 180; // Height of 4-item dropdown
         const viewportHeight = window.innerHeight;
-        const spaceBelow = viewportHeight - rect.bottom - 10; // 10px margin
+        const tableFooterHeight = 70; // Account for "Showing X of Y parts" footer
+        const spaceBelow = viewportHeight - rect.bottom - tableFooterHeight; // Include footer in calculation
         const spaceAbove = rect.top - 10; // 10px margin
         
         // Prefer bottom, but switch to top if not enough space below AND enough space above
@@ -1780,7 +1781,8 @@ const LandCruiserTracker = () => {
         const dropdownHeight = actualItems * itemHeight;
         
         const viewportHeight = window.innerHeight;
-        const spaceBelow = viewportHeight - rect.bottom - 10; // 10px margin
+        const tableFooterHeight = 70; // Account for "Showing X of Y parts" footer
+        const spaceBelow = viewportHeight - rect.bottom - tableFooterHeight; // Include footer in calculation
         const spaceAbove = rect.top - 10; // 10px margin
         
         // Prefer bottom, but switch to top if not enough space below AND enough space above
