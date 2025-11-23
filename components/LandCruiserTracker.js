@@ -6062,7 +6062,9 @@ const LandCruiserTracker = () => {
                               return (
                                 <button
                                   key={project.id}
-                                  onClick={() => {
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setViewingVehicle(null);
                                     setShowVehicleDetailModal(false);
                                     setViewingProject(project);
                                     setShowProjectDetailModal(true);
