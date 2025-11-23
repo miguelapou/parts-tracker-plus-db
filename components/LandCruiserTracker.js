@@ -4490,13 +4490,13 @@ const LandCruiserTracker = () => {
                   </div>
                   
                   {/* Content - with slide animation */}
-                  <div className="flex-1 relative overflow-hidden min-h-0">
+                  <div className="flex-1 overflow-y-auto relative">
                     {/* Project Details View */}
                     <div 
-                      className={`absolute inset-0 transition-all duration-500 ease-in-out overflow-y-auto ${
+                      className={`w-full transition-all duration-500 ease-in-out ${
                         projectModalEditMode
-                          ? 'opacity-0 pointer-events-none -translate-x-full' 
-                          : 'opacity-100'
+                          ? 'absolute opacity-0 pointer-events-none -translate-x-full' 
+                          : 'relative opacity-100'
                       }`}
                     >
                       <div className="p-6">
@@ -4733,13 +4733,13 @@ const LandCruiserTracker = () => {
 
                     {/* Edit Project View - Slides in for editing */}
                     <div 
-                      className={`absolute inset-0 transition-all duration-500 ease-in-out overflow-y-auto ${
+                      className={`w-full transition-all duration-500 ease-in-out ${
                         projectModalEditMode
-                          ? 'opacity-100 translate-x-0' 
-                          : 'opacity-0 translate-x-full pointer-events-none'
+                          ? 'relative opacity-100 translate-x-0' 
+                          : 'absolute opacity-0 translate-x-full pointer-events-none'
                       }`}
                     >
-                      <div className="p-6 space-y-6">
+                      <div className="p-6 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
