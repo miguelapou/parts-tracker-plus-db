@@ -5857,11 +5857,11 @@ const LandCruiserTracker = () => {
                       }`}
                     >
                       <div className="p-6 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto">
-                    {/* Top Section: Image first on mobile, then Basic Info */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {/* Vehicle Image - Full width on mobile (order-first), 2 columns on desktop */}
+                    {/* Top Section: Image and Basic Info side by side */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Vehicle Image - Half width on desktop */}
                       {viewingVehicle.image_url && (
-                        <div className="order-first md:order-last md:col-span-2 rounded-lg overflow-hidden">
+                        <div className="rounded-lg overflow-hidden">
                           <img 
                             src={viewingVehicle.image_url} 
                             alt={viewingVehicle.nickname || viewingVehicle.name}
@@ -5872,8 +5872,8 @@ const LandCruiserTracker = () => {
                         </div>
                       )}
                       
-                      {/* Basic Info Card - Full width on mobile (order-last), 1 column on desktop */}
-                      <div className={`order-last md:order-first md:col-span-1 rounded-lg p-6 ${
+                      {/* Basic Info Card - Half width on desktop, two column layout */}
+                      <div className={`rounded-lg p-6 ${
                         darkMode ? 'bg-gray-700' : 'bg-gray-50'
                       }`}>
                         <h3 className={`text-lg font-semibold mb-4 ${
@@ -5881,7 +5881,7 @@ const LandCruiserTracker = () => {
                         }`}>
                           Basic Info
                         </h3>
-                        <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
                           {viewingVehicle.year && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
@@ -5903,7 +5903,7 @@ const LandCruiserTracker = () => {
                             </div>
                           )}
                           {viewingVehicle.license_plate && (
-                            <div>
+                            <div className="col-span-2">
                               <p className={`text-sm font-medium mb-2 ${
                                 darkMode ? 'text-gray-400' : 'text-gray-600'
                               }`}>License Plate</p>
@@ -5915,7 +5915,7 @@ const LandCruiserTracker = () => {
                             </div>
                           )}
                           {viewingVehicle.vin && (
-                            <div>
+                            <div className="col-span-2">
                               <p className={`text-sm font-medium mb-2 ${
                                 darkMode ? 'text-gray-400' : 'text-gray-600'
                               }`}>VIN</p>
@@ -5927,7 +5927,7 @@ const LandCruiserTracker = () => {
                             </div>
                           )}
                           {viewingVehicle.insurance_policy && (
-                            <div>
+                            <div className="col-span-2">
                               <p className={`text-sm font-medium mb-1 ${
                                 darkMode ? 'text-gray-400' : 'text-gray-600'
                               }`}>Insurance Policy</p>
@@ -5943,7 +5943,7 @@ const LandCruiserTracker = () => {
                             const totalSpent = calculateVehicleTotalSpent(viewingVehicle.id, projects, parts);
                             
                             return (
-                              <div className={`pt-4 mt-4 border-t ${
+                              <div className={`col-span-2 pt-4 mt-4 border-t ${
                                 darkMode ? 'border-gray-600' : 'border-gray-300'
                               }`}>
                                 <p className={`text-sm font-medium mb-2 ${
@@ -5966,43 +5966,8 @@ const LandCruiserTracker = () => {
                       </div>
                     </div>
 
-                    {/* Filters Section */}
-                    {(viewingVehicle.fuel_filter || viewingVehicle.air_filter) && (
-                      <div className={`pt-6 border-t ${
-                        darkMode ? 'border-gray-700' : 'border-gray-200'
-                      }`}>
-                        <h3 className={`text-lg font-semibold mb-3 ${
-                          darkMode ? 'text-gray-200' : 'text-gray-800'
-                        }`}>
-                          Filters
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          {viewingVehicle.fuel_filter && (
-                            <div>
-                              <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
-                              }`}>Fuel</p>
-                              <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
-                              }`}>{viewingVehicle.fuel_filter}</p>
-                            </div>
-                          )}
-                          {viewingVehicle.air_filter && (
-                            <div>
-                              <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
-                              }`}>Air</p>
-                              <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
-                              }`}>{viewingVehicle.air_filter}</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Oil Info Section */}
-                    {(viewingVehicle.oil_filter || viewingVehicle.oil_type || viewingVehicle.oil_capacity || viewingVehicle.oil_brand || viewingVehicle.drain_plug || viewingVehicle.battery) && (
+                    {/* Maintenance Section (includes filters, oil, battery) */}
+                    {(viewingVehicle.fuel_filter || viewingVehicle.air_filter || viewingVehicle.oil_filter || viewingVehicle.oil_type || viewingVehicle.oil_capacity || viewingVehicle.oil_brand || viewingVehicle.drain_plug || viewingVehicle.battery) && (
                       <div className={`pt-6 border-t ${
                         darkMode ? 'border-gray-700' : 'border-gray-200'
                       }`}>
@@ -6012,6 +5977,26 @@ const LandCruiserTracker = () => {
                           Maintenance
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {viewingVehicle.fuel_filter && (
+                            <div>
+                              <p className={`text-sm font-medium mb-1 ${
+                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>Fuel Filter</p>
+                              <p className={`text-base ${
+                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                              }`}>{viewingVehicle.fuel_filter}</p>
+                            </div>
+                          )}
+                          {viewingVehicle.air_filter && (
+                            <div>
+                              <p className={`text-sm font-medium mb-1 ${
+                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>Air Filter</p>
+                              <p className={`text-base ${
+                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                              }`}>{viewingVehicle.air_filter}</p>
+                            </div>
+                          )}
                           {viewingVehicle.oil_filter && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
