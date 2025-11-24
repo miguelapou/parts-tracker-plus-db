@@ -185,14 +185,14 @@ const ProjectDetailView = ({
           
           // Then animate it to the new position
           requestAnimationFrame(() => {
-            element.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            element.style.transition = 'transform 0.3s ease-out';
             element.style.transform = 'translateY(0)';
             
             // Clear animation state after animation completes
             setTimeout(() => {
               setIsAnimating(false);
               element.style.transition = '';
-            }, 500);
+            }, 300);
           });
         }
         
