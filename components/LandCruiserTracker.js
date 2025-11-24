@@ -154,6 +154,26 @@ const ProjectDetailView = ({
     prevPositions.current = {};
   }, [project.id]);
 
+  // Capture positions after modal is fully rendered and layout is stable
+  React.useEffect(() => {
+    // Small delay to ensure modal animations are complete and layout is stable
+    const timer = setTimeout(() => {
+      if (hasInitialized.current) {
+        console.log('>>> Recapturing positions after layout stabilization');
+        sortedTodos.forEach(todo => {
+          const element = todoRefs.current[todo.id];
+          if (element) {
+            const pos = element.getBoundingClientRect().top;
+            prevPositions.current[todo.id] = pos;
+            console.log(`Recaptured position for todo ${todo.id}:`, pos);
+          }
+        });
+      }
+    }, 100); // Small delay to let modal animations complete
+    
+    return () => clearTimeout(timer);
+  }, [project.id, sortedTodos.length]); // Re-run when project changes or todo count changes
+
   // Sort todos: completed first (by completion time), then uncompleted (by creation time)
   const sortedTodos = React.useMemo(() => {
     if (!project.todos) return [];
