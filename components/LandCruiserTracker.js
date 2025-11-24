@@ -175,40 +175,6 @@ const ProjectDetailView = ({
     });
   }, [project.todos]);
 
-  // Capture positions after modal is fully rendered and layout is stable
-  React.useEffect(() => {
-    // Only run once when project changes (modal opens)
-    if (!hasInitialized.current) {
-      console.log('>>> Recapture effect skipped - waiting for initial capture');
-      return;
-    }
-    
-    console.log('>>> Recapture effect mounted for project:', project.id);
-    
-    // Single recapture after modal opens and stabilizes
-    const timer = setTimeout(() => {
-      console.log('>>> Timer fired - recapturing positions');
-      
-      if (sortedTodos.length > 0) {
-        console.log('>>> Recapturing positions after layout stabilization');
-        sortedTodos.forEach(todo => {
-          const element = todoRefs.current[todo.id];
-          if (element) {
-            const pos = element.getBoundingClientRect().top;
-            const oldPos = prevPositions.current[todo.id];
-            prevPositions.current[todo.id] = pos;
-            console.log(`Recaptured position for todo ${todo.id}: old=${oldPos}, new=${pos}`);
-          }
-        });
-      }
-    }, 200); // Give time for modal animation and layout to stabilize
-    
-    return () => {
-      console.log('>>> Clearing recapture timer');
-      clearTimeout(timer);
-    };
-  }, [project.id]); // Only run when project changes (modal opens/switches)
-
 
   // FLIP animation with useLayoutEffect for synchronous execution
   React.useLayoutEffect(() => {
@@ -217,9 +183,9 @@ const ProjectDetailView = ({
     console.log('prevPositions:', prevPositions.current);
     console.log('sortedTodos:', sortedTodos.map(t => ({ id: t.id, completed: t.completed })));
     
-    // On first render, capture positions synchronously (no setTimeout!)
-    if (!hasInitialized.current) {
-      console.log('>>> First render - capturing initial positions SYNCHRONOUSLY');
+    // On first render, just capture positions - don't set hasInitialized yet
+    if (!hasInitialized.current && Object.keys(prevPositions.current).length === 0) {
+      console.log('>>> First render - capturing initial positions');
       sortedTodos.forEach(todo => {
         const element = todoRefs.current[todo.id];
         if (element) {
@@ -228,9 +194,15 @@ const ProjectDetailView = ({
           console.log(`Initial position for todo ${todo.id}:`, pos);
         }
       });
-      hasInitialized.current = true;
-      console.log('>>> Initial positions captured, hasInitialized set to true');
+      console.log('>>> Initial positions captured, but NOT setting hasInitialized yet');
       return; // Don't animate on first render
+    }
+    
+    // On second render (first interaction), treat it as first animation
+    if (!hasInitialized.current && Object.keys(prevPositions.current).length > 0) {
+      console.log('>>> Second render (first interaction) - NOW setting hasInitialized and animating');
+      hasInitialized.current = true;
+      // Don't return - let it continue to animate
     }
     
     if (isAnimating) {
