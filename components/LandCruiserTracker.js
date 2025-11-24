@@ -842,45 +842,51 @@ const fontStyles = `
   .door-segment:nth-child(3) { animation-delay: 0.2s; }
   .door-segment:nth-child(4) { animation-delay: 0.3s; }
 
-  /* Scrollbar styles for light mode */
-  :root {
+  /* Scrollbar styles for light mode - apply to all elements including body */
+  * {
+    scrollbar-width: thin;
     scrollbar-color: #cbd5e1 #f1f5f9;
   }
 
-  ::-webkit-scrollbar {
+  *::-webkit-scrollbar {
     width: 12px;
     height: 12px;
   }
 
-  ::-webkit-scrollbar-track {
+  *::-webkit-scrollbar-track {
     background: #f1f5f9;
   }
 
-  ::-webkit-scrollbar-thumb {
+  *::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 6px;
     border: 2px solid #f1f5f9;
   }
 
-  ::-webkit-scrollbar-thumb:hover {
+  *::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
   }
 
-  /* Scrollbar styles for dark mode */
-  .dark-scrollbar {
+  /* Scrollbar styles for dark mode - apply to body and all children */
+  body.dark-scrollbar,
+  body.dark-scrollbar * {
+    scrollbar-width: thin;
     scrollbar-color: #4b5563 #1f2937;
   }
 
-  .dark-scrollbar ::-webkit-scrollbar-track {
+  body.dark-scrollbar::-webkit-scrollbar-track,
+  body.dark-scrollbar *::-webkit-scrollbar-track {
     background: #1f2937;
   }
 
-  .dark-scrollbar ::-webkit-scrollbar-thumb {
+  body.dark-scrollbar::-webkit-scrollbar-thumb,
+  body.dark-scrollbar *::-webkit-scrollbar-thumb {
     background: #4b5563;
     border-color: #1f2937;
   }
 
-  .dark-scrollbar ::-webkit-scrollbar-thumb:hover {
+  body.dark-scrollbar::-webkit-scrollbar-thumb:hover,
+  body.dark-scrollbar *::-webkit-scrollbar-thumb:hover {
     background: #6b7280;
   }
 `;
