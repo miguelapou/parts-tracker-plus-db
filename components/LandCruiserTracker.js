@@ -5859,19 +5859,6 @@ const LandCruiserTracker = () => {
                       <div className="p-6 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto">
                     {/* Top Section: Image and Basic Info side by side */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Vehicle Image - Half width on desktop */}
-                      {viewingVehicle.image_url && (
-                        <div className="rounded-lg overflow-hidden">
-                          <img 
-                            src={viewingVehicle.image_url} 
-                            alt={viewingVehicle.nickname || viewingVehicle.name}
-                            loading="lazy"
-                            decoding="async"
-                            className="w-full h-full object-cover min-h-[300px]"
-                          />
-                        </div>
-                      )}
-                      
                       {/* Basic Info Card - Half width on desktop, two column layout */}
                       <div className={`rounded-lg p-6 ${
                         darkMode ? 'bg-gray-700' : 'bg-gray-50'
@@ -5964,6 +5951,19 @@ const LandCruiserTracker = () => {
                           })()}
                         </div>
                       </div>
+                      
+                      {/* Vehicle Image - Half width on desktop */}
+                      {viewingVehicle.image_url && (
+                        <div className="rounded-lg overflow-hidden">
+                          <img 
+                            src={viewingVehicle.image_url} 
+                            alt={viewingVehicle.nickname || viewingVehicle.name}
+                            loading="lazy"
+                            decoding="async"
+                            className="w-full h-full object-cover min-h-[300px]"
+                          />
+                        </div>
+                      )}
                     </div>
 
                     {/* Maintenance Section (includes filters, oil, battery) */}
