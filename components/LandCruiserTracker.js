@@ -3458,8 +3458,8 @@ const LandCruiserTracker = () => {
               </div>
 
               {/* Footer with Edit Button */}
-              <div className={`border-t p-6 flex justify-end ${
-                darkMode ? 'border-gray-700' : 'border-gray-200'
+              <div className={`sticky bottom-0 border-t p-4 flex justify-end ${
+                darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
               }`}>
                 <button
                   onClick={() => {
@@ -3475,9 +3475,9 @@ const LandCruiserTracker = () => {
                     setShowPartDetailModal(false);
                     setViewingPart(null);
                   }}
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
                 >
-                  <Edit2 className="w-4 h-4" />
+                  <Edit2 className="w-3 h-3" />
                   Edit
                 </button>
               </div>
@@ -4990,7 +4990,7 @@ const LandCruiserTracker = () => {
                   </div>
 
                   {/* Content - with slide animation */}
-                  <div className="relative">
+                  <div className="relative min-h-[calc(90vh-180px)]">
                     {console.log('[MODAL ANIMATION] Content render - editMode:', projectModalEditMode)}
                     {/* Project Details View */}
                     <div 
@@ -7599,8 +7599,8 @@ const LandCruiserTracker = () => {
                   </div>
 
                   {/* Footer with Edit Button */}
-                  <div className={`border-t p-6 flex items-center justify-between ${
-                    darkMode ? 'border-gray-700' : 'border-gray-200'
+                  <div className={`sticky bottom-0 border-t p-4 flex items-center justify-between ${
+                    darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
                   }`}>
                     {(vehicleModalProjectView || vehicleModalEditMode) ? (
                       <button
@@ -7611,7 +7611,7 @@ const LandCruiserTracker = () => {
                             setVehicleModalProjectView(null);
                           }
                         }}
-                        className={`flex items-center gap-2 p-2 rounded-lg font-medium transition-colors border ${
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors border ${
                           darkMode 
                             ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500' 
                             : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
@@ -7653,7 +7653,7 @@ const LandCruiserTracker = () => {
                           setVehicleModalEditMode(null);
                         }}
                         disabled={uploadingImage}
-                        className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+                        className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
                           uploadingImage
                             ? 'bg-gray-600 cursor-not-allowed text-gray-300'
                             : 'bg-blue-600 hover:bg-blue-700 text-white'
@@ -7666,9 +7666,9 @@ const LandCruiserTracker = () => {
                         onClick={() => {
                           setVehicleModalEditMode('vehicle');
                         }}
-                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="w-3 h-3" />
                         Edit Vehicle
                       </button>
                     ) : (
@@ -7676,9 +7676,9 @@ const LandCruiserTracker = () => {
                         onClick={() => {
                           setVehicleModalEditMode('project');
                         }}
-                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="w-3 h-3" />
                         Edit Project
                       </button>
                     )}
