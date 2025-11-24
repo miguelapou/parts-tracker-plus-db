@@ -543,7 +543,10 @@ const ProjectDetailView = ({
           <h3 className={`text-lg font-semibold mb-3 ${
             darkMode ? 'text-gray-200' : 'text-gray-800'
           }`}>
-            Linked Parts ({linkedParts.length})
+            <div className="flex items-center gap-2">
+              <Package className="w-5 h-5" />
+              <span>Linked Parts ({linkedParts.length})</span>
+            </div>
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {linkedParts.map((part) => (
@@ -936,42 +939,6 @@ const ProjectEditForm = ({
         <label className={`block text-sm font-medium mb-2 ${
           darkMode ? 'text-gray-300' : 'text-gray-700'
         }`}>
-          Start Date
-        </label>
-        <input
-          type="date"
-          value={project.start_date ? project.start_date.split('T')[0] : ''}
-          onChange={(e) => onProjectChange({ ...project, start_date: e.target.value })}
-          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-            darkMode 
-              ? 'bg-gray-700 border-gray-600 text-gray-100' 
-              : 'bg-white border-gray-300 text-gray-900'
-          }`}
-        />
-      </div>
-
-      <div>
-        <label className={`block text-sm font-medium mb-2 ${
-          darkMode ? 'text-gray-300' : 'text-gray-700'
-        }`}>
-          Target Date
-        </label>
-        <input
-          type="date"
-          value={project.target_date ? project.target_date.split('T')[0] : ''}
-          onChange={(e) => onProjectChange({ ...project, target_date: e.target.value })}
-          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-            darkMode 
-              ? 'bg-gray-700 border-gray-600 text-gray-100' 
-              : 'bg-white border-gray-300 text-gray-900'
-          }`}
-        />
-      </div>
-
-      <div>
-        <label className={`block text-sm font-medium mb-2 ${
-          darkMode ? 'text-gray-300' : 'text-gray-700'
-        }`}>
           Status
         </label>
         <select
@@ -1016,6 +983,42 @@ const ProjectEditForm = ({
           ))}
         </select>
       </div>
+
+      <div>
+        <label className={`block text-sm font-medium mb-2 ${
+          darkMode ? 'text-gray-300' : 'text-gray-700'
+        }`}>
+          Start Date
+        </label>
+        <input
+          type="date"
+          value={project.start_date ? project.start_date.split('T')[0] : ''}
+          onChange={(e) => onProjectChange({ ...project, start_date: e.target.value })}
+          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+            darkMode 
+              ? 'bg-gray-700 border-gray-600 text-gray-100' 
+              : 'bg-white border-gray-300 text-gray-900'
+          }`}
+        />
+      </div>
+
+      <div>
+        <label className={`block text-sm font-medium mb-2 ${
+          darkMode ? 'text-gray-300' : 'text-gray-700'
+        }`}>
+          Target Date
+        </label>
+        <input
+          type="date"
+          value={project.target_date ? project.target_date.split('T')[0] : ''}
+          onChange={(e) => onProjectChange({ ...project, target_date: e.target.value })}
+          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+            darkMode 
+              ? 'bg-gray-700 border-gray-600 text-gray-100' 
+              : 'bg-white border-gray-300 text-gray-900'
+          }`}
+        />
+      </div>
     </div>
   );
 };
@@ -1043,7 +1046,10 @@ const LinkedPartsSection = ({
       <h3 className={`text-lg font-semibold mb-3 ${
         darkMode ? 'text-gray-200' : 'text-gray-800'
       }`}>
-        Linked Parts ({linkedParts.length})
+        <div className="flex items-center gap-2">
+          <Package className="w-5 h-5" />
+          <span>Linked Parts ({linkedParts.length})</span>
+        </div>
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-2">
         {linkedParts.map((part) => (
@@ -4591,9 +4597,10 @@ const LandCruiserTracker = () => {
                             darkMode ? 'border-gray-600' : 'border-gray-200'
                           }`}>
                             <div className="flex items-center justify-between mb-2">
-                              <span className={`text-sm font-semibold ${
+                              <span className={`text-sm font-semibold flex items-center gap-1.5 ${
                                 darkMode ? 'text-gray-300' : 'text-gray-700'
                               }`}>
+                                <Package className="w-4 h-4" />
                                 Linked Parts ({linkedParts.length})
                               </span>
                             </div>
@@ -5106,7 +5113,7 @@ const LandCruiserTracker = () => {
 
         {/* VEHICLES TAB CONTENT */}
         {activeTab === 'vehicles' && (
-          <div className="slide-in-right">
+          <div className="slide-in-right overflow-y-scroll">
           <>
             {/* Vehicles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -5859,8 +5866,8 @@ const LandCruiserTracker = () => {
                       <div className="p-6 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto">
                     {/* Top Section: Image and Basic Info side by side */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Basic Info Card - Half width on desktop, two column layout */}
-                      <div className={`rounded-lg p-6 ${
+                      {/* Basic Info Card - Half width on desktop, two column layout - appears second on mobile */}
+                      <div className={`order-last md:order-first rounded-lg p-6 ${
                         darkMode ? 'bg-gray-700' : 'bg-gray-50'
                       }`}>
                         <h3 className={`text-lg font-semibold mb-4 ${
@@ -5952,9 +5959,9 @@ const LandCruiserTracker = () => {
                         </div>
                       </div>
                       
-                      {/* Vehicle Image - Half width on desktop */}
+                      {/* Vehicle Image - Half width on desktop - appears first on mobile */}
                       {viewingVehicle.image_url && (
-                        <div className="rounded-lg overflow-hidden">
+                        <div className="order-first md:order-last rounded-lg overflow-hidden">
                           <img 
                             src={viewingVehicle.image_url} 
                             alt={viewingVehicle.nickname || viewingVehicle.name}
