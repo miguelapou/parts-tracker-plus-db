@@ -172,22 +172,20 @@ const ProjectDetailView = ({
     console.log('prevPositions:', prevPositions.current);
     console.log('sortedTodos:', sortedTodos.map(t => ({ id: t.id, completed: t.completed })));
     
-    // On first render, capture positions after a small delay to ensure layout is complete
+    // On first render, capture positions synchronously (no setTimeout!)
     if (!hasInitialized.current) {
-      console.log('>>> First render - capturing initial positions');
-      setTimeout(() => {
-        sortedTodos.forEach(todo => {
-          const element = todoRefs.current[todo.id];
-          if (element) {
-            const pos = element.getBoundingClientRect().top;
-            prevPositions.current[todo.id] = pos;
-            console.log(`Initial position for todo ${todo.id}:`, pos);
-          }
-        });
-        hasInitialized.current = true;
-        console.log('>>> Initial positions captured, hasInitialized set to true');
-      }, 0);
-      return;
+      console.log('>>> First render - capturing initial positions SYNCHRONOUSLY');
+      sortedTodos.forEach(todo => {
+        const element = todoRefs.current[todo.id];
+        if (element) {
+          const pos = element.getBoundingClientRect().top;
+          prevPositions.current[todo.id] = pos;
+          console.log(`Initial position for todo ${todo.id}:`, pos);
+        }
+      });
+      hasInitialized.current = true;
+      console.log('>>> Initial positions captured, hasInitialized set to true');
+      return; // Don't animate on first render
     }
     
     if (isAnimating) {
