@@ -4492,18 +4492,19 @@ const LandCruiserTracker = () => {
                               : (darkMode ? 'text-gray-500 italic' : 'text-gray-500 italic')
                           }`}
                         >
-                          <div className="relative">
-                            <div 
-                              className={`transition-all duration-300 ease-in-out ${
-                                !expandedDescriptions[project.id] ? 'line-clamp-2' : ''
-                              }`}
-                            >
+                          <div 
+                            className="overflow-hidden transition-all duration-300 ease-in-out"
+                            style={{ 
+                              maxHeight: expandedDescriptions[project.id] ? '500px' : '2.8em',
+                            }}
+                          >
+                            <span className={!expandedDescriptions[project.id] ? 'line-clamp-2' : ''}>
                               {project.description}
-                            </div>
-                            <ChevronDown className={`inline-block w-3 h-3 ml-1 transition-transform duration-300 ${
-                              expandedDescriptions[project.id] ? 'rotate-180' : ''
-                            } ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                            </span>
                           </div>
+                          <ChevronDown className={`inline-block w-3 h-3 ml-1 transition-transform duration-300 align-middle ${
+                            expandedDescriptions[project.id] ? 'rotate-180' : ''
+                          } ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                         </button>
                       ) : (
                         <p className={`text-sm ${
