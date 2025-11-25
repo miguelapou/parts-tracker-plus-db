@@ -2,7 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Scrollbar base styles - this is what works in Safari! */
+/* Set color scheme - this tells Safari about light/dark mode */
+:root {
+  color-scheme: light;
+}
+
+html.dark-scrollbar {
+  color-scheme: dark;
+}
+
+/* Ensure background colors are set on html/body */
+html, body {
+  background-color: #f1f5f9; /* Light mode background */
+}
+
+html.dark-scrollbar,
+body.dark-scrollbar {
+  background-color: #1f2937; /* Dark mode background */
+}
+
+/* Scrollbar base styles */
 * {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #f1f5f9; /* thumb track */
@@ -28,7 +47,7 @@
   background: #94a3b8;
 }
 
-/* Dark mode - Safari uses this! */
+/* Dark mode */
 html.dark-scrollbar *,
 body.dark-scrollbar * {
   scrollbar-width: thin;
