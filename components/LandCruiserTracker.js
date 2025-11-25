@@ -380,7 +380,9 @@ const ProjectDetailView = ({
                       return { 
                         ...t, 
                         completed: newCompleted,
-                        completed_at: newCompleted ? new Date().toISOString() : null
+                        completed_at: newCompleted ? new Date().toISOString() : null,
+                        // Update created_at when unchecking so it goes to top of uncompleted list
+                        created_at: !newCompleted ? new Date().toISOString() : t.created_at
                       };
                     }
                     return t;
