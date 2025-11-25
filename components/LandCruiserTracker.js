@@ -1260,83 +1260,12 @@ const LandCruiserTracker = () => {
           projectId: part.project_id || null
         }));
         setParts(formattedParts);
-      } else {
-        // If no data, initialize with default data
-        await initializeDefaultData();
       }
     } catch (error) {
       console.error('Error loading parts:', error);
       alert('Error loading parts from database');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const initializeDefaultData = async () => {
-    const defaultParts = [
-      { id: 1, delivered: true, shipped: true, purchased: true, part: "Cup Holder", partNumber: "-", vendor: "Etsy", price: 52.00, shipping: 0, duties: 0, total: 52.00, tracking: "9434609206094903332736" },
-      { id: 2, delivered: false, shipped: true, purchased: true, part: "Sony Stereo", partNumber: "XAV-AX6000", vendor: "Best Buy", price: 436.99, shipping: 0, duties: 0, total: 436.99, tracking: "480723763892" },
-      { id: 3, delivered: true, shipped: true, purchased: true, part: "FR Fender Rubber", partNumber: "53878-90K00", vendor: "Partsnext", price: 17.54, shipping: 3.29, duties: 132.65, total: 20.83, tracking: "1Z48537W0440715302" },
-      { id: 4, delivered: true, shipped: true, purchased: true, part: "FL Fender Rubber", partNumber: "53879-90K00", vendor: "Partsnext", price: 17.54, shipping: 0, duties: 0, total: 17.54, tracking: "1Z48537W0440715302" },
-      { id: 5, delivered: true, shipped: true, purchased: true, part: "RR Fender Rubber", partNumber: "61783-90K00", vendor: "Partsnext", price: 10.68, shipping: 3.29, duties: 0, total: 13.97, tracking: "1Z48537W0440715302" },
-      { id: 6, delivered: true, shipped: true, purchased: true, part: "RL Fender Rubber", partNumber: "61784-90K00", vendor: "Partsnext", price: 10.68, shipping: 0, duties: 0, total: 10.68, tracking: "1Z48537W0440715302" },
-      { id: 7, delivered: true, shipped: true, purchased: true, part: "Front Grille", partNumber: "53101-60050", vendor: "Partsnext", price: 126.20, shipping: 106.03, duties: 0, total: 232.23, tracking: "1Z48537W0440715302" },
-      { id: 8, delivered: true, shipped: true, purchased: true, part: "Gear Shift Knob", partNumber: "33504-24010-C1", vendor: "Partsnext", price: 31.95, shipping: 0, duties: 0, total: 31.95, tracking: "1Z48537W0440715302" },
-      { id: 9, delivered: true, shipped: true, purchased: true, part: "Accelerator Pad", partNumber: "78111-95110", vendor: "Partsnext", price: 7.02, shipping: 0, duties: 0, total: 7.02, tracking: "1Z48537W0440715302" },
-      { id: 10, delivered: true, shipped: true, purchased: true, part: "Clutch & Brake Pad", partNumber: "31321-14020", vendor: "Partsnext", price: 4.36, shipping: 3.29, duties: 0, total: 7.65, tracking: "1Z48537W0440715302" },
-      { id: 11, delivered: false, shipped: false, purchased: true, part: "Steering Wheel (Older)", partNumber: "-", vendor: "eBay", price: 210.00, shipping: 90.00, duties: 0, total: 300.00, tracking: "" },
-      { id: 12, delivered: true, shipped: true, purchased: true, part: "Steering Wheel (Original)", partNumber: "-", vendor: "eBay", price: 226.00, shipping: 65.00, duties: 0, total: 291.00, tracking: "885304602390" },
-      { id: 13, delivered: true, shipped: true, purchased: true, part: "Transfer Case Knob", partNumber: "36303-60211-C0", vendor: "eBay", price: 21.60, shipping: 18.35, duties: 0, total: 39.95, tracking: "885344165215" },
-      { id: 14, delivered: true, shipped: true, purchased: true, part: "Winch Cover", partNumber: "38286-60111", vendor: "eBay", price: 211.10, shipping: 0, duties: 0, total: 211.10, tracking: "885474166695" },
-      { id: 15, delivered: true, shipped: true, purchased: true, part: "Fog Light Switch", partNumber: "84160-90K01", vendor: "eBay", price: 42.99, shipping: 0, duties: 0, total: 42.99, tracking: "9400108106245393635087" },
-      { id: 16, delivered: true, shipped: true, purchased: true, part: "Diesel Badge", partNumber: "75315-90A02", vendor: "eBay", price: 33.90, shipping: 0, duties: 0, total: 33.90, tracking: "9400150206242016493978" },
-      { id: 17, delivered: true, shipped: true, purchased: true, part: "Hitch", partNumber: "-", vendor: "eBay", price: 55.87, shipping: 0, duties: 0, total: 55.87, tracking: "885492205088" },
-      { id: 18, delivered: true, shipped: true, purchased: true, part: "4 Pin Trailer Connector", partNumber: "-", vendor: "eBay", price: 29.99, shipping: 8.35, duties: 0, total: 38.34, tracking: "9400108106245426390983" },
-      { id: 19, delivered: true, shipped: true, purchased: true, part: "Rear Bumper Step (Split)", partNumber: "51987-60021", vendor: "eBay", price: 85.00, shipping: 18.00, duties: 0, total: 103.00, tracking: "2450562144" },
-      { id: 20, delivered: true, shipped: true, purchased: true, part: "Key", partNumber: "90999-00212", vendor: "eBay", price: 16.99, shipping: 0, duties: 0, total: 16.99, tracking: "9234690403371000425709" },
-      { id: 21, delivered: false, shipped: true, purchased: true, part: "FR/FL Fender Rubber", partNumber: "53851-90K00-01", vendor: "eBay", price: 65.24, shipping: 22.00, duties: 0, total: 87.24, tracking: "ECSDT00000000052" },
-      { id: 22, delivered: false, shipped: false, purchased: true, part: "Rear Door Latch", partNumber: "69206-10050-B0", vendor: "eBay", price: 10.21, shipping: 19.53, duties: 0, total: 29.74, tracking: "" },
-      { id: 23, delivered: false, shipped: true, purchased: true, part: "Rear Door Card (LH)", partNumber: "64790-60020-S7", vendor: "eBay", price: 88.85, shipping: 51.81, duties: 0, total: 140.66, tracking: "https://www.fedex.com/fedextrack/?trknbr=885730110967&trkqual=2460984000~885730110967~FX" },
-      { id: 24, delivered: false, shipped: true, purchased: true, part: "Rear Door Card (RH)", partNumber: "64780-60050-S7", vendor: "eBay", price: 62.62, shipping: 43.43, duties: 0, total: 106.05, tracking: "https://www.fedex.com/fedextrack/?trknbr=885730110967&trkqual=2460984000~885730110967~FX" },
-      { id: 25, delivered: true, shipped: true, purchased: true, part: "RH Belt Cover", partNumber: "71811-60020-B0", vendor: "Toyota", price: 29.01, shipping: 0, duties: 0, total: 29.01, tracking: "Local" },
-      { id: 26, delivered: true, shipped: true, purchased: true, part: "LH Belt Cover", partNumber: "71812-60040-B0", vendor: "Toyota", price: 36.38, shipping: 0, duties: 0, total: 36.38, tracking: "Local" },
-      { id: 27, delivered: true, shipped: true, purchased: true, part: "Fuel Filter", partNumber: "23303-64010", vendor: "Toyota", price: 15.93, shipping: 0, duties: 0, total: 15.93, tracking: "Local" },
-      { id: 28, delivered: true, shipped: true, purchased: true, part: "Oil Filter x 2", partNumber: "90915-30002", vendor: "Toyota", price: 36.77, shipping: 0, duties: 0, total: 36.77, tracking: "Local" },
-      { id: 29, delivered: true, shipped: true, purchased: true, part: "Air Filter", partNumber: "17801-68020", vendor: "Toyota", price: 21.24, shipping: 0, duties: 0, total: 21.24, tracking: "Local" },
-      { id: 30, delivered: true, shipped: true, purchased: true, part: "LH Inner Belt Assembly", partNumber: "73230-60181-B0", vendor: "Jauce", price: 56.03, shipping: 158.00, duties: 24.27, total: 423.55, tracking: "4730109366" },
-      { id: 31, delivered: true, shipped: true, purchased: true, part: "RH Inner Belt Assembly", partNumber: "73230-60151-B0", vendor: "Jauce", price: 56.03, shipping: 0, duties: 0, total: 56.03, tracking: "4730109366" },
-      { id: 32, delivered: true, shipped: true, purchased: true, part: "Dash Pad", partNumber: "55401-90K00-B0", vendor: "Jauce", price: 129.22, shipping: 0, duties: 0, total: 129.22, tracking: "4730109366" },
-      { id: 33, delivered: true, shipped: true, purchased: true, part: "Front Speakers", partNumber: "DB402", vendor: "Amazon", price: 49.98, shipping: 0, duties: 0, total: 49.98, tracking: "" },
-      { id: 34, delivered: true, shipped: true, purchased: true, part: "Rear Speakers", partNumber: "DB652", vendor: "Amazon", price: 69.35, shipping: 0, duties: 0, total: 69.35, tracking: "" },
-      { id: 35, delivered: true, shipped: true, purchased: true, part: "Radio Wiring Harness", partNumber: "70-1761", vendor: "Amazon", price: 5.00, shipping: 0, duties: 0, total: 5.00, tracking: "" },
-      { id: 36, delivered: false, shipped: true, purchased: true, part: "Oil Plug Gaskets", partNumber: "90430-12031", vendor: "Amazon", price: 14.74, shipping: 0, duties: 0, total: 14.74, tracking: "https://www.amazon.com/gp/your-account/ship-track?itemId=jkohkoonpjkqpsp&ref=ppx_yo2ov_dt_b_track_package&orderId=112-1718718-3841801" },
-      { id: 37, delivered: true, shipped: true, purchased: true, part: "5 to 4 Wire Converter", partNumber: "-", vendor: "Amazon", price: 19.99, shipping: 0, duties: 0, total: 19.99, tracking: "https://www.amazon.com/gp/your-account/ship-track?itemId=jkogrpkqljlrqmp&ref=ppx_yo2ov_dt_b_track_package&packageIndex=0&orderId=112-0626844-5673038&shipmentId=PhG9YC6jb" },
-      { id: 38, delivered: false, shipped: false, purchased: false, part: "Subwoofer", partNumber: "", vendor: "", price: 0, shipping: 0, duties: 0, total: 0, tracking: "" },
-    ];
-
-    try {
-      // Insert all default parts
-      for (const part of defaultParts) {
-        await supabase.from('parts').insert({
-          id: part.id,
-          delivered: part.delivered,
-          shipped: part.shipped,
-          purchased: part.purchased,
-          part: part.part,
-          part_number: part.partNumber,
-          vendor: part.vendor,
-          price: part.price,
-          shipping: part.shipping,
-          duties: part.duties,
-          total: part.total,
-          tracking: part.tracking
-        });
-      }
-      
-      // Reload parts after initialization
-      await loadParts();
-    } catch (error) {
-      console.error('Error initializing data:', error);
     }
   };
 
@@ -1353,56 +1282,9 @@ const LandCruiserTracker = () => {
 
       if (data && data.length > 0) {
         setProjects(data);
-      } else {
-        // Initialize with default projects
-        await initializeDefaultProjects();
       }
     } catch (error) {
       console.error('Error loading projects:', error);
-    }
-  };
-
-  const initializeDefaultProjects = async () => {
-    const defaultProjects = [
-      { 
-        name: "Interior Restoration", 
-        description: "Complete interior refurbishment including seats, dashboard, and trim",
-        status: "in_progress",
-        budget: 2000,
-        spent: 850,
-        start_date: "2024-01-15",
-        target_date: "2025-03-01",
-        priority: "high"
-      },
-      { 
-        name: "Engine Maintenance", 
-        description: "Regular maintenance and upgrades to engine components",
-        status: "in_progress",
-        budget: 1500,
-        spent: 600,
-        start_date: "2024-02-01",
-        target_date: "2025-06-01",
-        priority: "medium"
-      },
-      { 
-        name: "Exterior Body Work", 
-        description: "Rust repair, paint, and body panel replacement",
-        status: "planning",
-        budget: 3500,
-        spent: 0,
-        start_date: null,
-        target_date: "2025-12-01",
-        priority: "low"
-      }
-    ];
-
-    try {
-      for (const project of defaultProjects) {
-        await supabase.from('projects').insert(project);
-      }
-      await loadProjects();
-    } catch (error) {
-      console.error('Error initializing projects:', error);
     }
   };
 
