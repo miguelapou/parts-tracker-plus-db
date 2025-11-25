@@ -4653,19 +4653,19 @@ const LandCruiserTracker = () => {
                     {/* Linked Parts */}
                     {(() => {
                       const linkedParts = parts.filter(part => part.projectId === project.id);
-                      if (linkedParts.length > 0) {
-                        return (
-                          <div className={`mt-4 pt-4 border-t ${
-                            darkMode ? 'border-gray-600' : 'border-gray-200'
-                          }`}>
-                            <div className="flex items-center justify-between mb-2">
-                              <span className={`text-sm font-semibold flex items-center gap-1.5 ${
-                                darkMode ? 'text-gray-300' : 'text-gray-700'
-                              }`}>
-                                <Package className="w-4 h-4" />
-                                Linked Parts ({linkedParts.length})
-                              </span>
-                            </div>
+                      return (
+                        <div className={`mt-4 pt-4 border-t ${
+                          darkMode ? 'border-gray-600' : 'border-gray-200'
+                        }`}>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className={`text-sm font-semibold flex items-center gap-1.5 ${
+                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
+                              <Package className="w-4 h-4" />
+                              Linked Parts ({linkedParts.length})
+                            </span>
+                          </div>
+                          {linkedParts.length > 0 ? (
                             <div className="space-y-1">
                               {linkedParts.slice(0, 3).map((part) => (
                                 <div 
@@ -4688,10 +4688,22 @@ const LandCruiserTracker = () => {
                                 </div>
                               )}
                             </div>
-                          </div>
-                        );
-                      }
-                      return null;
+                          ) : (
+                            <div className={`text-center py-4 rounded-lg ${
+                              darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                            }`}>
+                              <Package className={`w-8 h-8 mx-auto mb-2 ${
+                                darkMode ? 'text-gray-600' : 'text-gray-400'
+                              }`} />
+                              <p className={`text-xs ${
+                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>
+                                No parts linked
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
                     })()}
                   </div>
                 );
@@ -5294,7 +5306,7 @@ const LandCruiserTracker = () => {
                     {/* Project Badges */}
                     {(() => {
                       const vehicleProjects = getVehicleProjects(vehicle.id);
-                      return vehicleProjects.length > 0 && (
+                      return (
                         <div className={`mt-4 pt-4 border-t ${
                           darkMode ? 'border-gray-700' : 'border-gray-200'
                         }`}>
@@ -5303,31 +5315,46 @@ const LandCruiserTracker = () => {
                           }`}>
                             Projects ({vehicleProjects.length})
                           </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {vehicleProjects.slice(0, 4).map((project) => (
-                              <span
-                                key={project.id}
-                                className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border ${
-                                  darkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-700 border-gray-300'
-                                }`}
-                                style={{ 
-                                  borderLeftWidth: '3px', 
-                                  borderLeftColor: getPriorityBorderColor(project.priority),
-                                  width: 'calc(50% - 4px)'
-                                }}
-                              >
-                                <Wrench className="w-3 h-3 mr-1 flex-shrink-0" />
-                                <span className="truncate">{project.name}</span>
-                              </span>
-                            ))}
-                            {vehicleProjects.length > 4 && (
-                              <span className={`inline-flex items-center px-2 py-1 rounded text-xs ${
-                                darkMode ? 'text-gray-500' : 'text-gray-600'
+                          {vehicleProjects.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                              {vehicleProjects.slice(0, 4).map((project) => (
+                                <span
+                                  key={project.id}
+                                  className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border ${
+                                    darkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-700 border-gray-300'
+                                  }`}
+                                  style={{ 
+                                    borderLeftWidth: '3px', 
+                                    borderLeftColor: getPriorityBorderColor(project.priority),
+                                    width: 'calc(50% - 4px)'
+                                  }}
+                                >
+                                  <Wrench className="w-3 h-3 mr-1 flex-shrink-0" />
+                                  <span className="truncate">{project.name}</span>
+                                </span>
+                              ))}
+                              {vehicleProjects.length > 4 && (
+                                <span className={`inline-flex items-center px-2 py-1 rounded text-xs ${
+                                  darkMode ? 'text-gray-500' : 'text-gray-600'
+                                }`}>
+                                  +{vehicleProjects.length - 4} more
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <div className={`text-center py-4 rounded-lg ${
+                              darkMode ? 'bg-gray-750' : 'bg-gray-50'
+                            }`}>
+                              <Wrench className={`w-8 h-8 mx-auto mb-2 ${
+                                darkMode ? 'text-gray-600' : 'text-gray-400'
+                              }`} />
+                              <p className={`text-xs ${
+                                darkMode ? 'text-gray-500' : 'text-gray-500'
                               }`}>
-                                +{vehicleProjects.length - 4} more
-                              </span>
-                            )}
-                          </div>
+                                No current projects
+                              </p>
+                            </div>
+                          )}
                         </div>
                       );
                     })()}
