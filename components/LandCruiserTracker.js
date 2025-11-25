@@ -2735,11 +2735,14 @@ const LandCruiserTracker = () => {
   };
 
   return (
-    <div className={`min-h-screen p-3 sm:p-6 transition-colors duration-200 ${
-      darkMode 
-        ? 'bg-gradient-to-br from-gray-900 to-gray-800 dark-scrollbar' 
-        : 'bg-gradient-to-br from-slate-50 to-slate-100'
-    }`}>
+    <div 
+      suppressHydrationWarning
+      className={`min-h-screen p-3 sm:p-6 transition-colors duration-200 ${
+        darkMode 
+          ? 'bg-gradient-to-br from-gray-900 to-gray-800 dark-scrollbar' 
+          : 'bg-gradient-to-br from-slate-50 to-slate-100'
+      }`}
+    >
       <style>{fontStyles}</style>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
