@@ -39,8 +39,8 @@ body.dark-scrollbar *::-webkit-scrollbar-thumb:hover {
   background: #6b7280;
 }
 
-/* Firefox only - scrollbar-color */
-@supports not selector(::-webkit-scrollbar) {
+/* Firefox only - using -moz prefix */
+@-moz-document url-prefix() {
   * {
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 #f1f5f9;
