@@ -6194,7 +6194,10 @@ const LandCruiserTracker = () => {
                                   darkMode ? 'text-gray-500' : 'text-gray-500'
                                 }`}>
                                   {vehicleProjects.length > 0 && (
-                                    <span>{vehicleProjects.length} project{vehicleProjects.length !== 1 ? 's' : ''}</span>
+                                    <>
+                                      <span>{vehicleProjects.length} project{vehicleProjects.length !== 1 ? 's' : ''}</span>
+                                      {linkedPartsCount > 0 && <span>•</span>}
+                                    </>
                                   )}
                                   {linkedPartsCount > 0 && (
                                     <span>{linkedPartsCount} part{linkedPartsCount !== 1 ? 's' : ''}</span>
