@@ -129,6 +129,7 @@ const ProjectDetailView = ({
   getStatusColors,
   getPriorityColors,
   getStatusText,
+  getStatusTextColor,
   getVendorColor,
   calculateProjectTotal,
   editingTodoId,
@@ -5171,6 +5172,7 @@ const LandCruiserTracker = () => {
                           getStatusColors={getStatusColors}
                           getPriorityColors={getPriorityColors}
                           getStatusText={getStatusText}
+                          getStatusTextColor={getStatusTextColor}
                           getVendorColor={getVendorColor}
                           calculateProjectTotal={calculateProjectTotal}
                           editingTodoId={editingTodoId}
@@ -6519,6 +6521,7 @@ const LandCruiserTracker = () => {
                             getStatusColors={getStatusColors}
                             getPriorityColors={getPriorityColors}
                             getStatusText={getStatusText}
+                            getStatusTextColor={getStatusTextColor}
                             getVendorColor={getVendorColor}
                             calculateProjectTotal={calculateProjectTotal}
                             editingTodoId={editingTodoId}
