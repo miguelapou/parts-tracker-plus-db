@@ -972,7 +972,7 @@ const ProjectEditForm = ({
           <select
             value={project.priority}
             onChange={(e) => onProjectChange({ ...project, priority: e.target.value })}
-            className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
+            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
               darkMode 
                 ? 'bg-gray-700 border-gray-600 text-gray-100' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -997,7 +997,7 @@ const ProjectEditForm = ({
           <select
             value={project.vehicle_id || ''}
             onChange={(e) => onProjectChange({ ...project, vehicle_id: e.target.value ? parseInt(e.target.value) : null })}
-            className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
+            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
               darkMode 
                 ? 'bg-gray-700 border-gray-600 text-gray-100' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -1013,40 +1013,42 @@ const ProjectEditForm = ({
         </div>
       </div>
 
-      <div>
-        <label className={`block text-sm font-medium mb-2 ${
-          darkMode ? 'text-gray-300' : 'text-gray-700'
-        }`}>
-          Start Date
-        </label>
-        <input
-          type="date"
-          value={project.start_date ? project.start_date.split('T')[0] : ''}
-          onChange={(e) => onProjectChange({ ...project, start_date: e.target.value })}
-          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-            darkMode 
-              ? 'bg-gray-700 border-gray-600 text-gray-100' 
-              : 'bg-white border-gray-300 text-gray-900'
-          }`}
-        />
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className={`block text-sm font-medium mb-2 ${
+            darkMode ? 'text-gray-300' : 'text-gray-700'
+          }`}>
+            Start Date
+          </label>
+          <input
+            type="date"
+            value={project.start_date ? project.start_date.split('T')[0] : ''}
+            onChange={(e) => onProjectChange({ ...project, start_date: e.target.value })}
+            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+              darkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-100' 
+                : 'bg-white border-gray-300 text-gray-900'
+            }`}
+          />
+        </div>
 
-      <div>
-        <label className={`block text-sm font-medium mb-2 ${
-          darkMode ? 'text-gray-300' : 'text-gray-700'
-        }`}>
-          Target Date
-        </label>
-        <input
-          type="date"
-          value={project.target_date ? project.target_date.split('T')[0] : ''}
-          onChange={(e) => onProjectChange({ ...project, target_date: e.target.value })}
-          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-            darkMode 
-              ? 'bg-gray-700 border-gray-600 text-gray-100' 
-              : 'bg-white border-gray-300 text-gray-900'
-          }`}
-        />
+        <div>
+          <label className={`block text-sm font-medium mb-2 ${
+            darkMode ? 'text-gray-300' : 'text-gray-700'
+          }`}>
+            Target Date
+          </label>
+          <input
+            type="date"
+            value={project.target_date ? project.target_date.split('T')[0] : ''}
+            onChange={(e) => onProjectChange({ ...project, target_date: e.target.value })}
+            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+              darkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-100' 
+                : 'bg-white border-gray-300 text-gray-900'
+            }`}
+          />
+        </div>
       </div>
     </div>
   );
