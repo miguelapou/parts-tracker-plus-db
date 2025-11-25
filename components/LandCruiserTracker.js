@@ -1751,6 +1751,12 @@ const LandCruiserTracker = () => {
   
   const [darkMode, setDarkMode] = useState(false); // Always start with false to match SSR
   const [darkModeInitialized, setDarkModeInitialized] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent SSR hydration mismatch by not rendering until mounted
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Initialize dark mode after mount to avoid hydration mismatch
   useEffect(() => {
@@ -1771,6 +1777,11 @@ const LandCruiserTracker = () => {
       localStorage.setItem('darkMode', JSON.stringify(darkMode));
     }
   }, [darkMode, darkModeInitialized]);
+
+  // Don't render anything until mounted on client to avoid hydration mismatch
+  if (!mounted) {
+    return null;
+  }
 
   // Apply dark scrollbar styles to both html and body for cross-browser compatibility
   useEffect(() => {
@@ -2735,14 +2746,11 @@ const LandCruiserTracker = () => {
   };
 
   return (
-    <div 
-      suppressHydrationWarning
-      className={`min-h-screen p-3 sm:p-6 transition-colors duration-200 ${
-        darkMode 
-          ? 'bg-gradient-to-br from-gray-900 to-gray-800 dark-scrollbar' 
-          : 'bg-gradient-to-br from-slate-50 to-slate-100'
-      }`}
-    >
+    <div className={`min-h-screen p-3 sm:p-6 transition-colors duration-200 ${
+      darkMode 
+        ? 'bg-gradient-to-br from-gray-900 to-gray-800 dark-scrollbar' 
+        : 'bg-gradient-to-br from-slate-50 to-slate-100'
+    }`}>
       <style>{fontStyles}</style>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
