@@ -2603,6 +2603,17 @@ const LandCruiserTracker = () => {
     const [dropdownPosition, setDropdownPosition] = useState('bottom');
     const [isPositioned, setIsPositioned] = useState(false);
     
+    // Get priority color for selected project
+    const getPriorityButtonColor = (priority) => {
+      const colors = {
+        not_set: darkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-700 border-gray-300',
+        low: darkMode ? 'bg-green-900/30 text-green-200 border-green-700' : 'bg-green-50 text-green-800 border-green-200',
+        medium: darkMode ? 'bg-yellow-900/30 text-yellow-200 border-yellow-700' : 'bg-yellow-50 text-yellow-800 border-yellow-200',
+        high: darkMode ? 'bg-red-900/30 text-red-200 border-red-700' : 'bg-red-50 text-red-800 border-red-200'
+      };
+      return colors[priority] || colors.not_set;
+    };
+    
     useEffect(() => {
       if (isOpen && buttonRef.current) {
         // Calculate position immediately when opening
@@ -2642,7 +2653,7 @@ const LandCruiserTracker = () => {
           }}
           className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full border transition-all hover:shadow-md ${
             selectedProject 
-              ? (darkMode ? 'bg-blue-900/30 text-blue-200 border-blue-700' : 'bg-blue-50 text-blue-800 border-blue-200')
+              ? getPriorityButtonColor(selectedProject.priority)
               : (darkMode ? 'bg-gray-700 text-gray-400 border-gray-600' : 'bg-gray-100 text-gray-600 border-gray-300')
           }`}
           style={{ minWidth: '8.25rem', maxWidth: '10rem' }}
@@ -2682,26 +2693,34 @@ const LandCruiserTracker = () => {
                 }`} />
                 <span>None</span>
               </button>
-              {projects.map(project => (
-                <button
-                  key={project.id}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    updatePartProject(part.id, project.id);
-                    setOpenDropdown(null);
-                  }}
-                  className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
-                    darkMode 
-                      ? 'text-gray-300 hover:bg-blue-900/20' 
-                      : 'text-gray-700 hover:bg-blue-50'
-                  }`}
-                >
-                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                    darkMode ? 'bg-blue-500' : 'bg-blue-600'
-                  }`} />
-                  <span className="truncate">{project.name}</span>
-                </button>
-              ))}
+              {projects.map(project => {
+                const priorityColor = {
+                  not_set: darkMode ? 'bg-gray-600' : 'bg-gray-400',
+                  low: darkMode ? 'bg-green-500' : 'bg-green-600',
+                  medium: darkMode ? 'bg-yellow-500' : 'bg-yellow-600',
+                  high: darkMode ? 'bg-red-500' : 'bg-red-600'
+                };
+                return (
+                  <button
+                    key={project.id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updatePartProject(part.id, project.id);
+                      setOpenDropdown(null);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
+                      darkMode 
+                        ? 'text-gray-300 hover:bg-blue-900/20' 
+                        : 'text-gray-700 hover:bg-blue-50'
+                    }`}
+                  >
+                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                      priorityColor[project.priority] || priorityColor.not_set
+                    }`} />
+                    <span className="truncate">{project.name}</span>
+                  </button>
+                );
+              })}
             </div>
           </>
         )}
@@ -5349,7 +5368,7 @@ const LandCruiserTracker = () => {
                             darkMode 
                               ? 'bg-gray-900/80 text-gray-300 border-2 border-gray-600' 
                               : 'bg-white/80 text-gray-700 border-2 border-gray-400'
-                          }`} style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                          }`} style={{ fontFamily: "'FoundationOne', 'Courier New', monospace" }}>
                             ARCHIVED
                           </span>
                         </div>
