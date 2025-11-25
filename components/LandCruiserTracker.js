@@ -6160,7 +6160,7 @@ const LandCruiserTracker = () => {
                     {/* Projects Section */}
                     {(() => {
                       const vehicleProjects = getVehicleProjects(viewingVehicle.id);
-                      return vehicleProjects.length > 0 && (
+                      return (
                         <div className={`pt-6 border-t ${
                           darkMode ? 'border-gray-700' : 'border-gray-200'
                         }`}>
@@ -6172,66 +6172,81 @@ const LandCruiserTracker = () => {
                               <span>Projects ({vehicleProjects.length})</span>
                             </div>
                           </h3>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {vehicleProjects.map((project) => {
-                              const projectParts = parts.filter(p => p.projectId === project.id);
-                              const projectTotal = projectParts.reduce((sum, part) => sum + part.total, 0);
-                              const deliveredCount = projectParts.filter(p => p.delivered).length;
+                          {vehicleProjects.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              {vehicleProjects.map((project) => {
+                                const projectParts = parts.filter(p => p.projectId === project.id);
+                                const projectTotal = projectParts.reduce((sum, part) => sum + part.total, 0);
+                                const deliveredCount = projectParts.filter(p => p.delivered).length;
 
-                              return (
-                                <button
-                                  key={project.id}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setVehicleModalProjectView(project);
-                                  }}
-                                  className={`rounded-lg p-4 border-l-4 text-left transition-all hover:shadow-md cursor-pointer ${
-                                    darkMode ? 'bg-gray-700 hover:bg-gray-650' : 'bg-gray-50 hover:bg-gray-100'
-                                  }`}
-                                  style={{ borderLeftColor: getPriorityBorderColor(project.priority) }}
-                                >
-                                  <h4 className={`font-semibold mb-2 ${
-                                    darkMode ? 'text-gray-200' : 'text-gray-800'
-                                  }`}>
-                                    {project.name}
-                                  </h4>
-                                  {project.description && (
-                                    <p className={`text-sm mb-3 ${
-                                      darkMode ? 'text-gray-400' : 'text-gray-600'
+                                return (
+                                  <button
+                                    key={project.id}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setVehicleModalProjectView(project);
+                                    }}
+                                    className={`rounded-lg p-4 border-l-4 text-left transition-all hover:shadow-md cursor-pointer ${
+                                      darkMode ? 'bg-gray-700 hover:bg-gray-650' : 'bg-gray-50 hover:bg-gray-100'
+                                    }`}
+                                    style={{ borderLeftColor: getPriorityBorderColor(project.priority) }}
+                                  >
+                                    <h4 className={`font-semibold mb-2 ${
+                                      darkMode ? 'text-gray-200' : 'text-gray-800'
                                     }`}>
-                                      {project.description}
-                                    </p>
-                                  )}
-                                  <div className="flex flex-wrap gap-4 text-xs">
-                                    <div className="flex items-center gap-1">
-                                      <Package className={`w-3 h-3 ${
-                                        darkMode ? 'text-gray-500' : 'text-gray-400'
-                                      }`} />
-                                      <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                                        {projectParts.length} parts
-                                      </span>
+                                      {project.name}
+                                    </h4>
+                                    {project.description && (
+                                      <p className={`text-sm mb-3 ${
+                                        darkMode ? 'text-gray-400' : 'text-gray-600'
+                                      }`}>
+                                        {project.description}
+                                      </p>
+                                    )}
+                                    <div className="flex flex-wrap gap-4 text-xs">
+                                      <div className="flex items-center gap-1">
+                                        <Package className={`w-3 h-3 ${
+                                          darkMode ? 'text-gray-500' : 'text-gray-400'
+                                        }`} />
+                                        <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                                          {projectParts.length} parts
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-1">
+                                        <CheckCircle className={`w-3 h-3 ${
+                                          darkMode ? 'text-gray-500' : 'text-gray-400'
+                                        }`} />
+                                        <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                                          {deliveredCount} delivered
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-1">
+                                        <DollarSign className={`w-3 h-3 ${
+                                          darkMode ? 'text-gray-500' : 'text-gray-400'
+                                        }`} />
+                                        <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                                          ${projectTotal.toFixed(2)}
+                                        </span>
+                                      </div>
                                     </div>
-                                    <div className="flex items-center gap-1">
-                                      <CheckCircle className={`w-3 h-3 ${
-                                        darkMode ? 'text-gray-500' : 'text-gray-400'
-                                      }`} />
-                                      <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                                        {deliveredCount} delivered
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                      <DollarSign className={`w-3 h-3 ${
-                                        darkMode ? 'text-gray-500' : 'text-gray-400'
-                                      }`} />
-                                      <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                                        ${projectTotal.toFixed(2)}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </button>
-                              );
-                            })}
-                          </div>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <div className={`text-center py-8 rounded-lg ${
+                              darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                            }`}>
+                              <Wrench className={`w-12 h-12 mx-auto mb-3 ${
+                                darkMode ? 'text-gray-600' : 'text-gray-400'
+                              }`} />
+                              <p className={`text-sm ${
+                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>
+                                No projects linked to this vehicle yet
+                              </p>
+                            </div>
+                          )}
                         </div>
                       );
                     })()}
