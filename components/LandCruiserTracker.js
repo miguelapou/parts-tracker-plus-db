@@ -4740,7 +4740,7 @@ const LandCruiserTracker = () => {
                     {/* Todo Counter - Bottom Right */}
                     {project.todos && project.todos.length > 0 && (
                       <div className="mt-4 flex justify-end">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           <div className="flex items-center gap-1">
                             <CheckCircle className={`w-3.5 h-3.5 ${
                               darkMode ? 'text-green-400' : 'text-green-600'
@@ -6312,8 +6312,16 @@ const LandCruiserTracker = () => {
                                           {projectParts.length} parts
                                         </span>
                                       </div>
+                                      <div className="flex items-center gap-1">
+                                        <DollarSign className={`w-3 h-3 ${
+                                          darkMode ? 'text-gray-500' : 'text-gray-400'
+                                        }`} />
+                                        <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                                          ${projectTotal.toFixed(2)}
+                                        </span>
+                                      </div>
                                       {project.todos && project.todos.length > 0 && (
-                                        <>
+                                        <div className="flex items-center gap-2">
                                           <div className="flex items-center gap-1">
                                             <CheckCircle className={`w-3 h-3 ${
                                               darkMode ? 'text-green-400' : 'text-green-600'
@@ -6330,16 +6338,8 @@ const LandCruiserTracker = () => {
                                               {uncompletedTodos}
                                             </span>
                                           </div>
-                                        </>
+                                        </div>
                                       )}
-                                      <div className="flex items-center gap-1">
-                                        <DollarSign className={`w-3 h-3 ${
-                                          darkMode ? 'text-gray-500' : 'text-gray-400'
-                                        }`} />
-                                        <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                                          ${projectTotal.toFixed(2)}
-                                        </span>
-                                      </div>
                                     </div>
                                   </button>
                                 );
