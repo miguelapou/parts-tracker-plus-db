@@ -38,17 +38,3 @@ html.dark-scrollbar *::-webkit-scrollbar-thumb:hover,
 body.dark-scrollbar *::-webkit-scrollbar-thumb:hover {
   background: #6b7280;
 }
-
-/* Firefox only - using -moz prefix */
-@-moz-document url-prefix() {
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: #cbd5e1 #f1f5f9;
-  }
-
-  html.dark-scrollbar *,
-  body.dark-scrollbar * {
-    scrollbar-width: thin;
-    scrollbar-color: #4b5563 #1f2937;
-  }
-}
