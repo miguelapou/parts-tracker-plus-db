@@ -4609,25 +4609,22 @@ const LandCruiserTracker = () => {
                             </span>
                           </div>
                           {linkedParts.length > 0 ? (
-                            <div className="space-y-1">
-                              {linkedParts.slice(0, 3).map((part) => (
+                            <div className="grid grid-cols-2 gap-1">
+                              {linkedParts.slice(0, 6).map((part) => (
                                 <div 
                                   key={part.id}
                                   className={`text-xs px-2 py-1 rounded ${
                                     darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
                                   }`}
                                 >
-                                  <div className="flex justify-between items-center">
-                                    <span className="truncate flex-1">{part.part}</span>
-                                    <span className="ml-2 font-medium">${part.total.toFixed(2)}</span>
-                                  </div>
+                                  <span className="truncate block">{part.part}</span>
                                 </div>
                               ))}
-                              {linkedParts.length > 3 && (
-                                <div className={`text-xs text-center py-1 ${
+                              {linkedParts.length > 6 && (
+                                <div className={`col-span-2 text-xs text-center py-1 ${
                                   darkMode ? 'text-gray-400' : 'text-gray-600'
                                 }`}>
-                                  +{linkedParts.length - 3} more
+                                  +{linkedParts.length - 6} more
                                 </div>
                               )}
                             </div>
