@@ -426,12 +426,6 @@ const ProjectDetailView = ({
               {/* Todo Text - Click to edit inline */}
               {editingTodoId === todo.id ? (
                 <input
-                  ref={(el) => {
-                    if (el) {
-                      // Focus without scrolling
-                      el.focus({ preventScroll: true });
-                    }
-                  }}
                   type="text"
                   value={editingTodoText}
                   onChange={(e) => setEditingTodoText(e.target.value)}
