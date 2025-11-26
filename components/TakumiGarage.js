@@ -120,6 +120,61 @@ const buttonClasses = (darkMode, variant = 'primary') => {
 // REUSABLE COMPONENTS
 // ========================================
 
+// ConfirmDialog - Custom styled confirmation modal
+const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message, confirmText = 'Delete', cancelText = 'Cancel', darkMode, isDangerous = true }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
+      <div 
+        className={`w-full max-w-md rounded-xl shadow-2xl overflow-hidden transition-all ${
+          darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className={`px-6 py-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+          <h3 className={`text-lg font-semibold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+            {title}
+          </h3>
+        </div>
+        
+        {/* Body */}
+        <div className={`px-6 py-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <p>{message}</p>
+        </div>
+        
+        {/* Footer */}
+        <div className={`px-6 py-4 flex justify-end gap-3 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+          <button
+            onClick={onClose}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              darkMode
+                ? 'bg-gray-700 hover:bg-gray-600 text-gray-100'
+                : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+            }`}
+          >
+            {cancelText}
+          </button>
+          <button
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              isDangerous
+                ? 'bg-red-600 hover:bg-red-700 text-white'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
+          >
+            {confirmText}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ProjectDetailView - Reusable component for displaying project details with todos and linked parts
 const ProjectDetailView = ({ 
   project, 
@@ -152,6 +207,14 @@ const ProjectDetailView = ({
   const hasInitialized = React.useRef(false);
   const [isNewTodoFocused, setIsNewTodoFocused] = React.useState(false);
   const [showCompletedTodos, setShowCompletedTodos] = React.useState(true);
+  
+  // Confirmation dialog state
+  const [confirmDialog, setConfirmDialog] = React.useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => {}
+  });
 
   // Reset on project change
   React.useEffect(() => {
@@ -573,12 +636,17 @@ const ProjectDetailView = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (confirm('Delete this to-do item?')) {
-                        const updatedTodos = project.todos.filter(t => t.id !== todo.id);
-                        updateProject(project.id, {
-                          todos: updatedTodos
-                        });
-                      }
+                      setConfirmDialog({
+                        isOpen: true,
+                        title: 'Delete To-Do',
+                        message: 'Are you sure you want to delete this to-do item? This action cannot be undone.',
+                        onConfirm: () => {
+                          const updatedTodos = project.todos.filter(t => t.id !== todo.id);
+                          updateProject(project.id, {
+                            todos: updatedTodos
+                          });
+                        }
+                      });
                     }}
                     className={`flex-shrink-0 p-1 rounded transition-colors ${
                       darkMode 
@@ -744,12 +812,17 @@ const ProjectDetailView = ({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (confirm('Delete this to-do item?')) {
-                    const updatedTodos = project.todos.filter(t => t.id !== todo.id);
-                    updateProject(project.id, {
-                      todos: updatedTodos
-                    });
-                  }
+                  setConfirmDialog({
+                    isOpen: true,
+                    title: 'Delete To-Do',
+                    message: 'Are you sure you want to delete this to-do item? This action cannot be undone.',
+                    onConfirm: () => {
+                      const updatedTodos = project.todos.filter(t => t.id !== todo.id);
+                      updateProject(project.id, {
+                        todos: updatedTodos
+                      });
+                    }
+                  });
                 }}
                 className={`flex-shrink-0 p-1 rounded transition-colors ${
                   darkMode 
@@ -977,6 +1050,16 @@ const ProjectDetailView = ({
           </p>
         </div>
       )}
+      
+      {/* Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={confirmDialog.onConfirm}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        darkMode={darkMode}
+      />
     </>
   );
 };
@@ -1431,9 +1514,15 @@ const LinkedPartsSection = ({
             </div>
             <button
               onClick={() => {
-                if (window.confirm(`Are you sure you want to unlink "${part.part}" from this project?`)) {
-                  unlinkPartFromProject(part.id);
-                }
+                setConfirmDialog({
+                  isOpen: true,
+                  title: 'Unlink Part',
+                  message: `Are you sure you want to unlink "${part.part}" from this project?`,
+                  confirmText: 'Unlink',
+                  onConfirm: () => {
+                    unlinkPartFromProject(part.id);
+                  }
+                });
               }}
               className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
                 darkMode 
@@ -1500,6 +1589,14 @@ const TakumiGarage = () => {
   const [vehicleImagePreview, setVehicleImagePreview] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isDraggingImage, setIsDraggingImage] = useState(false);
+
+  // Confirmation dialog state for main component
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => {}
+  });
 
   // Load parts and projects from Supabase on mount
   useEffect(() => {
@@ -2422,15 +2519,14 @@ const TakumiGarage = () => {
   };
 
   const deletePart = async (partId) => {
-    if (window.confirm('Are you sure you want to delete this part? This action cannot be undone.')) {
-      try {
-        // Delete from database
-        const { error } = await supabase
-          .from('parts')
-          .delete()
-          .eq('id', partId);
-        
-        if (error) throw error;
+    try {
+      // Delete from database
+      const { error } = await supabase
+        .from('parts')
+        .delete()
+        .eq('id', partId);
+      
+      if (error) throw error;
         
         // Update local state
         setParts(prevParts => prevParts.filter(part => part.id !== partId));
@@ -2438,7 +2534,6 @@ const TakumiGarage = () => {
         console.error('Error deleting part:', error);
         alert('Error deleting part. Please try again.');
       }
-    }
   };
 
   const unlinkPartFromProject = async (partId) => {
@@ -3873,9 +3968,17 @@ const TakumiGarage = () => {
                 <div className="flex gap-3">
                   <button
                     onClick={() => {
-                      deletePart(editingPart.id);
-                      setShowEditModal(false);
-                      setEditingPart(null);
+                      setConfirmDialog({
+                        isOpen: true,
+                        title: 'Delete Part',
+                        message: 'Are you sure you want to delete this part? This action cannot be undone.',
+                        confirmText: 'Delete',
+                        onConfirm: () => {
+                          deletePart(editingPart.id);
+                          setShowEditModal(false);
+                          setEditingPart(null);
+                        }
+                      });
                     }}
                     className={`px-6 py-3 rounded-lg font-medium transition-colors ${
                       darkMode 
@@ -5382,12 +5485,18 @@ const TakumiGarage = () => {
                 onClick={() => handleCloseModal(() => {
                   // Check for unsaved changes
                   if (hasUnsavedProjectChanges()) {
-                    const confirmClose = window.confirm(
-                      'You have unsaved changes. Are you sure you want to close without saving?'
-                    );
-                    if (!confirmClose) {
-                      return;
-                    }
+                    setConfirmDialog({
+                      isOpen: true,
+                      title: 'Unsaved Changes',
+                      message: 'You have unsaved changes. Are you sure you want to close without saving?',
+                      onConfirm: () => {
+                        setShowProjectDetailModal(false);
+                        setViewingProject(null);
+                        setOriginalProjectData(null);
+                        setProjectModalEditMode(false);
+                      }
+                    });
+                    return;
                   }
                   
                   setShowProjectDetailModal(false);
@@ -5435,12 +5544,18 @@ const TakumiGarage = () => {
                         onClick={() => handleCloseModal(() => {
                           // Check for unsaved changes
                           if (hasUnsavedProjectChanges()) {
-                            const confirmClose = window.confirm(
-                              'You have unsaved changes. Are you sure you want to close without saving?'
-                            );
-                            if (!confirmClose) {
-                              return;
-                            }
+                            setConfirmDialog({
+                              isOpen: true,
+                              title: 'Unsaved Changes',
+                              message: 'You have unsaved changes. Are you sure you want to close without saving?',
+                              onConfirm: () => {
+                                setShowProjectDetailModal(false);
+                                setViewingProject(null);
+                                setOriginalProjectData(null);
+                                setProjectModalEditMode(false);
+                              }
+                            });
+                            return;
                           }
                           
                           setShowProjectDetailModal(false);
@@ -5536,16 +5651,19 @@ const TakumiGarage = () => {
                         onClick={() => {
                           // Check for unsaved changes before going back
                           if (hasUnsavedProjectChanges()) {
-                            const confirmBack = window.confirm(
-                              'You have unsaved changes. Are you sure you want to go back without saving?'
-                            );
-                            if (!confirmBack) {
-                              return;
-                            }
-                            // Restore original data
-                            if (originalProjectData) {
-                              setViewingProject({ ...originalProjectData });
-                            }
+                            setConfirmDialog({
+                              isOpen: true,
+                              title: 'Unsaved Changes',
+                              message: 'You have unsaved changes. Are you sure you want to go back without saving?',
+                              onConfirm: () => {
+                                // Restore original data
+                                if (originalProjectData) {
+                                  setViewingProject({ ...originalProjectData });
+                                }
+                                setProjectModalEditMode(false);
+                              }
+                            });
+                            return;
                           }
                           setProjectModalEditMode(false);
                         }}
@@ -6367,12 +6485,20 @@ const TakumiGarage = () => {
                 onClick={() => handleCloseModal(() => {
                   // Check for unsaved changes
                   if (hasUnsavedVehicleChanges()) {
-                    const confirmClose = window.confirm(
-                      'You have unsaved changes. Are you sure you want to close without saving?'
-                    );
-                    if (!confirmClose) {
-                      return;
-                    }
+                    setConfirmDialog({
+                      isOpen: true,
+                      title: 'Unsaved Changes',
+                      message: 'You have unsaved changes. Are you sure you want to close without saving?',
+                      onConfirm: () => {
+                        setShowVehicleDetailModal(false);
+                        setViewingVehicle(null);
+                        setOriginalVehicleData(null);
+                        setVehicleModalProjectView(null);
+                        setVehicleModalEditMode(null);
+                        clearImageSelection();
+                      }
+                    });
+                    return;
                   }
                   
                   setShowVehicleDetailModal(false);
@@ -6413,12 +6539,20 @@ const TakumiGarage = () => {
                       onClick={() => handleCloseModal(() => {
                         // Check for unsaved changes
                         if (hasUnsavedVehicleChanges()) {
-                          const confirmClose = window.confirm(
-                            'You have unsaved changes. Are you sure you want to close without saving?'
-                          );
-                          if (!confirmClose) {
-                            return;
-                          }
+                          setConfirmDialog({
+                            isOpen: true,
+                            title: 'Unsaved Changes',
+                            message: 'You have unsaved changes. Are you sure you want to close without saving?',
+                            onConfirm: () => {
+                              setShowVehicleDetailModal(false);
+                              setViewingVehicle(null);
+                              setOriginalVehicleData(null);
+                              setVehicleModalProjectView(null);
+                              setVehicleModalEditMode(null);
+                              clearImageSelection();
+                            }
+                          });
+                          return;
                         }
                         
                         setShowVehicleDetailModal(false);
@@ -7293,17 +7427,20 @@ const TakumiGarage = () => {
                           if (vehicleModalEditMode) {
                             // Check for unsaved changes before going back
                             if (hasUnsavedVehicleChanges()) {
-                              const confirmBack = window.confirm(
-                                'You have unsaved changes. Are you sure you want to go back without saving?'
-                              );
-                              if (!confirmBack) {
-                                return;
-                              }
-                              // Restore original data
-                              if (originalVehicleData) {
-                                setViewingVehicle({ ...originalVehicleData });
-                              }
-                              clearImageSelection();
+                              setConfirmDialog({
+                                isOpen: true,
+                                title: 'Unsaved Changes',
+                                message: 'You have unsaved changes. Are you sure you want to go back without saving?',
+                                onConfirm: () => {
+                                  // Restore original data
+                                  if (originalVehicleData) {
+                                    setViewingVehicle({ ...originalVehicleData });
+                                  }
+                                  clearImageSelection();
+                                  setVehicleModalEditMode(null);
+                                }
+                              });
+                              return;
                             }
                             setVehicleModalEditMode(null);
                           } else {
@@ -7328,16 +7465,19 @@ const TakumiGarage = () => {
                           <>
                             <button
                               onClick={async () => {
-                                const confirmDelete = window.confirm(
-                                  'Are you sure you want to permanently delete this vehicle? This action cannot be undone.'
-                                );
-                                if (!confirmDelete) return;
-                                
-                                await deleteVehicle(viewingVehicle.id);
-                                setShowVehicleDetailModal(false);
-                                setViewingVehicle(null);
-                                setOriginalVehicleData(null);
-                                setVehicleModalEditMode(null);
+                                setConfirmDialog({
+                                  isOpen: true,
+                                  title: 'Delete Vehicle',
+                                  message: 'Are you sure you want to permanently delete this vehicle? This action cannot be undone.',
+                                  confirmText: 'Delete',
+                                  onConfirm: async () => {
+                                    await deleteVehicle(viewingVehicle.id);
+                                    setShowVehicleDetailModal(false);
+                                    setViewingVehicle(null);
+                                    setOriginalVehicleData(null);
+                                    setVehicleModalEditMode(null);
+                                  }
+                                });
                               }}
                               className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm mr-4 ${
                                 darkMode
@@ -7350,32 +7490,36 @@ const TakumiGarage = () => {
                             </button>
                             <button
                               onClick={async () => {
-                                const confirmArchive = window.confirm(
-                                  viewingVehicle.archived 
+                                setConfirmDialog({
+                                  isOpen: true,
+                                  title: viewingVehicle.archived ? 'Unarchive Vehicle' : 'Archive Vehicle',
+                                  message: viewingVehicle.archived 
                                     ? 'Are you sure you want to unarchive this vehicle?' 
-                                    : 'Are you sure you want to archive this vehicle? It will still be visible but with limited information.'
-                                );
-                                if (!confirmArchive) return;
-                                
-                                // When archiving, set display_order to a high number to move to end
-                                // When unarchiving, keep current display_order
-                                const updates = { 
-                                  archived: !viewingVehicle.archived 
-                                };
-                                
-                                if (!viewingVehicle.archived) {
-                                  // Archiving: set display_order to max + 1
-                                  const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
-                                  updates.display_order = maxOrder + 1;
-                                }
-                                
-                                const updatedVehicle = { 
-                                  ...viewingVehicle, 
-                                  ...updates
-                                };
-                                await updateVehicle(viewingVehicle.id, updates);
-                                setViewingVehicle(updatedVehicle);
-                                setOriginalVehicleData({ ...updatedVehicle });
+                                    : 'Are you sure you want to archive this vehicle? It will still be visible but with limited information.',
+                                  confirmText: viewingVehicle.archived ? 'Unarchive' : 'Archive',
+                                  isDangerous: false,
+                                  onConfirm: async () => {
+                                    // When archiving, set display_order to a high number to move to end
+                                    // When unarchiving, keep current display_order
+                                    const updates = { 
+                                      archived: !viewingVehicle.archived 
+                                    };
+                                    
+                                    if (!viewingVehicle.archived) {
+                                      // Archiving: set display_order to max + 1
+                                      const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
+                                      updates.display_order = maxOrder + 1;
+                                    }
+                                    
+                                    const updatedVehicle = { 
+                                      ...viewingVehicle, 
+                                      ...updates
+                                    };
+                                    await updateVehicle(viewingVehicle.id, updates);
+                                    setViewingVehicle(updatedVehicle);
+                                    setOriginalVehicleData({ ...updatedVehicle });
+                                  }
+                                });
                               }}
                               className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
                                 viewingVehicle.archived
@@ -7483,6 +7627,19 @@ const TakumiGarage = () => {
         </>
         )}
       </div>
+      
+      {/* Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={confirmDialog.onConfirm}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        confirmText={confirmDialog.confirmText}
+        cancelText={confirmDialog.cancelText}
+        isDangerous={confirmDialog.isDangerous !== false}
+        darkMode={darkMode}
+      />
     </div>
   );
 };
