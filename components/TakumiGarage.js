@@ -1741,24 +1741,6 @@ const TakumiGarage = () => {
     }
   }, [activeTab]);
 
-  // Console log when Add Part modal opens/closes
-  useEffect(() => {
-    if (showAddModal) {
-      console.log('🟢 ADD PART MODAL OPENED');
-    } else {
-      console.log('🔴 ADD PART MODAL CLOSED');
-    }
-  }, [showAddModal]);
-
-  // Console log when Edit Part modal opens/closes
-  useEffect(() => {
-    if (showEditModal) {
-      console.log('🟢 EDIT PART MODAL OPENED');
-    } else {
-      console.log('🔴 EDIT PART MODAL CLOSED');
-    }
-  }, [showEditModal]);
-
   // Update underline position when active tab changes
   useEffect(() => {
     const updateUnderline = () => {
