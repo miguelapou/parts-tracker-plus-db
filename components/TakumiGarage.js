@@ -4512,8 +4512,7 @@ const TakumiGarage = () => {
               style={{
                 gridTemplateRows: partDetailView === 'detail' ? 'auto 1fr auto' : 'auto 1fr auto',
                 maxHeight: partDetailView === 'detail' ? '80vh' : '90vh',
-                height: partDetailView === 'manage-vendors' ? '90vh' : 'auto',
-                transition: 'max-height 0.7s ease-in-out, height 0.7s ease-in-out'
+                transition: 'max-height 0.7s ease-in-out'
               }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -6449,7 +6448,9 @@ const TakumiGarage = () => {
             {/* Project Detail Modal */}
             {showProjectDetailModal && viewingProject && (
               <div 
-                className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fadeIn`}
+                className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop ${
+                  isModalClosing ? 'modal-backdrop-exit' : 'modal-backdrop-enter'
+                }`}
                 onClick={() => handleCloseModal(() => {
                   // Check for unsaved changes
                   if (hasUnsavedProjectChanges()) {
@@ -6477,11 +6478,13 @@ const TakumiGarage = () => {
                 })}
               >
                 <div 
-                  className={`rounded-lg shadow-xl max-w-5xl w-full overflow-hidden transition-all duration-300 ease-out grid animate-modalSlideUp ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+                  className={`rounded-lg shadow-xl max-w-5xl w-full overflow-hidden modal-content transition-all duration-700 ease-in-out grid ${
+                    isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
+                  } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
                   style={{
                     gridTemplateRows: 'auto 1fr auto',
                     maxHeight: projectModalEditMode ? '90vh' : '85vh',
-                    transition: 'max-height 0.3s ease-in-out'
+                    transition: 'max-height 0.7s ease-in-out'
                   }}
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -7490,7 +7493,9 @@ const TakumiGarage = () => {
             {/* Vehicle Detail Modal */}
             {showVehicleDetailModal && viewingVehicle && (
               <div 
-                className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fadeIn`}
+                className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop ${
+                  isModalClosing ? 'modal-backdrop-exit' : 'modal-backdrop-enter'
+                }`}
                 onClick={() => handleCloseModal(() => {
                   // Check for unsaved changes
                   if (hasUnsavedVehicleChanges()) {
@@ -7522,11 +7527,13 @@ const TakumiGarage = () => {
                 })}
               >
                 <div 
-                  className={`rounded-lg shadow-xl max-w-5xl w-full overflow-hidden transition-all duration-300 ease-out grid animate-modalSlideUp ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+                  className={`rounded-lg shadow-xl max-w-5xl w-full overflow-hidden modal-content transition-all duration-700 ease-in-out grid ${
+                    isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
+                  } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
                   style={{
                     gridTemplateRows: 'auto 1fr auto',
                     maxHeight: vehicleModalEditMode ? '90vh' : '85vh',
-                    transition: 'max-height 0.3s ease-in-out'
+                    transition: 'max-height 0.7s ease-in-out'
                   }}
                   onClick={(e) => e.stopPropagation()}
                 >
