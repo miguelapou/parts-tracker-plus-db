@@ -426,6 +426,12 @@ const ProjectDetailView = ({
               {/* Todo Text - Click to edit inline */}
               {editingTodoId === todo.id ? (
                 <input
+                  ref={(el) => {
+                    if (el) {
+                      // Focus without scrolling
+                      el.focus({ preventScroll: true });
+                    }
+                  }}
                   type="text"
                   value={editingTodoText}
                   onChange={(e) => setEditingTodoText(e.target.value)}
@@ -459,14 +465,13 @@ const ProjectDetailView = ({
                     setEditingTodoId(null);
                     setEditingTodoText('');
                   }}
-                  autoFocus
                   inputMode="text"
                   className={`flex-1 text-base px-2 py-1 bg-transparent border-0 focus:outline-none ${
                     darkMode
                       ? 'text-gray-100'
                       : 'text-gray-800'
                   }`}
-                  style={{ fontSize: '16px' }}
+                  style={{ fontSize: '16px', lineHeight: '1.5' }}
                 />
               ) : (
                 <span 
@@ -484,6 +489,7 @@ const ProjectDetailView = ({
                         ? 'text-gray-200'
                         : 'text-gray-800'
                   }`}
+                  style={{ lineHeight: '1.5' }}
                   title="Click to edit"
                 >
                   {todo.text}
