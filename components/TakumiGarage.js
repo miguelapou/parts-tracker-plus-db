@@ -150,6 +150,7 @@ const ProjectDetailView = ({
   const prevPositions = React.useRef({});
   const [isAnimating, setIsAnimating] = React.useState(false);
   const hasInitialized = React.useRef(false);
+  const [isNewTodoFocused, setIsNewTodoFocused] = React.useState(false);
 
   // Reset on project change
   React.useEffect(() => {
@@ -382,9 +383,13 @@ const ProjectDetailView = ({
               key={todo.id}
               ref={(el) => todoRefs.current[todo.id] = el}
               className={`flex items-center gap-3 py-1.5 px-3 rounded-lg border transition-colors ${
-                darkMode 
-                  ? 'bg-gray-700 border-gray-600 hover:border-blue-500 focus-within:!border-blue-500' 
-                  : 'bg-gray-50 border-gray-200 hover:border-blue-500 focus-within:!border-blue-500'
+                editingTodoId === todo.id
+                  ? darkMode 
+                    ? 'bg-gray-700 border-blue-500' 
+                    : 'bg-gray-50 border-blue-500'
+                  : darkMode 
+                    ? 'bg-gray-700 border-gray-600 hover:border-blue-500' 
+                    : 'bg-gray-50 border-gray-200 hover:border-blue-500'
               }`}
             >
               {/* Checkbox */}
@@ -532,9 +537,13 @@ const ProjectDetailView = ({
           {/* Always-visible input for new todos */}
           <div 
             className={`flex items-center gap-3 py-1.5 px-3 rounded-lg border transition-colors ${
-              darkMode 
-                ? 'bg-gray-700 border-gray-600 hover:border-blue-500 focus-within:!border-blue-500' 
-                : 'bg-gray-50 border-gray-200 hover:border-blue-500 focus-within:!border-blue-500'
+              isNewTodoFocused
+                ? darkMode 
+                  ? 'bg-gray-700 border-blue-500' 
+                  : 'bg-gray-50 border-blue-500'
+                : darkMode 
+                  ? 'bg-gray-700 border-gray-600 hover:border-blue-500' 
+                  : 'bg-gray-50 border-gray-200 hover:border-blue-500'
             }`}
           >
             {/* Empty checkbox placeholder */}
@@ -547,6 +556,7 @@ const ProjectDetailView = ({
               type="text"
               value={newTodoText}
               onChange={(e) => setNewTodoText(e.target.value)}
+              onFocus={() => setIsNewTodoFocused(true)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
@@ -568,6 +578,7 @@ const ProjectDetailView = ({
                 }
               }}
               onBlur={() => {
+                setIsNewTodoFocused(false);
                 if (newTodoText.trim()) {
                   const currentTodos = project.todos || [];
                   const timestamp = new Date().toISOString();
