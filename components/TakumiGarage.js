@@ -169,9 +169,23 @@ const ProjectDetailView = ({
           const bCompletedAt = b.completed_at ? new Date(b.completed_at) : new Date(b.created_at);
           return aCompletedAt - bCompletedAt;
         } else {
-          // Both uncompleted: sort by created_at (oldest created first)
-          // This makes new todos go to bottom, and unchecked todos (with new created_at) go to top
-          return new Date(a.created_at) - new Date(b.created_at);
+          // Both uncompleted: 
+          // First check if either has a fresh created_at (recently unchecked)
+          // If created_at is very recent (within 1 second of now), it was just unchecked - prioritize it
+          const now = Date.now();
+          const aCreatedMs = new Date(a.created_at).getTime();
+          const bCreatedMs = new Date(b.created_at).getTime();
+          const aIsRecent = now - aCreatedMs < 1000; // Within last second
+          const bIsRecent = now - bCreatedMs < 1000;
+          
+          // If one is recently unchecked and other isn't, put recent one first
+          if (aIsRecent && !bIsRecent) return -1;
+          if (!aIsRecent && bIsRecent) return 1;
+          
+          // Otherwise sort by original_created_at (oldest first = new todos at bottom)
+          const aOriginal = new Date(a.original_created_at || a.created_at);
+          const bOriginal = new Date(b.original_created_at || b.created_at);
+          return aOriginal - bOriginal;
         }
       }
       // Different completion status: completed items first
@@ -383,7 +397,9 @@ const ProjectDetailView = ({
                         completed: newCompleted,
                         completed_at: newCompleted ? new Date().toISOString() : null,
                         // Update created_at when unchecking so it goes to top of uncompleted list
-                        created_at: !newCompleted ? new Date().toISOString() : t.created_at
+                        created_at: !newCompleted ? new Date().toISOString() : t.created_at,
+                        // Preserve original_created_at or set it if missing (for old todos)
+                        original_created_at: t.original_created_at || t.created_at
                       };
                     }
                     return t;
@@ -444,11 +460,13 @@ const ProjectDetailView = ({
                     setEditingTodoText('');
                   }}
                   autoFocus
+                  inputMode="text"
                   className={`flex-1 text-base px-2 py-1 bg-transparent border-0 focus:outline-none ${
                     darkMode
                       ? 'text-gray-100'
                       : 'text-gray-800'
                   }`}
+                  style={{ fontSize: '16px' }}
                 />
               ) : (
                 <span 
@@ -517,11 +535,13 @@ const ProjectDetailView = ({
                   e.preventDefault();
                   if (newTodoText.trim()) {
                     const currentTodos = project.todos || [];
+                    const timestamp = new Date().toISOString();
                     const newTodo = {
                       id: Date.now(),
                       text: newTodoText.trim(),
                       completed: false,
-                      created_at: new Date().toISOString()
+                      created_at: timestamp,
+                      original_created_at: timestamp
                     };
                     updateProject(project.id, {
                       todos: [...currentTodos, newTodo]
@@ -533,11 +553,13 @@ const ProjectDetailView = ({
               onBlur={() => {
                 if (newTodoText.trim()) {
                   const currentTodos = project.todos || [];
+                  const timestamp = new Date().toISOString();
                   const newTodo = {
                     id: Date.now(),
                     text: newTodoText.trim(),
                     completed: false,
-                    created_at: new Date().toISOString()
+                    created_at: timestamp,
+                    original_created_at: timestamp
                   };
                   updateProject(project.id, {
                     todos: [...currentTodos, newTodo]
@@ -546,11 +568,13 @@ const ProjectDetailView = ({
                 }
               }}
               placeholder="Add a to-do item..."
+              inputMode="text"
               className={`flex-1 text-base px-2 py-1 bg-transparent border-0 focus:outline-none ${
                 darkMode
                   ? 'text-gray-100 placeholder-gray-500'
                   : 'text-gray-800 placeholder-gray-400'
               }`}
+              style={{ fontSize: '16px' }}
             />
           </div>
         </div>
@@ -1150,7 +1174,7 @@ const LinkedPartsSection = ({
   );
 };
 
-const LandCruiserTracker = () => {
+const TakumiGarage = () => {
   const [parts, setParts] = useState([]);
   const [projects, setProjects] = useState([]);
   const [vehicles, setVehicles] = useState([]);
@@ -7186,4 +7210,4 @@ const LandCruiserTracker = () => {
   );
 };
 
-export default LandCruiserTracker;
+export default TakumiGarage;
