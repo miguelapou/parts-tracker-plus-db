@@ -1741,6 +1741,26 @@ const TakumiGarage = () => {
     }
   }, [activeTab]);
 
+  // Console log when Add Part modal opens/closes
+  useEffect(() => {
+    if (showAddModal) {
+      console.log('🟢 ADD PART MODAL OPENED');
+      console.log('State:', { showAddModal, newPart });
+    } else {
+      console.log('🔴 ADD PART MODAL CLOSED');
+    }
+  }, [showAddModal]);
+
+  // Console log when Edit Part modal opens/closes
+  useEffect(() => {
+    if (showEditModal) {
+      console.log('🟢 EDIT PART MODAL OPENED');
+      console.log('State:', { showEditModal, editingPart });
+    } else {
+      console.log('🔴 EDIT PART MODAL CLOSED');
+    }
+  }, [showEditModal]);
+
   // Update underline position when active tab changes
   useEffect(() => {
     const updateUnderline = () => {
@@ -5127,6 +5147,7 @@ const TakumiGarage = () => {
               }`}>
                 <button
                   onClick={() => {
+                    console.log('✏️ Edit Part button clicked', { part: viewingPart?.part, id: viewingPart?.id });
                     const partData = {
                       ...viewingPart,
                       status: viewingPart.delivered ? 'delivered' : (viewingPart.shipped ? 'shipped' : (viewingPart.purchased ? 'purchased' : 'pending'))
@@ -5214,6 +5235,7 @@ const TakumiGarage = () => {
               }`}>
                 <button
                   onClick={() => {
+                    console.log('↩️ Back to Edit button clicked (from Manage Vendors)');
                     setPartDetailView('edit');
                     setEditingVendor(null);
                   }}
@@ -5227,6 +5249,7 @@ const TakumiGarage = () => {
                 </button>
                 <button
                   onClick={() => {
+                    console.log('↩️ Back to Edit button clicked (Done managing vendors)');
                     setPartDetailView('edit');
                     setEditingVendor(null);
                   }}
@@ -5695,7 +5718,7 @@ const TakumiGarage = () => {
             </p>
             {!searchTerm && statusFilter === 'all' && vendorFilter === 'all' && (
               <button
-                onClick={() => setShowAddModal(true)}
+                onClick={() => { console.log('🔵 Add New Part button clicked (Desktop)'); setShowAddModal(true); }}
                 className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition-colors font-medium"
               >
                 <Plus className="w-5 h-5" />
@@ -5888,7 +5911,7 @@ const TakumiGarage = () => {
             </p>
             {!searchTerm && statusFilter === 'all' && vendorFilter === 'all' && (
               <button
-                onClick={() => setShowAddModal(true)}
+                onClick={() => { console.log('🔵 Add New Part button clicked (Mobile)'); setShowAddModal(true); }}
                 className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition-colors font-medium"
               >
                 <Plus className="w-5 h-5" />
