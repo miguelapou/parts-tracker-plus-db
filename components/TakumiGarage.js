@@ -4773,7 +4773,7 @@ const TakumiGarage = () => {
               {/* Manage Vendors View */}
               {partDetailView === 'manage-vendors' && (
               <div className="slide-in-right">
-              <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+              <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
                 {uniqueVendors.length === 0 ? (
                   <div className={`text-center py-12 ${
                     darkMode ? 'text-gray-400' : 'text-gray-600'
