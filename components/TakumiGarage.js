@@ -4264,7 +4264,8 @@ const TakumiGarage = () => {
                         : 'bg-blue-600 hover:bg-blue-700 text-white'
                     }`}
                   >
-                    Save Changes
+                    <span className="sm:hidden">Save</span>
+                    <span className="hidden sm:inline">Save Changes</span>
                   </button>
                 </div>
               </div>
@@ -5066,7 +5067,8 @@ const TakumiGarage = () => {
                       : 'bg-blue-600 hover:bg-blue-700 text-white'
                   }`}
                 >
-                  Save Changes
+                  <span className="sm:hidden">Save</span>
+                  <span className="hidden sm:inline">Save Changes</span>
                 </button>
               </div>
               )}
