@@ -3793,7 +3793,7 @@ const TakumiGarage = () => {
               } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
               style={{
                 gridTemplateRows: partDetailView === 'detail' ? 'auto 1fr auto' : 'auto 1fr auto',
-                maxHeight: partDetailView === 'detail' ? '80vh' : '90vh',
+                maxHeight: partDetailView === 'detail' ? 'calc(100vh - 2rem)' : 'calc(100vh - 2rem)',
                 transition: 'max-height 0.7s ease-in-out'
               }}
               onClick={(e) => e.stopPropagation()}
