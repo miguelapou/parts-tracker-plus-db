@@ -4303,6 +4303,18 @@ const TakumiGarage = () => {
                   <button
                     onClick={async () => {
                       await saveEditedPart();
+                      // Update viewingPart with the saved changes
+                      setViewingPart({
+                        ...viewingPart,
+                        ...editingPart,
+                        price: parseFloat(editingPart.price) || 0,
+                        shipping: parseFloat(editingPart.shipping) || 0,
+                        duties: parseFloat(editingPart.duties) || 0,
+                        total: (parseFloat(editingPart.price) || 0) + (parseFloat(editingPart.shipping) || 0) + (parseFloat(editingPart.duties) || 0),
+                        delivered: editingPart.status === 'delivered',
+                        shipped: editingPart.status === 'delivered' || editingPart.status === 'shipped',
+                        purchased: editingPart.status === 'delivered' || editingPart.status === 'shipped' || editingPart.status === 'purchased'
+                      });
                       setPartDetailView('detail');
                     }}
                     disabled={!editingPart.part}
@@ -5910,8 +5922,13 @@ const TakumiGarage = () => {
                               vehicle_id: viewingProject.vehicle_id || null,
                               todos: viewingProject.todos || []
                             });
-                            // Update original data after successful save
-                            setOriginalProjectData({ ...viewingProject });
+                            // Update viewing data with saved changes
+                            const updatedProject = {
+                              ...viewingProject,
+                              budget: parseFloat(viewingProject.budget)
+                            };
+                            setViewingProject(updatedProject);
+                            setOriginalProjectData({ ...updatedProject });
                             setProjectModalEditMode(false);
                           }}
                           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
@@ -7773,7 +7790,8 @@ const TakumiGarage = () => {
                               }
                               await updateVehicle(viewingVehicle.id, updatedVehicle);
                               clearImageSelection();
-                              // Update original data after successful save
+                              // Update viewing data with saved changes
+                              setViewingVehicle(updatedVehicle);
                               setOriginalVehicleData({ ...updatedVehicle });
                             } else if (vehicleModalEditMode === 'project') {
                               await updateProject(vehicleModalProjectView.id, {
