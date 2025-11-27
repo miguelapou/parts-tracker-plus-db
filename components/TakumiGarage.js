@@ -3844,7 +3844,7 @@ const TakumiGarage = () => {
 
               {/* Detail View */}
               {partDetailView === 'detail' && (
-              <div className="slide-in-left overflow-hidden">
+              <div className="slide-in-left overflow-hidden min-h-0">
               <div className="p-4 sm:p-6 overflow-y-auto h-full modal-scrollable" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {/* Status Badge */}
                 <div className="mb-6">
@@ -4013,7 +4013,7 @@ const TakumiGarage = () => {
               )}
               {/* Edit View */}
               {partDetailView === 'edit' && editingPart && (
-              <div className="slide-in-right overflow-hidden">
+              <div className="slide-in-right overflow-hidden min-h-0">
               <div className="p-6 modal-scrollable overflow-y-auto h-full">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-1">
@@ -4327,7 +4327,7 @@ const TakumiGarage = () => {
 
               {/* Manage Vendors View */}
               {partDetailView === 'manage-vendors' && (
-              <div className="slide-in-right overflow-hidden">
+              <div className="slide-in-right overflow-hidden min-h-0">
               <div className="p-6 overflow-y-auto h-full">
                 {uniqueVendors.length === 0 ? (
                   <div className={`text-center py-12 ${
