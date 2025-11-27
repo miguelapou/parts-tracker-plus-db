@@ -3806,7 +3806,7 @@ const TakumiGarage = () => {
                     <h2 className={`text-2xl font-bold ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`} style={{ fontFamily: "'FoundationOne', 'Courier New', monospace" }}>
-                      {partDetailView === 'manage-vendors' ? 'Manage Vendors' : (partDetailView === 'edit' ? 'Edit Part' : viewingPart.part)}
+                      {partDetailView === 'manage-vendors' ? 'Vendors' : (partDetailView === 'edit' ? 'Edit Part' : viewingPart.part)}
                     </h2>
                     {(() => {
                       const partProject = viewingPart.projectId ? projects.find(p => p.id === viewingPart.projectId) : null;
