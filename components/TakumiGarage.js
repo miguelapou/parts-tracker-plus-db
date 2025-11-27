@@ -1369,9 +1369,9 @@ const ProjectEditForm = ({
   darkMode 
 }) => {
   return (
-    <div className="space-y-4">
-      {/* Project Name and Description Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Left Column: Project Name, Priority/Vehicle, Budget */}
+      <div className="space-y-4">
         <div>
           <label className={`block text-sm font-medium mb-2 ${
             darkMode ? 'text-gray-300' : 'text-gray-700'
@@ -1390,96 +1390,98 @@ const ProjectEditForm = ({
           />
         </div>
 
-        <div>
-          <label className={`block text-sm font-medium mb-2 ${
-            darkMode ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            Description
-          </label>
-          <textarea
-            value={project.description}
-            onChange={(e) => onProjectChange({ ...project, description: e.target.value })}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-              darkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100' 
-                : 'bg-white border-gray-300 text-gray-900'
-            }`}
-            rows="3"
-          />
+        {/* Priority and Vehicle Row */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className={`block text-sm font-medium mb-2 ${
+              darkMode ? 'text-gray-300' : 'text-gray-700'
+            }`}>
+              Priority
+            </label>
+            <select
+              value={project.priority}
+              onChange={(e) => onProjectChange({ ...project, priority: e.target.value })}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
+                darkMode 
+                  ? 'bg-gray-700 border-gray-600 text-gray-100' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+            >
+              <option value="not_set">Not Set</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+
+          <div>
+            <label className={`block text-sm font-medium mb-2 ${
+              darkMode ? 'text-gray-300' : 'text-gray-700'
+            }`}>
+              <div className="flex items-center gap-2">
+                <Car className="w-4 h-4" />
+                <span>Vehicle</span>
+              </div>
+            </label>
+            <select
+              value={project.vehicle_id || ''}
+              onChange={(e) => onProjectChange({ ...project, vehicle_id: e.target.value ? parseInt(e.target.value) : null })}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
+                darkMode 
+                  ? 'bg-gray-700 border-gray-600 text-gray-100' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+            >
+              <option value="">No vehicle</option>
+              {vehicles.map(vehicle => (
+                <option key={vehicle.id} value={vehicle.id}>
+                  {vehicle.nickname || vehicle.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Budget Row */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className={`block text-sm font-medium mb-2 ${
+              darkMode ? 'text-gray-300' : 'text-gray-700'
+            }`}>
+              Budget ($)
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              value={project.budget}
+              onChange={(e) => onProjectChange({ ...project, budget: e.target.value })}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                darkMode 
+                  ? 'bg-gray-700 border-gray-600 text-gray-100' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Budget, Priority, and Vehicle Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label className={`block text-sm font-medium mb-2 ${
-            darkMode ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            Budget ($)
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            value={project.budget}
-            onChange={(e) => onProjectChange({ ...project, budget: e.target.value })}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-              darkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100' 
-                : 'bg-white border-gray-300 text-gray-900'
-            }`}
-          />
-        </div>
-
-        <div>
-          <label className={`block text-sm font-medium mb-2 ${
-            darkMode ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            Priority
-          </label>
-          <select
-            value={project.priority}
-            onChange={(e) => onProjectChange({ ...project, priority: e.target.value })}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
-              darkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100' 
-                : 'bg-white border-gray-300 text-gray-900'
-            }`}
-          >
-            <option value="not_set">Not Set</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-        </div>
-
-        <div>
-          <label className={`block text-sm font-medium mb-2 ${
-            darkMode ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            <div className="flex items-center gap-2">
-              <Car className="w-4 h-4" />
-              <span>Vehicle</span>
-            </div>
-          </label>
-          <select
-            value={project.vehicle_id || ''}
-            onChange={(e) => onProjectChange({ ...project, vehicle_id: e.target.value ? parseInt(e.target.value) : null })}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
-              darkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100' 
-                : 'bg-white border-gray-300 text-gray-900'
-            }`}
-          >
-            <option value="">No vehicle</option>
-            {vehicles.map(vehicle => (
-              <option key={vehicle.id} value={vehicle.id}>
-                {vehicle.nickname || vehicle.name}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* Right Column: Description (taller) */}
+      <div>
+        <label className={`block text-sm font-medium mb-2 ${
+          darkMode ? 'text-gray-300' : 'text-gray-700'
+        }`}>
+          Description
+        </label>
+        <textarea
+          value={project.description}
+          onChange={(e) => onProjectChange({ ...project, description: e.target.value })}
+          className={`w-full h-[calc(100%-2rem)] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${
+            darkMode 
+              ? 'bg-gray-700 border-gray-600 text-gray-100' 
+              : 'bg-white border-gray-300 text-gray-900'
+          }`}
+        />
       </div>
-
     </div>
   );
 };
@@ -6079,9 +6081,9 @@ const TakumiGarage = () => {
                   </div>
 
                   <div className="p-6 modal-scrollable">
-                    <div className="space-y-4">
-                      {/* Project Name and Description Row */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Left Column: Project Name, Priority/Vehicle, Budget */}
+                      <div className="space-y-4">
                         <div>
                           <label className={`block text-sm font-medium mb-2 ${
                             darkMode ? 'text-gray-300' : 'text-gray-700'
@@ -6102,95 +6104,99 @@ const TakumiGarage = () => {
                           />
                         </div>
 
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
-                          }`}>
-                            Description
-                          </label>
-                          <textarea
-                            value={newProject.description}
-                            onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                              darkMode 
-                                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
-                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                            }`}
-                            placeholder="Brief description of the project"
-                            rows="3"
-                          />
+                        {/* Priority and Vehicle Row */}
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className={`block text-sm font-medium mb-2 ${
+                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
+                              Priority
+                            </label>
+                            <select
+                              value={newProject.priority}
+                              onChange={(e) => setNewProject({ ...newProject, priority: e.target.value })}
+                              className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
+                                darkMode 
+                                  ? 'bg-gray-700 border-gray-600 text-gray-100' 
+                                  : 'bg-white border-gray-300 text-gray-900'
+                              }`}
+                            >
+                              <option value="not_set">Not Set</option>
+                              <option value="low">Low</option>
+                              <option value="medium">Medium</option>
+                              <option value="high">High</option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <label className={`block text-sm font-medium mb-2 ${
+                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
+                              <div className="flex items-center gap-2">
+                                <Car className="w-4 h-4" />
+                                <span>Vehicle</span>
+                              </div>
+                            </label>
+                            <select
+                              value={newProject.vehicle_id || ''}
+                              onChange={(e) => setNewProject({ ...newProject, vehicle_id: e.target.value ? parseInt(e.target.value) : null })}
+                              className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
+                                darkMode 
+                                  ? 'bg-gray-700 border-gray-600 text-gray-100' 
+                                  : 'bg-white border-gray-300 text-gray-900'
+                              }`}
+                            >
+                              <option value="">No vehicle</option>
+                              {vehicles.map(vehicle => (
+                                <option key={vehicle.id} value={vehicle.id}>
+                                  {vehicle.nickname || vehicle.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Budget Row */}
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className={`block text-sm font-medium mb-2 ${
+                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
+                              Budget ($)
+                            </label>
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={newProject.budget}
+                              onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
+                              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                                darkMode 
+                                  ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
+                                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                              }`}
+                              placeholder="0.00"
+                            />
+                          </div>
                         </div>
                       </div>
 
-                      {/* Budget, Priority, and Vehicle Row */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
-                          }`}>
-                            Budget ($)
-                          </label>
-                          <input
-                            type="number"
-                            step="0.01"
-                            value={newProject.budget}
-                            onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
-                            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                              darkMode 
-                                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
-                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                            }`}
-                            placeholder="0.00"
-                          />
-                        </div>
-
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
-                          }`}>
-                            Priority
-                          </label>
-                          <select
-                            value={newProject.priority}
-                            onChange={(e) => setNewProject({ ...newProject, priority: e.target.value })}
-                            className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
-                              darkMode 
-                                ? 'bg-gray-700 border-gray-600 text-gray-100' 
-                                : 'bg-white border-gray-300 text-gray-900'
-                            }`}
-                          >
-                            <option value="not_set">Not Set</option>
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                          </select>
-                        </div>
-
-                        <div>
+                      {/* Right Column: Description (taller) */}
+                      <div>
                         <label className={`block text-sm font-medium mb-2 ${
                           darkMode ? 'text-gray-300' : 'text-gray-700'
                         }`}>
-                          <div className="flex items-center gap-2">
-                            <Car className="w-4 h-4" />
-                            <span>Vehicle</span>
-                          </div>
+                          Description
                         </label>
-                        <select
-                          value={newProject.vehicle_id || ''}
-                          onChange={(e) => setNewProject({ ...newProject, vehicle_id: e.target.value ? parseInt(e.target.value) : null })}
-                          className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
+                        <textarea
+                          value={newProject.description}
+                          onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                          className={`w-full h-[calc(100%-2rem)] px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${
                             darkMode 
-                              ? 'bg-gray-700 border-gray-600 text-gray-100' 
-                              : 'bg-white border-gray-300 text-gray-900'
+                              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
+                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
                           }`}
-                        >
-                          <option value="">No vehicle</option>
-                          {vehicles.map(vehicle => (
-                            <option key={vehicle.id} value={vehicle.id}>
-                              {vehicle.nickname || vehicle.name}
-                            </option>
-                          ))}
-                        </select>
+                          placeholder="Brief description of the project"
+                        />
                       </div>
                     </div>
                   </div>
