@@ -2189,7 +2189,7 @@ const TakumiGarage = () => {
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const [showPartDetailModal, setShowPartDetailModal] = useState(false);
   const [viewingPart, setViewingPart] = useState(null);
-  const [partDetailView, setPartDetailView] = useState('detail'); // 'detail' or 'edit'
+  const [partDetailView, setPartDetailView] = useState('detail'); // 'detail', 'edit', or 'manage-vendors'
   const [trackingModalPartId, setTrackingModalPartId] = useState(null);
   const [trackingInput, setTrackingInput] = useState('');
   const [editingPart, setEditingPart] = useState(null);
@@ -3806,7 +3806,7 @@ const TakumiGarage = () => {
                     <h2 className={`text-2xl font-bold ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`} style={{ fontFamily: "'FoundationOne', 'Courier New', monospace" }}>
-                      {partDetailView === 'edit' ? 'Edit Part' : viewingPart.part}
+                      {partDetailView === 'manage-vendors' ? 'Manage Vendors' : (partDetailView === 'edit' ? 'Edit Part' : viewingPart.part)}
                     </h2>
                     {(() => {
                       const partProject = viewingPart.projectId ? projects.find(p => p.id === viewingPart.projectId) : null;
@@ -4291,22 +4291,186 @@ const TakumiGarage = () => {
                     Delete
                   </button>
                 </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setPartDetailView('manage-vendors')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm border ${
+                      darkMode
+                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300'
+                    }`}
+                  >
+                    <Settings className="w-4 h-4" />
+                    Vendors
+                  </button>
+                  <button
+                    onClick={async () => {
+                      await saveEditedPart();
+                      setPartDetailView('detail');
+                    }}
+                    disabled={!editingPart.part}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
+                      !editingPart.part
+                        ? darkMode 
+                          ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    }`}
+                  >
+                    <span className="sm:hidden">Save</span>
+                    <span className="hidden sm:inline">Save Changes</span>
+                  </button>
+                </div>
+              </div>
+              </div>
+              )}
+
+              {/* Manage Vendors View */}
+              {partDetailView === 'manage-vendors' && (
+              <div className="slide-in-right">
+              <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+                {uniqueVendors.length === 0 ? (
+                  <div className={`text-center py-12 ${
+                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    <Package className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                    <p>No vendors yet. Add parts with vendors to see them here.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {uniqueVendors.map(vendor => {
+                      const partCount = parts.filter(p => p.vendor === vendor).length;
+                      const isEditing = editingVendor?.oldName === vendor;
+                      return (
+                        <div 
+                          key={vendor}
+                          className={`p-4 rounded-lg border ${
+                            darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3 flex-1">
+                              {isEditing ? (
+                                <input
+                                  type="text"
+                                  value={editingVendor.newName}
+                                  onChange={(e) => setEditingVendor({ ...editingVendor, newName: e.target.value })}
+                                  className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                    darkMode 
+                                      ? 'bg-gray-800 border-gray-600 text-gray-100' 
+                                      : 'bg-white border-gray-300 text-gray-900'
+                                  }`}
+                                  autoFocus
+                                />
+                              ) : (
+                                <>
+                                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getVendorColor(vendor)}`}>
+                                    {vendor}
+                                  </span>
+                                  <span className={`text-sm ${
+                                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                                  }`}>
+                                    {partCount} {partCount === 1 ? 'part' : 'parts'}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {isEditing ? (
+                                <>
+                                  <button
+                                    onClick={() => {
+                                      renameVendor(vendor, editingVendor.newName);
+                                      setEditingVendor(null);
+                                    }}
+                                    disabled={!editingVendor.newName.trim() || editingVendor.newName === vendor}
+                                    className={`p-2 rounded-lg transition-colors ${
+                                      !editingVendor.newName.trim() || editingVendor.newName === vendor
+                                        ? darkMode 
+                                          ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                                          : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                        : darkMode
+                                          ? 'bg-green-900/30 hover:bg-green-900/50 text-green-400'
+                                          : 'bg-green-50 hover:bg-green-100 text-green-600'
+                                    }`}
+                                  >
+                                    <Check className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => setEditingVendor(null)}
+                                    className={`p-2 rounded-lg transition-colors ${
+                                      darkMode
+                                        ? 'bg-gray-800 hover:bg-gray-700 text-gray-400'
+                                        : 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                                    }`}
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    onClick={() => setEditingVendor({ oldName: vendor, newName: vendor })}
+                                    className={`p-2 rounded-lg transition-colors ${
+                                      darkMode
+                                        ? 'bg-gray-800 hover:bg-gray-700 text-gray-400'
+                                        : 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                                    }`}
+                                  >
+                                    <Edit2 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      setConfirmDialog({
+                                        isOpen: true,
+                                        title: 'Delete Vendor',
+                                        message: `Are you sure you want to delete "${vendor}"? This will remove the vendor from ${partCount} ${partCount === 1 ? 'part' : 'parts'}.`,
+                                        confirmText: 'Delete',
+                                        onConfirm: () => deleteVendor(vendor)
+                                      });
+                                    }}
+                                    className={`p-2 rounded-lg transition-colors ${
+                                      darkMode
+                                        ? 'bg-red-900/30 hover:bg-red-900/50 text-red-400'
+                                        : 'bg-red-50 hover:bg-red-100 text-red-600'
+                                    }`}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              <div className={`sticky bottom-0 border-t p-4 flex items-center justify-between ${
+                darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
+              }`}>
                 <button
-                  onClick={async () => {
-                    await saveEditedPart();
-                    setPartDetailView('detail');
+                  onClick={() => {
+                    setPartDetailView('edit');
+                    setEditingVendor(null);
                   }}
-                  disabled={!editingPart.part}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
-                    !editingPart.part
-                      ? darkMode 
-                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm border ${
+                    darkMode
+                      ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600'
+                      : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300'
                   }`}
                 >
-                  <span className="sm:hidden">Save</span>
-                  <span className="hidden sm:inline">Save Changes</span>
+                  <ChevronDown className="w-4 h-4 rotate-90" />
+                </button>
+                <button
+                  onClick={() => {
+                    setPartDetailView('edit');
+                    setEditingVendor(null);
+                  }}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors text-sm"
+                >
+                  Done
                 </button>
               </div>
               </div>
