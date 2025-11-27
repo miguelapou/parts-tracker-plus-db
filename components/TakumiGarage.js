@@ -4500,17 +4500,6 @@ const TakumiGarage = () => {
                     </div>
                   </th>
                   <th 
-                    onClick={() => handleSort('price')}
-                    className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider cursor-pointer transition-colors ${
-                      darkMode ? 'text-gray-300 hover:bg-gray-600' : 'text-slate-700 hover:bg-slate-200'
-                    }`}
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      Price
-                      {getSortIcon('price')}
-                    </div>
-                  </th>
-                  <th 
                     onClick={() => handleSort('total')}
                     className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider cursor-pointer transition-colors ${
                       darkMode ? 'text-gray-300 hover:bg-gray-600' : 'text-slate-700 hover:bg-slate-200'
@@ -4606,11 +4595,6 @@ const TakumiGarage = () => {
                           </span>
                         );
                       })()}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className={`text-sm ${
-                        darkMode ? 'text-gray-100' : 'text-slate-900'
-                      }`}>${part.price.toFixed(2)}</div>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className={`text-sm font-semibold ${
