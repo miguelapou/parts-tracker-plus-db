@@ -4484,7 +4484,7 @@ const TakumiGarage = () => {
               {/* Detail View */}
               {partDetailView === 'detail' && (
               <div className="slide-in-left">
-              <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+              <div className="p-4 sm:p-6 pb-8 overflow-y-auto max-h-[calc(80vh-120px)] sm:max-h-[calc(80vh-140px)] modal-scrollable" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {/* Status Badge */}
                 <div className="mb-6">
                   <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(viewingPart)}`}>
