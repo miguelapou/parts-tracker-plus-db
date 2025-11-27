@@ -3328,7 +3328,7 @@ const TakumiGarage = () => {
                           </>
                         ) : null;
                       })()}
-                      {projectVehicleFilter === 'all' && <span>All Vehicles</span>}
+                      {projectVehicleFilter === 'all' && <span>All</span>}
                     </div>
                     <ChevronDown className="w-4 h-4" />
                   </button>
@@ -3354,7 +3354,7 @@ const TakumiGarage = () => {
                               : darkMode ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-100 text-gray-900'
                           }`}
                         >
-                          All Vehicles
+                          All
                         </button>
                         {vehicles.map(vehicle => (
                           <button
@@ -5033,7 +5033,7 @@ const TakumiGarage = () => {
                       setEditingPart(null);
                       setOriginalPartData(null);
                     }}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm border ${
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center text-sm border ${
                       darkMode
                         ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600'
                         : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300'
@@ -5041,6 +5041,34 @@ const TakumiGarage = () => {
                   >
                     <ChevronDown className="w-4 h-4 rotate-90" />
                   </button>
+                  <button
+                    onClick={() => {
+                      setConfirmDialog({
+                        isOpen: true,
+                        title: 'Delete Part',
+                        message: 'Are you sure you want to delete this part? This action cannot be undone.',
+                        confirmText: 'Delete',
+                        onConfirm: async () => {
+                          await deletePart(viewingPart.id);
+                          setShowPartDetailModal(false);
+                          setViewingPart(null);
+                          setPartDetailView('detail');
+                          setEditingPart(null);
+                          setOriginalPartData(null);
+                        }
+                      });
+                    }}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
+                      darkMode
+                        ? 'bg-red-900/30 hover:bg-red-900/50 text-red-400 border border-red-700'
+                        : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-300'
+                    }`}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
                   <button
                     onClick={() => setPartDetailView('manage-vendors')}
                     className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm border ${
@@ -5052,24 +5080,24 @@ const TakumiGarage = () => {
                     <Settings className="w-4 h-4" />
                     Vendors
                   </button>
+                  <button
+                    onClick={async () => {
+                      await saveEditedPart();
+                      setPartDetailView('detail');
+                    }}
+                    disabled={!editingPart.part}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
+                      !editingPart.part
+                        ? darkMode 
+                          ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    }`}
+                  >
+                    <span className="sm:hidden">Save</span>
+                    <span className="hidden sm:inline">Save Changes</span>
+                  </button>
                 </div>
-                <button
-                  onClick={async () => {
-                    await saveEditedPart();
-                    setPartDetailView('detail');
-                  }}
-                  disabled={!editingPart.part}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
-                    !editingPart.part
-                      ? darkMode 
-                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
-                  }`}
-                >
-                  <span className="sm:hidden">Save</span>
-                  <span className="hidden sm:inline">Save Changes</span>
-                </button>
               </div>
               )}
               {partDetailView === 'manage-vendors' && (
