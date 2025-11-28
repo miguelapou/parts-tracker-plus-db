@@ -4202,7 +4202,7 @@ const TakumiGarage = () => {
                   </div>
                   
                   {/* Row 3: Vendor | Status | Shipping */}
-                  <div>
+                  <div className="self-start">
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
