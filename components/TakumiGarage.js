@@ -5189,43 +5189,82 @@ const TakumiGarage = () => {
                   darkMode ? 'border-gray-700' : 'border-slate-200'
                 }`}></div>
 
-                {/* Tracking */}
-                <div className="inline-block" onClick={(e) => e.stopPropagation()}>
-                  {part.tracking ? (
-                    getTrackingUrl(part.tracking) ? (
-                      <a
-                        href={getTrackingUrl(part.tracking)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        Track: {getCarrierName(part.tracking)}
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
+                {/* Tracking and Total Price Row (Mobile Only) */}
+                <div className="flex items-center justify-between gap-3 sm:hidden">
+                  {/* Tracking on Left */}
+                  <div className="inline-block" onClick={(e) => e.stopPropagation()}>
+                    {part.tracking ? (
+                      getTrackingUrl(part.tracking) ? (
+                        <a
+                          href={getTrackingUrl(part.tracking)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Track: {getCarrierName(part.tracking)}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      ) : (
+                        <div className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg ${
+                          darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'
+                        }`}>
+                          {getCarrierName(part.tracking)}
+                        </div>
+                      )
                     ) : (
-                      <div className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg ${
-                        darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'
+                      <span className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg border ${
+                        darkMode 
+                          ? 'bg-gray-700/50 text-gray-500 border-gray-600' 
+                          : 'bg-gray-100 text-gray-500 border-gray-300'
                       }`}>
-                        {getCarrierName(part.tracking)}
-                      </div>
-                    )
-                  ) : (
-                    <span className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg border ${
-                      darkMode 
-                        ? 'bg-gray-700/50 text-gray-500 border-gray-600' 
-                        : 'bg-gray-100 text-gray-500 border-gray-300'
-                    }`}>
-                      No Tracking
-                    </span>
-                  )}
-                </div>
-                {/* Total Price - Bottom Right Corner (Fixed Position, Mobile Only) */}
-                <div className="absolute bottom-2 right-2 sm:hidden">
+                        No Tracking
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Total Price on Right */}
                   <div className="flex items-baseline gap-1">
+                    <p className={`text-xs ${
+                      darkMode ? 'text-gray-400' : 'text-slate-600'
+                    }`}>total</p>
                     <p className={`text-2xl font-bold ${
                       darkMode ? 'text-gray-100' : 'text-slate-800'
                     }`}>${part.total.toFixed(2)}</p>
+                  </div>
+                </div>
+
+                {/* Desktop: Tracking Only */}
+                <div className="hidden sm:block">
+                  <div className="inline-block" onClick={(e) => e.stopPropagation()}>
+                    {part.tracking ? (
+                      getTrackingUrl(part.tracking) ? (
+                        <a
+                          href={getTrackingUrl(part.tracking)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Track: {getCarrierName(part.tracking)}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      ) : (
+                        <div className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg ${
+                          darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'
+                        }`}>
+                          {getCarrierName(part.tracking)}
+                        </div>
+                      )
+                    ) : (
+                      <span className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg border ${
+                        darkMode 
+                          ? 'bg-gray-700/50 text-gray-500 border-gray-600' 
+                          : 'bg-gray-100 text-gray-500 border-gray-300'
+                      }`}>
+                        No Tracking
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
