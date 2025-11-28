@@ -371,7 +371,7 @@ const ProjectDetailView = ({
                 ref={descriptionRef}
                 className={`text-base transition-all duration-300 ease-in-out ${
                   project.description 
-                    ? (darkMode ? 'text-gray-400' : 'text-gray-600')
+                    ? (darkMode ? 'text-gray-400' : 'text-slate-600')
                     : (darkMode ? 'text-gray-500 italic' : 'text-gray-500 italic')
                 } ${!isDescriptionExpanded && project.description ? 'line-clamp-3' : ''}`}
               >
@@ -400,7 +400,7 @@ const ProjectDetailView = ({
             }`}>Budget Used</h3>
             <div className="flex justify-between items-center mb-2">
               <span className={`text-sm font-medium ${
-                darkMode ? 'text-gray-300' : 'text-gray-700'
+                darkMode ? 'text-gray-300' : 'text-slate-700'
               }`}>
                 ${linkedPartsTotal.toFixed(2)} / ${project.budget?.toFixed(2) || '0.00'}
               </span>
@@ -437,10 +437,10 @@ const ProjectDetailView = ({
             </div>
             <div>
               <p className={`text-xs mb-1 ${
-                darkMode ? 'text-gray-400' : 'text-gray-600'
+                darkMode ? 'text-gray-400' : 'text-slate-600'
               }`}>Parts Linked</p>
               <p className={`text-lg font-bold ${
-                darkMode ? 'text-gray-100' : 'text-gray-900'
+                darkMode ? 'text-gray-100' : 'text-slate-800'
               }`}>
                 {linkedParts.length}
               </p>
@@ -929,7 +929,7 @@ const ProjectDetailView = ({
       {/* Linked Parts List - Full Width Below */}
       {linkedParts.length > 0 && (
         <div className={`pt-6 border-t ${
-          darkMode ? 'border-gray-700' : 'border-gray-200'
+          darkMode ? 'border-gray-700' : 'border-slate-200'
         }`}>
           <h3 className={`text-lg font-semibold mb-3 ${
             darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -950,7 +950,7 @@ const ProjectDetailView = ({
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1">
                     <h4 className={`font-medium ${
-                      darkMode ? 'text-gray-100' : 'text-gray-900'
+                      darkMode ? 'text-gray-100' : 'text-slate-800'
                     }`}>
                       {part.part}
                     </h4>
@@ -966,7 +966,7 @@ const ProjectDetailView = ({
                 </div>
                 {part.partNumber && part.partNumber !== '-' && (
                   <p className={`text-xs font-mono mb-3 ${
-                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                    darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>
                     Part #: {part.partNumber}
                   </p>
@@ -976,7 +976,7 @@ const ProjectDetailView = ({
                 }`}>
                   <div className="pt-3 space-y-2 mt-auto">
                   <div className="flex justify-between text-sm">
-                    <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                    <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
                       Part Price:
                     </span>
                     <span className={`font-medium ${
@@ -987,7 +987,7 @@ const ProjectDetailView = ({
                   </div>
                   {part.shipping > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                      <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
                         Shipping:
                       </span>
                       <span className={`font-medium ${
@@ -999,7 +999,7 @@ const ProjectDetailView = ({
                   )}
                   {part.duties > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                      <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
                         Duties:
                       </span>
                       <span className={`font-medium ${
@@ -1012,10 +1012,10 @@ const ProjectDetailView = ({
                   <div className={`flex justify-between text-base font-bold pt-2 border-t ${
                     darkMode ? 'border-gray-600' : 'border-gray-200'
                   }`}>
-                    <span className={darkMode ? 'text-gray-100' : 'text-gray-900'}>
+                    <span className={darkMode ? 'text-gray-100' : 'text-slate-800'}>
                       Total:
                     </span>
-                    <span className={darkMode ? 'text-gray-100' : 'text-gray-900'}>
+                    <span className={darkMode ? 'text-gray-100' : 'text-slate-800'}>
                       ${part.total.toFixed(2)}
                     </span>
                   </div>
@@ -1035,7 +1035,7 @@ const ProjectDetailView = ({
             darkMode ? 'text-gray-600' : 'text-gray-400'
           }`} />
           <p className={`text-sm ${
-            darkMode ? 'text-gray-400' : 'text-gray-600'
+            darkMode ? 'text-gray-400' : 'text-slate-600'
           }`}>
             No parts linked to this project yet
           </p>
@@ -1381,7 +1381,7 @@ const ProjectEditForm = ({
       <div className="space-y-4">
         <div>
           <label className={`block text-sm font-medium mb-2 ${
-            darkMode ? 'text-gray-300' : 'text-gray-700'
+            darkMode ? 'text-gray-300' : 'text-slate-700'
           }`}>
             Project Name
           </label>
@@ -1401,7 +1401,7 @@ const ProjectEditForm = ({
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className={`block text-sm font-medium mb-2 ${
-              darkMode ? 'text-gray-300' : 'text-gray-700'
+              darkMode ? 'text-gray-300' : 'text-slate-700'
             }`}>
               Priority
             </label>
@@ -1423,7 +1423,7 @@ const ProjectEditForm = ({
 
           <div>
             <label className={`block text-sm font-medium mb-2 ${
-              darkMode ? 'text-gray-300' : 'text-gray-700'
+              darkMode ? 'text-gray-300' : 'text-slate-700'
             }`}>
               <div className="flex items-center gap-2">
                 <Car className="w-4 h-4" />
@@ -1522,7 +1522,7 @@ const ProjectEditForm = ({
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className={`block text-sm font-medium mb-2 ${
-              darkMode ? 'text-gray-300' : 'text-gray-700'
+              darkMode ? 'text-gray-300' : 'text-slate-700'
             }`}>
               Budget ($)
             </label>
@@ -1544,7 +1544,7 @@ const ProjectEditForm = ({
       {/* Right Column: Description (taller) */}
       <div>
         <label className={`block text-sm font-medium mb-2 ${
-          darkMode ? 'text-gray-300' : 'text-gray-700'
+          darkMode ? 'text-gray-300' : 'text-slate-700'
         }`}>
           Description
         </label>
@@ -1600,7 +1600,7 @@ const LinkedPartsSection = ({
           >
             <div className="flex-1 min-w-0">
               <h4 className={`font-medium truncate ${
-                darkMode ? 'text-gray-100' : 'text-gray-900'
+                darkMode ? 'text-gray-100' : 'text-slate-800'
               }`}>
                 {part.part}
               </h4>
@@ -1664,7 +1664,7 @@ const VendorSelect = ({ value, onChange, darkMode, uniqueVendors }) => {
           <option key={vendor} value={vendor}>{vendor}</option>
         ))}
       </select>
-      <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+      <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-slate-600'}`}>
         Or enter a new vendor:
       </div>
       <input
@@ -3521,7 +3521,7 @@ const TakumiGarage = () => {
             <div 
               className={`rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] modal-content ${
                 isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
-              } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+              } ${darkMode ? 'bg-gray-800' : 'bg-slate-100'}`}
               onClick={(e) => e.stopPropagation()}
             >
               <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
@@ -3543,7 +3543,7 @@ const TakumiGarage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-1">
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Part Name <span className="text-red-500">*</span>
                     </label>
@@ -3563,7 +3563,7 @@ const TakumiGarage = () => {
                   <div></div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Part Number
                     </label>
@@ -3581,7 +3581,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Price ($)
                     </label>
@@ -3600,7 +3600,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Shipping ($)
                     </label>
@@ -3619,7 +3619,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Import Duties ($)
                     </label>
@@ -3638,7 +3638,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Tracking Link
                     </label>
@@ -3656,7 +3656,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Status
                     </label>
@@ -3678,7 +3678,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Vendor
                     </label>
@@ -3692,7 +3692,7 @@ const TakumiGarage = () => {
 
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Project <span className={`text-xs font-normal ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>(optional)</span>
                     </label>
@@ -3722,7 +3722,7 @@ const TakumiGarage = () => {
                     }`}>
                       <div className="flex items-center justify-between">
                         <span className={`text-sm font-medium ${
-                          darkMode ? 'text-gray-300' : 'text-gray-700'
+                          darkMode ? 'text-gray-300' : 'text-slate-700'
                         }`}>Calculated Total:</span>
                         <span className={`text-2xl font-bold ${
                           darkMode ? 'text-blue-400' : 'text-blue-600'
@@ -3735,7 +3735,7 @@ const TakumiGarage = () => {
                 </div>
               </div>
               <div className={`border-t ${
-                darkMode ? 'border-gray-700' : 'border-gray-200'
+                darkMode ? 'border-gray-700' : 'border-slate-200'
               }`}></div>
               <div className="p-6">
                 <div className="flex gap-3">
@@ -3780,7 +3780,7 @@ const TakumiGarage = () => {
           >
             <div 
               className={`rounded-lg shadow-xl max-w-md w-full modal-popup-enter ${
-                darkMode ? 'bg-gray-800' : 'bg-white'
+                darkMode ? 'bg-gray-800' : 'bg-slate-100'
               }`}
               onClick={(e) => e.stopPropagation()}
             >
@@ -3805,12 +3805,12 @@ const TakumiGarage = () => {
               </div>
               <div className="p-6 modal-scrollable">
                 <p className={`text-sm mb-4 ${
-                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                  darkMode ? 'text-gray-400' : 'text-slate-600'
                 }`}>
                   Enter the tracking number for this shipment (optional)
                 </p>
                 <label className={`block text-sm font-medium mb-2 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                  darkMode ? 'text-gray-300' : 'text-slate-700'
                 }`}>
                   Tracking Number
                 </label>
@@ -3866,7 +3866,7 @@ const TakumiGarage = () => {
             <div 
               className={`rounded-lg shadow-xl max-w-4xl w-full modal-content overflow-hidden transition-all duration-700 ease-in-out grid ${
                 isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
-              } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+              } ${darkMode ? 'bg-gray-800' : 'bg-slate-100'}`}
               style={{
                 gridTemplateRows: partDetailView === 'detail' ? 'auto 1fr auto' : 'auto 1fr auto',
                 maxHeight: partDetailView === 'detail' ? 'calc(100vh - 2rem)' : 'calc(100vh - 2rem)',
@@ -3959,17 +3959,17 @@ const TakumiGarage = () => {
                       {viewingPart.partNumber && viewingPart.partNumber !== '-' && (
                         <div>
                           <p className={`text-sm font-medium mb-1 ${
-                            darkMode ? 'text-gray-400' : 'text-gray-600'
+                            darkMode ? 'text-gray-400' : 'text-slate-600'
                           }`}>Part Number</p>
                           <p className={`text-base font-mono ${
-                            darkMode ? 'text-gray-100' : 'text-gray-900'
+                            darkMode ? 'text-gray-100' : 'text-slate-800'
                           }`}>{viewingPart.partNumber}</p>
                         </div>
                       )}
                       {viewingPart.vendor && (
                         <div>
                           <p className={`text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-400' : 'text-gray-600'
+                            darkMode ? 'text-gray-400' : 'text-slate-600'
                           }`}>Vendor</p>
                           <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getVendorColor(viewingPart.vendor)}`}>
                             {viewingPart.vendor}
@@ -3981,7 +3981,7 @@ const TakumiGarage = () => {
                         return project && (
                           <div>
                             <p className={`text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-400' : 'text-gray-600'
+                              darkMode ? 'text-gray-400' : 'text-slate-600'
                             }`}>Project</p>
                             <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
                               darkMode ? 'bg-blue-900/30 text-blue-200 border border-blue-700' : 'bg-blue-50 text-blue-800 border border-blue-200'
@@ -4004,29 +4004,29 @@ const TakumiGarage = () => {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span className={`text-sm ${
-                          darkMode ? 'text-gray-400' : 'text-gray-600'
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
                         }`}>Part Price</span>
                         <span className={`text-lg font-semibold ${
-                          darkMode ? 'text-gray-100' : 'text-gray-900'
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
                         }`}>${viewingPart.price.toFixed(2)}</span>
                       </div>
                       {viewingPart.shipping > 0 && (
                         <div className="flex justify-between items-center">
                           <span className={`text-sm ${
-                            darkMode ? 'text-gray-400' : 'text-gray-600'
+                            darkMode ? 'text-gray-400' : 'text-slate-600'
                           }`}>Shipping</span>
                           <span className={`text-lg font-semibold ${
-                            darkMode ? 'text-gray-100' : 'text-gray-900'
+                            darkMode ? 'text-gray-100' : 'text-slate-800'
                           }`}>${viewingPart.shipping.toFixed(2)}</span>
                         </div>
                       )}
                       {viewingPart.duties > 0 && (
                         <div className="flex justify-between items-center">
                           <span className={`text-sm ${
-                            darkMode ? 'text-gray-400' : 'text-gray-600'
+                            darkMode ? 'text-gray-400' : 'text-slate-600'
                           }`}>Import Duties</span>
                           <span className={`text-lg font-semibold ${
-                            darkMode ? 'text-gray-100' : 'text-gray-900'
+                            darkMode ? 'text-gray-100' : 'text-slate-800'
                           }`}>${viewingPart.duties.toFixed(2)}</span>
                         </div>
                       )}
@@ -4047,14 +4047,14 @@ const TakumiGarage = () => {
                 {/* Tracking Information */}
                 {viewingPart.tracking && (
                   <div className={`pt-6 border-t ${
-                    darkMode ? 'border-gray-700' : 'border-gray-200'
+                    darkMode ? 'border-gray-700' : 'border-slate-200'
                   }`}>
                     <h3 className={`text-lg font-semibold mb-3 ${
                       darkMode ? 'text-gray-200' : 'text-gray-800'
                     }`}>Tracking Information</h3>
                     <div className="flex items-center gap-3">
                       <span className={`text-sm ${
-                        darkMode ? 'text-gray-400' : 'text-gray-600'
+                        darkMode ? 'text-gray-400' : 'text-slate-600'
                       }`}>Carrier:</span>
                       {getTrackingUrl(viewingPart.tracking) ? (
                         <a
@@ -4083,7 +4083,7 @@ const TakumiGarage = () => {
               {/* Footer */}
               {partDetailView === 'detail' && (
               <div className={`sticky bottom-0 border-t p-4 flex justify-end ${
-                darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
+                darkMode ? 'border-gray-700 bg-gray-800' : 'border-slate-200 bg-slate-100'
               }`}>
                 <PrimaryButton
                   onClick={() => {
@@ -4127,7 +4127,7 @@ const TakumiGarage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-1">
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Part Name <span className="text-red-500">*</span>
                     </label>
@@ -4147,7 +4147,7 @@ const TakumiGarage = () => {
                   <div></div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Part Number
                     </label>
@@ -4165,7 +4165,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Price ($)
                     </label>
@@ -4184,7 +4184,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Shipping ($)
                     </label>
@@ -4203,7 +4203,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Import Duties ($)
                     </label>
@@ -4222,7 +4222,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Tracking Number
                     </label>
@@ -4240,7 +4240,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Status
                     </label>
@@ -4262,7 +4262,7 @@ const TakumiGarage = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Vendor
                     </label>
@@ -4276,7 +4276,7 @@ const TakumiGarage = () => {
 
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
                       Project <span className={`text-xs font-normal ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>(optional)</span>
                     </label>
@@ -4306,7 +4306,7 @@ const TakumiGarage = () => {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className={`text-sm ${
-                          darkMode ? 'text-gray-300' : 'text-gray-700'
+                          darkMode ? 'text-gray-300' : 'text-slate-700'
                         }`}>Price:</span>
                         <span className={`text-sm font-medium ${
                           darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -4317,7 +4317,7 @@ const TakumiGarage = () => {
                       {(parseFloat(editingPart.shipping) || 0) > 0 && (
                         <div className="flex items-center justify-between">
                           <span className={`text-sm ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
+                            darkMode ? 'text-gray-300' : 'text-slate-700'
                           }`}>Shipping:</span>
                           <span className={`text-sm font-medium ${
                             darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -4329,7 +4329,7 @@ const TakumiGarage = () => {
                       {(parseFloat(editingPart.duties) || 0) > 0 && (
                         <div className="flex items-center justify-between">
                           <span className={`text-sm ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
+                            darkMode ? 'text-gray-300' : 'text-slate-700'
                           }`}>Import Duties:</span>
                           <span className={`text-sm font-medium ${
                             darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -4358,7 +4358,7 @@ const TakumiGarage = () => {
               {/* Edit Footer */}
               {partDetailView === 'edit' && (
               <div className={`sticky bottom-0 border-t p-4 flex items-center justify-between ${
-                darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
+                darkMode ? 'border-gray-700 bg-gray-800' : 'border-slate-200 bg-slate-100'
               }`}>
                 <div className="flex items-center gap-2">
                   <button
@@ -4452,7 +4452,7 @@ const TakumiGarage = () => {
               <div className="p-6 modal-scrollable slide-in-right">
                 {uniqueVendors.length === 0 ? (
                   <div className={`text-center py-12 ${
-                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                    darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>
                     <Package className="w-16 h-16 mx-auto mb-4 opacity-50" />
                     <p>No vendors yet. Add parts with vendors to see them here.</p>
@@ -4489,7 +4489,7 @@ const TakumiGarage = () => {
                                     {vendor}
                                   </span>
                                   <span className={`text-sm ${
-                                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                                    darkMode ? 'text-gray-400' : 'text-slate-600'
                                   }`}>
                                     {partCount} {partCount === 1 ? 'part' : 'parts'}
                                   </span>
@@ -4573,7 +4573,7 @@ const TakumiGarage = () => {
               )}
               {partDetailView === 'manage-vendors' && (
               <div className={`sticky bottom-0 border-t p-4 flex items-center justify-between ${
-                darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
+                darkMode ? 'border-gray-700 bg-gray-800' : 'border-slate-200 bg-slate-100'
               }`}>
                 <button
                   onClick={() => {
@@ -4621,7 +4621,7 @@ const TakumiGarage = () => {
                 <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
                 <div>
                   <p className={`text-xs sm:text-sm mb-1 sm:mb-2 lg:mb-3 ${
-                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                    darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Order Placed</p>
                   <p className={`text-xl sm:text-2xl lg:text-3xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
@@ -4638,7 +4638,7 @@ const TakumiGarage = () => {
                 <Truck className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
                 <div>
                   <p className={`text-xs sm:text-sm mb-1 sm:mb-2 lg:mb-3 ${
-                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                    darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>In Transit</p>
                   <p className={`text-xl sm:text-2xl lg:text-3xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
@@ -4655,7 +4655,7 @@ const TakumiGarage = () => {
                 <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
                 <div>
                   <p className={`text-xs sm:text-sm mb-1 sm:mb-2 lg:mb-3 ${
-                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                    darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Delivered</p>
                   <p className={`text-xl sm:text-2xl lg:text-3xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
@@ -4664,12 +4664,12 @@ const TakumiGarage = () => {
               </div>
 
               <div className={`rounded-lg shadow-md p-3 sm:p-4 lg:p-6 border-l-4 border-purple-500 relative overflow-hidden ${
-                darkMode ? 'bg-gray-800' : 'bg-white'
+                darkMode ? 'bg-gray-800' : 'bg-slate-100'
               }`}>
                 <BadgeDollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-purple-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
                 <div>
                   <p className={`text-xs sm:text-sm mb-1 sm:mb-2 lg:mb-3 ${
-                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                    darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Total Spent</p>
                   <p className={`text-lg sm:text-2xl lg:text-3xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
@@ -4680,7 +4680,7 @@ const TakumiGarage = () => {
 
             {/* Search Box - Shows in left column on desktop only */}
             <div className={`hidden lg:block rounded-lg shadow-md p-3 ${
-              darkMode ? 'bg-gray-800' : 'bg-white'
+              darkMode ? 'bg-gray-800' : 'bg-slate-100'
             }`}>
               <div className="relative">
                 <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
@@ -4715,7 +4715,7 @@ const TakumiGarage = () => {
 
           {/* Cost Breakdown - order-2 on mobile */}
           <div className={`rounded-lg shadow-md p-4 sm:p-6 order-2 lg:order-none ${
-            darkMode ? 'bg-gray-800' : 'bg-white'
+            darkMode ? 'bg-gray-800' : 'bg-slate-100'
           }`}>
             <h3 className={`text-base sm:text-lg font-semibold mb-4 flex items-center gap-2 ${
               darkMode ? 'text-gray-100' : 'text-gray-800'
@@ -4728,7 +4728,7 @@ const TakumiGarage = () => {
                 darkMode ? 'border-gray-700' : 'border-gray-100'
               }`}>
                 <p className={`text-xs sm:text-sm ${
-                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                  darkMode ? 'text-gray-400' : 'text-slate-600'
                 }`}>Parts Cost</p>
                 <p className={`text-base sm:text-xl font-semibold truncate ${
                   darkMode ? 'text-gray-100' : 'text-gray-800'
@@ -4738,7 +4738,7 @@ const TakumiGarage = () => {
                 darkMode ? 'border-gray-700' : 'border-gray-100'
               }`}>
                 <p className={`text-xs sm:text-sm ${
-                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                  darkMode ? 'text-gray-400' : 'text-slate-600'
                 }`}>Shipping</p>
                 <p className={`text-base sm:text-xl font-semibold truncate ${
                   darkMode ? 'text-gray-100' : 'text-gray-800'
@@ -4748,7 +4748,7 @@ const TakumiGarage = () => {
                 darkMode ? 'border-gray-700' : 'border-gray-100'
               }`}>
                 <p className={`text-xs sm:text-sm ${
-                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                  darkMode ? 'text-gray-400' : 'text-slate-600'
                 }`}>Import Duties</p>
                 <p className={`text-base sm:text-xl font-semibold truncate ${
                   darkMode ? 'text-gray-100' : 'text-gray-800'
@@ -4756,7 +4756,7 @@ const TakumiGarage = () => {
               </div>
               <div className="pt-2">
                 <p className={`text-sm mb-2 ${
-                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                  darkMode ? 'text-gray-400' : 'text-slate-600'
                 }`}>Progress</p>
                 <div className="flex items-center gap-2">
                   <div className={`flex-1 rounded-full h-2 ${
@@ -4768,7 +4768,7 @@ const TakumiGarage = () => {
                     />
                   </div>
                   <span className={`text-sm font-semibold ${
-                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                    darkMode ? 'text-gray-300' : 'text-slate-700'
                   }`}>
                     {Math.round((stats.delivered / stats.total) * 100)}%
                   </span>
@@ -4779,7 +4779,7 @@ const TakumiGarage = () => {
 
           {/* Search Box - Mobile only (order-3, shows after cost breakdown) */}
           <div className={`lg:hidden rounded-lg shadow-md p-3 order-3 ${
-            darkMode ? 'bg-gray-800' : 'bg-white'
+            darkMode ? 'bg-gray-800' : 'bg-slate-100'
           }`}>
             <div className="relative">
               <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
@@ -4815,7 +4815,7 @@ const TakumiGarage = () => {
         {/* Desktop Table View - Hidden on mobile */}
         {filteredParts.length > 0 ? (
         <div className={`hidden lg:block rounded-lg shadow-md overflow-hidden ${
-          darkMode ? 'bg-gray-800' : 'bg-white'
+          darkMode ? 'bg-gray-800' : 'bg-slate-100'
         }`}>
           <div className="overflow-x-auto">
             <table className={`w-full ${isSorting ? 'table-sorting' : ''}`}>
@@ -5022,18 +5022,18 @@ const TakumiGarage = () => {
         </div>
         ) : (
           <div className={`hidden md:block text-center py-16 rounded-lg ${
-            darkMode ? 'bg-gray-800' : 'bg-white'
+            darkMode ? 'bg-gray-800' : 'bg-slate-100'
           }`}>
             <Package className={`w-20 h-20 mx-auto mb-4 ${
               darkMode ? 'text-gray-600' : 'text-gray-400'
             }`} />
             <h3 className={`text-xl font-semibold mb-2 ${
-              darkMode ? 'text-gray-300' : 'text-gray-700'
+              darkMode ? 'text-gray-300' : 'text-slate-700'
             }`}>
               No Parts Found
             </h3>
             <p className={`mb-4 ${
-              darkMode ? 'text-gray-400' : 'text-gray-600'
+              darkMode ? 'text-gray-400' : 'text-slate-600'
             }`}>
               {searchTerm || statusFilter !== 'all' || vendorFilter !== 'all' 
                 ? 'Try adjusting your filters or search term'
@@ -5064,13 +5064,13 @@ const TakumiGarage = () => {
                 className={`rounded-lg shadow-lg p-4 transition-all hover:shadow-xl cursor-pointer ${
                   darkMode 
                     ? 'bg-gray-800' 
-                    : 'bg-white'
+                    : 'bg-slate-100'
                 }`}
               >
                 {/* Card Header - Part Name and Status */}
                 <div className="flex items-center justify-between gap-3 mb-3">
                   <h3 className={`text-base font-bold flex-1 ${
-                    darkMode ? 'text-gray-100' : 'text-gray-900'
+                    darkMode ? 'text-gray-100' : 'text-slate-800'
                   }`}>
                     {part.part}
                   </h3>
@@ -5084,7 +5084,7 @@ const TakumiGarage = () => {
                   {part.vendor && (
                     <div className="flex items-center gap-2 mb-2">
                       <p className={`text-xs ${
-                        darkMode ? 'text-gray-400' : 'text-gray-600'
+                        darkMode ? 'text-gray-400' : 'text-slate-600'
                       }`}>Vendor:</p>
                       <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${getVendorColor(part.vendor)}`}>
                         {part.vendor}
@@ -5100,7 +5100,7 @@ const TakumiGarage = () => {
                       return vehicle && (
                         <div className="flex items-center gap-2">
                           <p className={`text-xs ${
-                            darkMode ? 'text-gray-400' : 'text-gray-600'
+                            darkMode ? 'text-gray-400' : 'text-slate-600'
                           }`}>Vehicle:</p>
                           <span 
                             className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${
@@ -5117,7 +5117,7 @@ const TakumiGarage = () => {
                     })()}
                     <div className="flex items-center gap-2">
                       <p className={`text-xs ${
-                        darkMode ? 'text-gray-400' : 'text-gray-600'
+                        darkMode ? 'text-gray-400' : 'text-slate-600'
                       }`}>Project:</p>
                       <div onClick={(e) => e.stopPropagation()}>
                         <ProjectDropdown part={part} />
@@ -5133,38 +5133,38 @@ const TakumiGarage = () => {
                   <div className="grid grid-cols-4 gap-2">
                     <div>
                       <p className={`text-xs mb-0.5 ${
-                        darkMode ? 'text-gray-400' : 'text-gray-600'
+                        darkMode ? 'text-gray-400' : 'text-slate-600'
                       }`}>Price</p>
                       <p className={`text-sm font-semibold ${
-                        darkMode ? 'text-gray-100' : 'text-gray-900'
+                        darkMode ? 'text-gray-100' : 'text-slate-800'
                       }`}>${part.price.toFixed(2)}</p>
                     </div>
                     {part.shipping > 0 && (
                       <div>
                         <p className={`text-xs mb-0.5 ${
-                          darkMode ? 'text-gray-400' : 'text-gray-600'
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
                         }`}>Ship</p>
                         <p className={`text-sm font-semibold ${
-                          darkMode ? 'text-gray-100' : 'text-gray-900'
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
                         }`}>${part.shipping.toFixed(2)}</p>
                       </div>
                     )}
                     {part.duties > 0 && (
                       <div>
                         <p className={`text-xs mb-0.5 ${
-                          darkMode ? 'text-gray-400' : 'text-gray-600'
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
                         }`}>Duties</p>
                         <p className={`text-sm font-semibold ${
-                          darkMode ? 'text-gray-100' : 'text-gray-900'
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
                         }`}>${part.duties.toFixed(2)}</p>
                       </div>
                     )}
                     <div>
                       <p className={`text-xs mb-0.5 ${
-                        darkMode ? 'text-gray-400' : 'text-gray-600'
+                        darkMode ? 'text-gray-400' : 'text-slate-600'
                       }`}>Total</p>
                       <p className={`text-base font-bold ${
-                        darkMode ? 'text-gray-100' : 'text-gray-900'
+                        darkMode ? 'text-gray-100' : 'text-slate-800'
                       }`}>${part.total.toFixed(2)}</p>
                     </div>
                   </div>
@@ -5214,18 +5214,18 @@ const TakumiGarage = () => {
           </div>
         ) : (
           <div className={`lg:hidden text-center py-16 rounded-lg ${
-            darkMode ? 'bg-gray-800' : 'bg-white'
+            darkMode ? 'bg-gray-800' : 'bg-slate-100'
           }`}>
             <Package className={`w-20 h-20 mx-auto mb-4 ${
               darkMode ? 'text-gray-600' : 'text-gray-400'
             }`} />
             <h3 className={`text-xl font-semibold mb-2 ${
-              darkMode ? 'text-gray-300' : 'text-gray-700'
+              darkMode ? 'text-gray-300' : 'text-slate-700'
             }`}>
               No Parts Found
             </h3>
             <p className={`mb-4 ${
-              darkMode ? 'text-gray-400' : 'text-gray-600'
+              darkMode ? 'text-gray-400' : 'text-slate-600'
             }`}>
               {searchTerm || statusFilter !== 'all' || vendorFilter !== 'all' 
                 ? 'Try adjusting your filters or search term'
@@ -5373,7 +5373,7 @@ const TakumiGarage = () => {
                     <div className="mb-4">
                       <div className="flex justify-between items-center mb-2">
                         <span className={`text-sm font-medium ${
-                          darkMode ? 'text-gray-300' : 'text-gray-700'
+                          darkMode ? 'text-gray-300' : 'text-slate-700'
                         }`}>
                           Budget Used
                         </span>
@@ -5405,7 +5405,7 @@ const TakumiGarage = () => {
                     }`}>
                       <div>
                         <p className={`text-xs mb-1 ${
-                          darkMode ? 'text-gray-400' : 'text-gray-600'
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
                         }`}>
                           Spent
                         </p>
@@ -5419,12 +5419,12 @@ const TakumiGarage = () => {
                       </div>
                       <div>
                         <p className={`text-xs mb-1 ${
-                          darkMode ? 'text-gray-400' : 'text-gray-600'
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
                         }`}>
                           Budget
                         </p>
                         <p className={`text-lg font-bold ${
-                          darkMode ? 'text-gray-100' : 'text-gray-900'
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
                         }`}>
                           ${project.budget?.toFixed(2) || '0.00'}
                         </p>
@@ -5435,7 +5435,7 @@ const TakumiGarage = () => {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <span className={`text-sm font-medium ${
-                          darkMode ? 'text-gray-400' : 'text-gray-600'
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
                         }`}>
                           Priority:
                         </span>
@@ -5454,7 +5454,7 @@ const TakumiGarage = () => {
                         }`}>
                           <div className="flex items-center justify-between mb-2">
                             <span className={`text-sm font-semibold flex items-center gap-1.5 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               <Package className="w-4 h-4" />
                               Linked Parts ({linkedParts.length})
@@ -5476,7 +5476,7 @@ const TakumiGarage = () => {
                               ))}
                               {linkedParts.length > 6 && (
                                 <div className={`col-span-2 text-xs text-center pt-1 ${
-                                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                                  darkMode ? 'text-gray-400' : 'text-slate-600'
                                 }`}>
                                   +{linkedParts.length - 6} more
                                 </div>
@@ -5490,7 +5490,7 @@ const TakumiGarage = () => {
                                 darkMode ? 'text-gray-600' : 'text-gray-400'
                               }`} />
                               <p className={`text-xs ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>
                                 No parts linked
                               </p>
@@ -5509,7 +5509,7 @@ const TakumiGarage = () => {
                               darkMode ? 'text-green-400' : 'text-green-600'
                             }`} />
                             <span className={`text-xs font-medium ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               {project.todos.filter(t => t.completed).length}
                             </span>
@@ -5519,7 +5519,7 @@ const TakumiGarage = () => {
                               darkMode ? 'text-gray-400' : 'text-gray-500'
                             }`} />
                             <span className={`text-xs font-medium ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               {project.todos.filter(t => !t.completed).length}
                             </span>
@@ -5535,18 +5535,18 @@ const TakumiGarage = () => {
             {/* Empty State */}
             {projects.length === 0 && (
               <div className={`text-center py-12 rounded-lg ${
-                darkMode ? 'bg-gray-800' : 'bg-white'
+                darkMode ? 'bg-gray-800' : 'bg-slate-100'
               }`}>
                 <Wrench className={`w-16 h-16 mx-auto mb-4 ${
                   darkMode ? 'text-gray-600' : 'text-gray-400'
                 }`} />
                 <h3 className={`text-xl font-semibold mb-2 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                  darkMode ? 'text-gray-300' : 'text-slate-700'
                 }`}>
                   No Projects Yet
                 </h3>
                 <p className={`mb-4 ${
-                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                  darkMode ? 'text-gray-400' : 'text-slate-600'
                 }`}>
                   Start organizing your restoration by creating your first project
                 </p>
@@ -5571,7 +5571,7 @@ const TakumiGarage = () => {
                 <div 
                   className={`rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] modal-content ${
                     isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
-                  } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+                  } ${darkMode ? 'bg-gray-800' : 'bg-slate-100'}`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
@@ -5598,7 +5598,7 @@ const TakumiGarage = () => {
                       <div className="space-y-4">
                         <div>
                           <label className={`block text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
+                            darkMode ? 'text-gray-300' : 'text-slate-700'
                           }`}>
                             Project Name <span className="text-red-500">*</span>
                           </label>
@@ -5620,7 +5620,7 @@ const TakumiGarage = () => {
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Priority
                             </label>
@@ -5642,7 +5642,7 @@ const TakumiGarage = () => {
 
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               <div className="flex items-center gap-2">
                                 <Car className="w-4 h-4" />
@@ -5672,7 +5672,7 @@ const TakumiGarage = () => {
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Budget ($)
                             </label>
@@ -5695,7 +5695,7 @@ const TakumiGarage = () => {
                       {/* Right Column: Description (taller) */}
                       <div>
                         <label className={`block text-sm font-medium mb-2 ${
-                          darkMode ? 'text-gray-300' : 'text-gray-700'
+                          darkMode ? 'text-gray-300' : 'text-slate-700'
                         }`}>
                           Description
                         </label>
@@ -5713,7 +5713,7 @@ const TakumiGarage = () => {
                     </div>
                   </div>
                   <div className={`border-t ${
-                    darkMode ? 'border-gray-700' : 'border-gray-200'
+                    darkMode ? 'border-gray-700' : 'border-slate-200'
                   }`}></div>
                   <div className="p-6">
                     <div className="flex gap-3">
@@ -5793,7 +5793,7 @@ const TakumiGarage = () => {
                 <div 
                   className={`rounded-lg shadow-xl max-w-5xl w-full overflow-hidden modal-content transition-all duration-700 ease-in-out grid ${
                     isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
-                  } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+                  } ${darkMode ? 'bg-gray-800' : 'bg-slate-100'}`}
                   style={{
                     gridTemplateRows: 'auto 1fr auto',
                     maxHeight: projectModalEditMode ? '90vh' : '85vh',
@@ -5918,7 +5918,7 @@ const TakumiGarage = () => {
 
                   {/* Footer with conditional buttons */}
                   <div className={`sticky bottom-0 border-t p-4 flex items-center justify-between ${
-                    darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
+                    darkMode ? 'border-gray-700 bg-gray-800' : 'border-slate-200 bg-slate-100'
                   }`}>
                     {projectModalEditMode ? (
                       <button
@@ -6072,7 +6072,7 @@ const TakumiGarage = () => {
                       : dragOverVehicle?.id === vehicle.id
                         ? (darkMode ? 'ring-2 ring-blue-500' : 'ring-2 ring-blue-400')
                         : ''
-                  } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+                  } ${darkMode ? 'bg-gray-800' : 'bg-slate-100'}`}
                   style={{ borderTopColor: getMutedColor(vehicle.color, darkMode) }}
                 >
                   {/* Drag Handle - Hidden on mobile */}
@@ -6146,13 +6146,13 @@ const TakumiGarage = () => {
                   {/* Vehicle Header */}
                   <div className={`mb-4 ${vehicle.image_url ? 'mt-4' : 'mt-8'}`}>
                     <h3 className={`text-xl font-bold mb-1 ${
-                      darkMode ? 'text-gray-100' : 'text-gray-900'
+                      darkMode ? 'text-gray-100' : 'text-slate-800'
                     }`}>
                       {vehicle.nickname || (vehicle.year ? `${vehicle.year} ` : '') + vehicle.name}
                     </h3>
                     {vehicle.nickname && (
                       <p className={`text-sm mb-2 ${
-                        darkMode ? 'text-gray-400' : 'text-gray-600'
+                        darkMode ? 'text-gray-400' : 'text-slate-600'
                       }`}>
                         {vehicle.year ? `${vehicle.year} ` : ''}{vehicle.name}
                       </p>
@@ -6181,10 +6181,10 @@ const TakumiGarage = () => {
                           const vehicleProjects = getVehicleProjects(vehicle.id);
                           return (
                             <div className={`mt-4 pt-4 border-t ${
-                              darkMode ? 'border-gray-700' : 'border-gray-200'
+                              darkMode ? 'border-gray-700' : 'border-slate-200'
                             }`}>
                               <h4 className={`text-xs font-semibold mb-2 uppercase tracking-wider ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>
                                 Projects ({vehicleProjects.length})
                               </h4>
@@ -6250,18 +6250,18 @@ const TakumiGarage = () => {
             {/* Empty State */}
             {vehicles.length === 0 && (
               <div className={`text-center py-12 rounded-lg ${
-                darkMode ? 'bg-gray-800' : 'bg-white'
+                darkMode ? 'bg-gray-800' : 'bg-slate-100'
               }`}>
                 <Car className={`w-16 h-16 mx-auto mb-4 ${
                   darkMode ? 'text-gray-600' : 'text-gray-400'
                 }`} />
                 <h3 className={`text-xl font-semibold mb-2 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                  darkMode ? 'text-gray-300' : 'text-slate-700'
                 }`}>
                   No Vehicles Yet
                 </h3>
                 <p className={`mb-4 ${
-                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                  darkMode ? 'text-gray-400' : 'text-slate-600'
                 }`}>
                   Add your first vehicle to track maintenance and information
                 </p>
@@ -6286,7 +6286,7 @@ const TakumiGarage = () => {
                 <div 
                   className={`rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] modal-content ${
                     isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
-                  } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+                  } ${darkMode ? 'bg-gray-800' : 'bg-slate-100'}`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className={`sticky top-0 border-b px-6 py-4 flex items-center justify-between ${
@@ -6312,7 +6312,7 @@ const TakumiGarage = () => {
                       <div className="space-y-4">
                         <div>
                           <label className={`block text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
+                            darkMode ? 'text-gray-300' : 'text-slate-700'
                           }`}>
                             Nickname *
                           </label>
@@ -6328,7 +6328,7 @@ const TakumiGarage = () => {
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Vehicle Color
                             </label>
@@ -6340,14 +6340,14 @@ const TakumiGarage = () => {
                                 className="h-10 w-20 rounded cursor-pointer border-2 border-gray-300"
                               />
                               <span className={`text-sm font-mono ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>{newVehicle.color || '#3B82F6'}</span>
                             </div>
                           </div>
 
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Year
                             </label>
@@ -6369,7 +6369,7 @@ const TakumiGarage = () => {
 
                         <div>
                           <label className={`block text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
+                            darkMode ? 'text-gray-300' : 'text-slate-700'
                           }`}>
                             Vehicle Name
                           </label>
@@ -6389,7 +6389,7 @@ const TakumiGarage = () => {
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               License Plate
                             </label>
@@ -6408,7 +6408,7 @@ const TakumiGarage = () => {
 
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               VIN
                             </label>
@@ -6428,7 +6428,7 @@ const TakumiGarage = () => {
 
                         <div>
                           <label className={`block text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
+                            darkMode ? 'text-gray-300' : 'text-slate-700'
                           }`}>
                             Insurance Policy
                           </label>
@@ -6446,7 +6446,7 @@ const TakumiGarage = () => {
                       <div className="space-y-4">
                         <div>
                           <label className={`block text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
+                            darkMode ? 'text-gray-300' : 'text-slate-700'
                           }`}>
                             Vehicle Image
                           </label>
@@ -6494,7 +6494,7 @@ const TakumiGarage = () => {
                                 <p className={`mb-2 text-sm ${
                                   isDraggingImage
                                     ? 'text-blue-600 font-semibold'
-                                    : darkMode ? 'text-gray-400' : 'text-gray-600'
+                                    : darkMode ? 'text-gray-400' : 'text-slate-600'
                                 }`}>
                                   {isDraggingImage ? (
                                     'Drop image here'
@@ -6526,7 +6526,7 @@ const TakumiGarage = () => {
                     {/* Half Width Sections Below */}
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className={`pt-4 border-t ${
-                        darkMode ? 'border-gray-700' : 'border-gray-200'
+                        darkMode ? 'border-gray-700' : 'border-slate-200'
                       }`}>
                         <h3 className={`text-lg font-semibold mb-3 ${
                           darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -6536,7 +6536,7 @@ const TakumiGarage = () => {
                         <div className="space-y-4">
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Fuel Filter
                             </label>
@@ -6555,7 +6555,7 @@ const TakumiGarage = () => {
 
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Air Filter
                             </label>
@@ -6575,7 +6575,7 @@ const TakumiGarage = () => {
                       </div>
 
                       <div className={`pt-4 border-t ${
-                        darkMode ? 'border-gray-700' : 'border-gray-200'
+                        darkMode ? 'border-gray-700' : 'border-slate-200'
                       }`}>
                         <h3 className={`text-lg font-semibold mb-3 ${
                           darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -6584,7 +6584,7 @@ const TakumiGarage = () => {
                         </h3>
                         <div>
                           <label className={`block text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-300' : 'text-gray-700'
+                            darkMode ? 'text-gray-300' : 'text-slate-700'
                           }`}>
                             Battery Type
                           </label>
@@ -6602,7 +6602,7 @@ const TakumiGarage = () => {
                     {/* Oil Info Section - Full Width */}
                     <div className="mt-6">
                       <div className={`pt-4 border-t ${
-                        darkMode ? 'border-gray-700' : 'border-gray-200'
+                        darkMode ? 'border-gray-700' : 'border-slate-200'
                       }`}>
                         <h3 className={`text-lg font-semibold mb-3 ${
                           darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -6612,7 +6612,7 @@ const TakumiGarage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Oil Filter
                             </label>
@@ -6627,7 +6627,7 @@ const TakumiGarage = () => {
 
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Oil Type
                             </label>
@@ -6646,7 +6646,7 @@ const TakumiGarage = () => {
 
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Oil Capacity
                             </label>
@@ -6665,7 +6665,7 @@ const TakumiGarage = () => {
 
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Oil Brand
                             </label>
@@ -6684,7 +6684,7 @@ const TakumiGarage = () => {
 
                           <div>
                             <label className={`block text-sm font-medium mb-2 ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
                             }`}>
                               Drain Plug
                             </label>
@@ -6705,7 +6705,7 @@ const TakumiGarage = () => {
                     </div>
                   </div>
                   <div className={`border-t ${
-                    darkMode ? 'border-gray-700' : 'border-gray-200'
+                    darkMode ? 'border-gray-700' : 'border-slate-200'
                   }`}></div>
                   <div className="p-6">
                     <div className="flex gap-3">
@@ -6813,7 +6813,7 @@ const TakumiGarage = () => {
                 <div 
                   className={`rounded-lg shadow-xl max-w-5xl w-full overflow-hidden modal-content transition-all duration-700 ease-in-out grid ${
                     isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
-                  } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+                  } ${darkMode ? 'bg-gray-800' : 'bg-slate-100'}`}
                   style={{
                     gridTemplateRows: 'auto 1fr auto',
                     maxHeight: vehicleModalEditMode ? '90vh' : '85vh',
@@ -6827,7 +6827,7 @@ const TakumiGarage = () => {
                   }`}>
                     <div className="flex items-center gap-3">
                       <h2 className={`text-2xl font-bold ${
-                        darkMode ? 'text-gray-100' : 'text-gray-900'
+                        darkMode ? 'text-gray-100' : 'text-slate-800'
                       }`} style={{ fontFamily: "'FoundationOne', 'Courier New', monospace" }}>
                         {vehicleModalProjectView ? vehicleModalProjectView.name : (viewingVehicle.nickname || viewingVehicle.name || 'Vehicle Details')}
                       </h2>
@@ -6904,20 +6904,20 @@ const TakumiGarage = () => {
                             {viewingVehicle.year && (
                               <div>
                                 <p className={`text-sm font-medium mb-1 ${
-                                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                                  darkMode ? 'text-gray-400' : 'text-slate-600'
                                 }`}>Year</p>
                                 <p className={`text-base ${
-                                  darkMode ? 'text-gray-100' : 'text-gray-900'
+                                  darkMode ? 'text-gray-100' : 'text-slate-800'
                                 }`}>{viewingVehicle.year}</p>
                               </div>
                             )}
                             {viewingVehicle.name && (
                               <div>
                                 <p className={`text-sm font-medium mb-1 ${
-                                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                                  darkMode ? 'text-gray-400' : 'text-slate-600'
                                 }`}>Model</p>
                                 <p className={`text-base ${
-                                  darkMode ? 'text-gray-100' : 'text-gray-900'
+                                  darkMode ? 'text-gray-100' : 'text-slate-800'
                                 }`}>{viewingVehicle.name}</p>
                               </div>
                             )}
@@ -6926,7 +6926,7 @@ const TakumiGarage = () => {
                             {viewingVehicle.license_plate && (
                               <div>
                                 <p className={`text-sm font-medium mb-2 ${
-                                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                                  darkMode ? 'text-gray-400' : 'text-slate-600'
                                 }`}>License Plate</p>
                                 <span className={`inline-block px-3 py-1 rounded text-sm font-medium ${
                                   darkMode ? 'bg-blue-600 text-blue-100' : 'bg-blue-100 text-blue-800'
@@ -6938,7 +6938,7 @@ const TakumiGarage = () => {
                             {viewingVehicle.vin && (
                               <div>
                                 <p className={`text-sm font-medium mb-2 ${
-                                  darkMode ? 'text-gray-400' : 'text-gray-600'
+                                  darkMode ? 'text-gray-400' : 'text-slate-600'
                                 }`}>VIN</p>
                                 <span className={`inline-block px-3 py-1 rounded-full text-xs font-mono ${
                                   darkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
@@ -6951,10 +6951,10 @@ const TakumiGarage = () => {
                           {viewingVehicle.insurance_policy && (
                             <div className="col-span-2">
                               <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>Insurance Policy</p>
                               <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                                darkMode ? 'text-gray-100' : 'text-slate-800'
                               }`}>{viewingVehicle.insurance_policy}</p>
                             </div>
                           )}
@@ -6973,7 +6973,7 @@ const TakumiGarage = () => {
                                 <div className="grid grid-cols-2 gap-4">
                                   <div>
                                     <p className={`text-sm font-medium mb-2 ${
-                                      darkMode ? 'text-gray-400' : 'text-gray-600'
+                                      darkMode ? 'text-gray-400' : 'text-slate-600'
                                     }`}>Total Spent</p>
                                     <p className={`text-2xl font-bold ${
                                       darkMode ? 'text-green-400' : 'text-green-600'
@@ -6981,10 +6981,10 @@ const TakumiGarage = () => {
                                   </div>
                                   <div>
                                     <p className={`text-sm font-medium mb-2 ${
-                                      darkMode ? 'text-gray-400' : 'text-gray-600'
+                                      darkMode ? 'text-gray-400' : 'text-slate-600'
                                     }`}>Total Budget</p>
                                     <p className={`text-2xl font-bold ${
-                                      darkMode ? 'text-gray-100' : 'text-gray-900'
+                                      darkMode ? 'text-gray-100' : 'text-slate-800'
                                     }`}>${totalBudget.toFixed(2)}</p>
                                   </div>
                                 </div>
@@ -7022,7 +7022,7 @@ const TakumiGarage = () => {
 
                     {/* Maintenance Section (includes filters, oil, battery) */}
                     <div className={`pt-6 border-t ${
-                      darkMode ? 'border-gray-700' : 'border-gray-200'
+                      darkMode ? 'border-gray-700' : 'border-slate-200'
                     }`}>
                       <h3 className={`text-lg font-semibold mb-3 ${
                         darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -7034,80 +7034,80 @@ const TakumiGarage = () => {
                           {viewingVehicle.fuel_filter && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>Fuel Filter</p>
                               <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                                darkMode ? 'text-gray-100' : 'text-slate-800'
                               }`}>{viewingVehicle.fuel_filter}</p>
                             </div>
                           )}
                           {viewingVehicle.air_filter && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>Air Filter</p>
                               <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                                darkMode ? 'text-gray-100' : 'text-slate-800'
                               }`}>{viewingVehicle.air_filter}</p>
                             </div>
                           )}
                           {viewingVehicle.oil_filter && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>Oil Filter</p>
                               <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                                darkMode ? 'text-gray-100' : 'text-slate-800'
                               }`}>{viewingVehicle.oil_filter}</p>
                             </div>
                           )}
                           {viewingVehicle.oil_type && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>Oil Type</p>
                               <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                                darkMode ? 'text-gray-100' : 'text-slate-800'
                               }`}>{viewingVehicle.oil_type}</p>
                             </div>
                           )}
                           {viewingVehicle.oil_capacity && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>Oil Capacity</p>
                               <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                                darkMode ? 'text-gray-100' : 'text-slate-800'
                               }`}>{viewingVehicle.oil_capacity}</p>
                             </div>
                           )}
                           {viewingVehicle.oil_brand && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>Oil Brand</p>
                               <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                                darkMode ? 'text-gray-100' : 'text-slate-800'
                               }`}>{viewingVehicle.oil_brand}</p>
                             </div>
                           )}
                           {viewingVehicle.drain_plug && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>Drain Plug</p>
                               <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                                darkMode ? 'text-gray-100' : 'text-slate-800'
                               }`}>{viewingVehicle.drain_plug}</p>
                             </div>
                           )}
                           {viewingVehicle.battery && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>Battery Type</p>
                               <p className={`text-base ${
-                                darkMode ? 'text-gray-100' : 'text-gray-900'
+                                darkMode ? 'text-gray-100' : 'text-slate-800'
                               }`}>{viewingVehicle.battery}</p>
                             </div>
                           )}
@@ -7120,7 +7120,7 @@ const TakumiGarage = () => {
                             darkMode ? 'text-gray-600' : 'text-gray-400'
                           }`} />
                           <p className={`text-sm ${
-                            darkMode ? 'text-gray-400' : 'text-gray-600'
+                            darkMode ? 'text-gray-400' : 'text-slate-600'
                           }`}>
                             No maintenance information added yet
                           </p>
@@ -7133,7 +7133,7 @@ const TakumiGarage = () => {
                       const vehicleProjects = getVehicleProjects(viewingVehicle.id);
                       return (
                         <div className={`pt-6 border-t ${
-                          darkMode ? 'border-gray-700' : 'border-gray-200'
+                          darkMode ? 'border-gray-700' : 'border-slate-200'
                         }`}>
                           <h3 className={`text-lg font-semibold mb-3 ${
                             darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -7170,7 +7170,7 @@ const TakumiGarage = () => {
                                     </h4>
                                     <p className={`text-sm mb-3 line-clamp-3 overflow-hidden ${
                                       project.description 
-                                        ? (darkMode ? 'text-gray-400' : 'text-gray-600')
+                                        ? (darkMode ? 'text-gray-400' : 'text-slate-600')
                                         : (darkMode ? 'text-gray-500 italic' : 'text-gray-500 italic')
                                     }`}
                                     style={{ height: '3.75rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
@@ -7181,7 +7181,7 @@ const TakumiGarage = () => {
                                         <Package className={`w-3 h-3 ${
                                           darkMode ? 'text-gray-500' : 'text-gray-400'
                                         }`} />
-                                        <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                                        <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
                                           {projectParts.length} parts
                                         </span>
                                       </div>
@@ -7190,7 +7190,7 @@ const TakumiGarage = () => {
                                         <BadgeDollarSign className={`w-3 h-3 ${
                                           darkMode ? 'text-gray-500' : 'text-gray-400'
                                         }`} />
-                                        <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                                        <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
                                           ${projectTotal.toFixed(2)}
                                         </span>
                                       </div>
@@ -7202,7 +7202,7 @@ const TakumiGarage = () => {
                                               <CheckCircle className={`w-3 h-3 ${
                                                 darkMode ? 'text-green-400' : 'text-green-600'
                                               }`} />
-                                              <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                                              <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
                                                 {completedTodos}
                                               </span>
                                             </div>
@@ -7210,7 +7210,7 @@ const TakumiGarage = () => {
                                               <Clock className={`w-3 h-3 ${
                                                 darkMode ? 'text-gray-400' : 'text-gray-500'
                                               }`} />
-                                              <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                                              <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
                                                 {uncompletedTodos}
                                               </span>
                                             </div>
@@ -7230,7 +7230,7 @@ const TakumiGarage = () => {
                                 darkMode ? 'text-gray-600' : 'text-gray-400'
                               }`} />
                               <p className={`text-sm ${
-                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>
                                 No projects linked to this vehicle yet
                               </p>
@@ -7329,7 +7329,7 @@ const TakumiGarage = () => {
                             <div className="space-y-4">
                               <div>
                                 <label className={`block text-sm font-medium mb-2 ${
-                                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                                  darkMode ? 'text-gray-300' : 'text-slate-700'
                                 }`}>
                                   Nickname *
                                 </label>
@@ -7349,7 +7349,7 @@ const TakumiGarage = () => {
                               <div className="grid grid-cols-2 gap-4">
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     Vehicle Color
                                   </label>
@@ -7361,14 +7361,14 @@ const TakumiGarage = () => {
                                       className="h-10 w-20 rounded cursor-pointer border-2 border-gray-300"
                                     />
                                     <span className={`text-sm font-mono ${
-                                      darkMode ? 'text-gray-400' : 'text-gray-600'
+                                      darkMode ? 'text-gray-400' : 'text-slate-600'
                                     }`}>{viewingVehicle.color || '#3B82F6'}</span>
                                   </div>
                                 </div>
 
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     Year
                                   </label>
@@ -7390,7 +7390,7 @@ const TakumiGarage = () => {
 
                               <div>
                                 <label className={`block text-sm font-medium mb-2 ${
-                                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                                  darkMode ? 'text-gray-300' : 'text-slate-700'
                                 }`}>
                                   Vehicle Name
                                 </label>
@@ -7410,7 +7410,7 @@ const TakumiGarage = () => {
                               <div className="grid grid-cols-2 gap-4">
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     License Plate
                                   </label>
@@ -7429,7 +7429,7 @@ const TakumiGarage = () => {
 
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     VIN
                                   </label>
@@ -7449,7 +7449,7 @@ const TakumiGarage = () => {
 
                               <div>
                                 <label className={`block text-sm font-medium mb-2 ${
-                                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                                  darkMode ? 'text-gray-300' : 'text-slate-700'
                                 }`}>
                                   Insurance Policy
                                 </label>
@@ -7471,7 +7471,7 @@ const TakumiGarage = () => {
                             <div className="space-y-4">
                               <div>
                                 <label className={`block text-sm font-medium mb-2 ${
-                                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                                  darkMode ? 'text-gray-300' : 'text-slate-700'
                                 }`}>
                                   Vehicle Image
                                 </label>
@@ -7525,7 +7525,7 @@ const TakumiGarage = () => {
                                       <p className={`mb-2 text-sm ${
                                         isDraggingImage
                                           ? 'text-blue-600 font-semibold'
-                                          : darkMode ? 'text-gray-400' : 'text-gray-600'
+                                          : darkMode ? 'text-gray-400' : 'text-slate-600'
                                       }`}>
                                         {isDraggingImage ? (
                                           'Drop image here'
@@ -7556,7 +7556,7 @@ const TakumiGarage = () => {
                           {/* Maintenance Section - Full Width */}
                           <div className="mt-6">
                             <div className={`pt-4 border-t ${
-                              darkMode ? 'border-gray-700' : 'border-gray-200'
+                              darkMode ? 'border-gray-700' : 'border-slate-200'
                             }`}>
                               <h3 className={`text-lg font-semibold mb-3 ${
                                 darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -7566,7 +7566,7 @@ const TakumiGarage = () => {
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     Fuel Filter
                                   </label>
@@ -7585,7 +7585,7 @@ const TakumiGarage = () => {
 
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     Air Filter
                                   </label>
@@ -7604,7 +7604,7 @@ const TakumiGarage = () => {
 
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     Oil Filter
                                   </label>
@@ -7623,7 +7623,7 @@ const TakumiGarage = () => {
 
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     Oil Type
                                   </label>
@@ -7642,7 +7642,7 @@ const TakumiGarage = () => {
 
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     Oil Capacity
                                   </label>
@@ -7661,7 +7661,7 @@ const TakumiGarage = () => {
 
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     Oil Brand
                                   </label>
@@ -7680,7 +7680,7 @@ const TakumiGarage = () => {
 
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     Drain Plug
                                   </label>
@@ -7699,7 +7699,7 @@ const TakumiGarage = () => {
 
                                 <div>
                                   <label className={`block text-sm font-medium mb-2 ${
-                                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                                    darkMode ? 'text-gray-300' : 'text-slate-700'
                                   }`}>
                                     Battery Type
                                   </label>
@@ -7721,7 +7721,7 @@ const TakumiGarage = () => {
 
                   {/* Footer with Edit Button */}
                   <div className={`sticky bottom-0 border-t p-4 flex items-center justify-between ${
-                    darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
+                    darkMode ? 'border-gray-700 bg-gray-800' : 'border-slate-200 bg-slate-100'
                   }`}>
                     {(vehicleModalProjectView || vehicleModalEditMode) ? (
                       <button
