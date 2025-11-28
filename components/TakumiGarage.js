@@ -4586,7 +4586,7 @@ const TakumiGarage = () => {
                 >
                   <ChevronDown className="w-4 h-4 rotate-90" />
                 </button>
-                <button
+                <PrimaryButton
                   onClick={() => {
                     setPartDetailView('edit');
                     setEditingVendor(null);
@@ -6004,7 +6004,7 @@ const TakumiGarage = () => {
                         >
                           {viewingProject.status === 'on_hold' ? 'Resume' : 'Pause'}
                         </button>
-                        <button
+                        <PrimaryButton
                           onClick={async () => {
                             await updateProject(viewingProject.id, {
                               name: viewingProject.name,
