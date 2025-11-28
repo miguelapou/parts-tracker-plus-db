@@ -5088,19 +5088,21 @@ const TakumiGarage = () => {
 
                 {/* Vendor and Project Row */}
                 <div className="flex items-center justify-between gap-3 mb-3">
-                  {/* Vendor on Left (or empty space if no vendor) */}
+                  {/* Vendor on Left (or "none" badge if no vendor) */}
                   <div className="flex items-center gap-2">
+                    <p className={`text-xs ${
+                      darkMode ? 'text-gray-400' : 'text-slate-600'
+                    }`}>Vendor:</p>
                     {part.vendor ? (
-                      <>
-                        <p className={`text-xs ${
-                          darkMode ? 'text-gray-400' : 'text-slate-600'
-                        }`}>Vendor:</p>
-                        <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${getVendorColor(part.vendor)}`}>
-                          {part.vendor}
-                        </span>
-                      </>
+                      <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${getVendorColor(part.vendor)}`}>
+                        {part.vendor}
+                      </span>
                     ) : (
-                      <div></div>
+                      <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
+                        darkMode ? 'bg-gray-700 text-gray-500' : 'bg-gray-200 text-gray-500'
+                      }`}>
+                        none
+                      </span>
                     )}
                   </div>
                   
