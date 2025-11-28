@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { Search, Package, BadgeDollarSign, TrendingUp, Truck, CheckCircle, Clock, XCircle, ChevronDown, Plus, X, ExternalLink, ChevronUp, Edit2, Trash2, Moon, Sun, Wrench, List, Target, Calendar, GripVertical, ShoppingCart, Car, Upload, Image as ImageIcon, Gauge, Settings } from 'lucide-react';
+import { Search, Package, BadgeDollarSign, TrendingUp, Truck, CheckCircle, Clock, ChevronDown, Plus, X, ExternalLink, ChevronUp, Edit2, Trash2, Moon, Sun, Wrench, GripVertical, ShoppingCart, Car, Upload, Gauge, Settings } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 // ========================================
@@ -76,11 +76,6 @@ const calculateProjectTotal = (projectId, parts) => {
     .reduce((sum, part) => sum + (part.total || 0), 0);
 };
 
-// Dark mode class helper
-const dmClass = (darkMode, darkClass, lightClass) => {
-  return darkMode ? darkClass : lightClass;
-};
-
 // Common input field classes
 const inputClasses = (darkMode, additionalClasses = '') => {
   const base = `w-full md:max-w-md px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${additionalClasses}`;
@@ -88,28 +83,6 @@ const inputClasses = (darkMode, additionalClasses = '') => {
     ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
     : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400';
   return `${base} ${theme}`;
-};
-
-// Common select field classes
-const selectClasses = (darkMode, additionalClasses = '') => {
-  const base = `w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${additionalClasses}`;
-  const theme = darkMode 
-    ? 'bg-gray-700 border-gray-600 text-gray-100' 
-    : 'bg-white border-gray-300 text-gray-900';
-  return `${base} ${theme}`;
-};
-
-// Common button classes
-const buttonClasses = (darkMode, variant = 'primary') => {
-  if (variant === 'primary') {
-    return 'px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors';
-  }
-  if (variant === 'secondary') {
-    return darkMode 
-      ? 'px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-100 rounded-lg font-medium transition-colors'
-      : 'px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition-colors';
-  }
-  return '';
 };
 
 
