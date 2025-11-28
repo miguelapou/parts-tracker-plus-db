@@ -5368,7 +5368,7 @@ const TakumiGarage = () => {
                     </div>
 
                     {/* Description */}
-                    <div className="mb-4" style={{ height: '4.5rem' }}>
+                    <div className="mb-4" style={{ height: '3.75rem' }}>
                       <p className={`text-sm line-clamp-3 overflow-hidden ${
                         project.description 
                           ? (darkMode ? 'text-gray-400' : 'text-gray-600')
@@ -7185,7 +7185,7 @@ const TakumiGarage = () => {
                                         ? (darkMode ? 'text-gray-400' : 'text-gray-600')
                                         : (darkMode ? 'text-gray-500 italic' : 'text-gray-500 italic')
                                     }`}
-                                    style={{ height: '4.5rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
+                                    style={{ height: '3.75rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
                                       {project.description || 'No description added'}
                                     </p>
                                     <div className="flex flex-wrap gap-4 text-xs mt-auto">
