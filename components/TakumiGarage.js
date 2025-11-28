@@ -4121,8 +4121,8 @@ const TakumiGarage = () => {
                 })()}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Row 1: Part Name (full width) */}
-                  <div className="md:col-span-2">
+                  {/* Row 1: Part Name (left column only) */}
+                  <div>
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
@@ -4141,6 +4141,9 @@ const TakumiGarage = () => {
                       required
                     />
                   </div>
+                  
+                  {/* Right column empty on row 1 */}
+                  <div></div>
                   
                   {/* Left Column - Non-price fields */}
                   <div className="space-y-4">
