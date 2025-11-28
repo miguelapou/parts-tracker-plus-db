@@ -5100,7 +5100,7 @@ const TakumiGarage = () => {
                         </span>
                       </>
                     ) : (
-                      <div /> {/* Empty div to maintain space */}
+                      <div></div>
                     )}
                   </div>
                   
