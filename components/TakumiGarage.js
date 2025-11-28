@@ -5115,26 +5115,32 @@ const TakumiGarage = () => {
                   </div>
                 </div>
 
-                {/* Price - Simple total display on mobile, breakdown on desktop */}
-                <div className="mb-3">
-                  {/* Mobile: Total price with Status on right */}
-                  <div className="flex items-center justify-between gap-3 sm:hidden">
-                    <div className="flex items-baseline gap-2">
-                      <p className={`text-2xl font-bold ${
-                        darkMode ? 'text-gray-100' : 'text-slate-800'
-                      }`}>${part.total.toFixed(2)}</p>
-                      <p className={`text-xs ${
-                        darkMode ? 'text-gray-400' : 'text-slate-600'
-                      }`}>total</p>
-                    </div>
+                {/* Part Number and Status Row - Mobile only */}
+                <div className="mb-3 sm:hidden">
+                  <div className="flex items-center justify-between gap-3">
+                    {/* Part Number on Left */}
+                    {part.partNumber && part.partNumber !== '-' ? (
+                      <div className="flex items-center gap-2">
+                        <p className={`text-xs ${
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
+                        }`}>Part #:</p>
+                        <p className={`text-sm font-mono ${
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
+                        }`}>{part.partNumber}</p>
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
                     {/* Status on Right (no label) */}
                     <div onClick={(e) => e.stopPropagation()}>
                       <StatusDropdown part={part} />
                     </div>
                   </div>
-                  
-                  {/* Desktop: Show full breakdown */}
-                  <div className={`hidden sm:block p-3 rounded-lg ${
+                </div>
+                
+                {/* Desktop: Show full price breakdown */}
+                <div className="mb-3 hidden sm:block">
+                  <div className={`p-3 rounded-lg ${
                     darkMode ? 'bg-gray-700' : 'bg-gray-50'
                   }`}>
                     <div className="grid grid-cols-4 gap-2">
@@ -5214,14 +5220,14 @@ const TakumiGarage = () => {
                     </span>
                   )}
                 </div>
-                {/* Part Number - Bottom Right Corner (Fixed Position) */}
-                {part.partNumber && part.partNumber !== '-' && (
-                  <div className="absolute bottom-2 right-2">
-                    <p className={`text-[10px] font-mono ${
-                      darkMode ? 'text-gray-500' : 'text-gray-400'
-                    }`}>{part.partNumber}</p>
+                {/* Total Price - Bottom Right Corner (Fixed Position, Mobile Only) */}
+                <div className="absolute bottom-2 right-2 sm:hidden">
+                  <div className="flex items-baseline gap-1">
+                    <p className={`text-2xl font-bold ${
+                      darkMode ? 'text-gray-100' : 'text-slate-800'
+                    }`}>${part.total.toFixed(2)}</p>
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
