@@ -4121,7 +4121,7 @@ const TakumiGarage = () => {
                 })()}
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Part Name - Single Column, own row */}
+                  {/* Row 1: Part Name | empty | empty */}
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-slate-700'
@@ -4141,11 +4141,46 @@ const TakumiGarage = () => {
                       required
                     />
                   </div>
-                  
-                  {/* Empty columns to keep part name on its own row */}
+                  <div></div>
                   <div></div>
                   
-                  {/* Price column - starts here on row 1 */}
+                  {/* Row 2: Part Number | Tracking Number | Price */}
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
+                    }`}>
+                      Part Number
+                    </label>
+                    <input
+                      type="text"
+                      value={editingPart.partNumber}
+                      onChange={(e) => setEditingPart({ ...editingPart, partNumber: e.target.value })}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        darkMode 
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                      placeholder="e.g., 12345-67890"
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
+                    }`}>
+                      Tracking Number
+                    </label>
+                    <input
+                      type="text"
+                      value={editingPart.tracking}
+                      onChange={(e) => setEditingPart({ ...editingPart, tracking: e.target.value })}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        darkMode 
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                      placeholder="e.g., 1Z999AA10123456784"
+                    />
+                  </div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-slate-700'
@@ -4166,68 +4201,20 @@ const TakumiGarage = () => {
                     />
                   </div>
                   
-                  {/* Part Number */}
+                  {/* Row 3: Vendor | Status | Shipping */}
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
-                      Part Number
+                      Vendor
                     </label>
-                    <input
-                      type="text"
-                      value={editingPart.partNumber}
-                      onChange={(e) => setEditingPart({ ...editingPart, partNumber: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        darkMode 
-                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
-                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                      }`}
-                      placeholder="e.g., 12345-67890"
+                    <VendorSelect 
+                      value={editingPart.vendor}
+                      onChange={(value) => setEditingPart({ ...editingPart, vendor: value })}
+                      darkMode={darkMode}
+                      uniqueVendors={uniqueVendors}
                     />
                   </div>
-                  
-                  {/* Tracking Number */}
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-slate-700'
-                    }`}>
-                      Tracking Number
-                    </label>
-                    <input
-                      type="text"
-                      value={editingPart.tracking}
-                      onChange={(e) => setEditingPart({ ...editingPart, tracking: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        darkMode 
-                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
-                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                      }`}
-                      placeholder="e.g., 1Z999AA10123456784"
-                    />
-                  </div>
-                  
-                  {/* Shipping ($) - right column */}
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-slate-700'
-                    }`}>
-                      Shipping ($)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={editingPart.shipping}
-                      onChange={(e) => setEditingPart({ ...editingPart, shipping: e.target.value })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                        darkMode 
-                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
-                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                      }`}
-                      placeholder="0.00"
-                    />
-                  </div>
-                  
-                  {/* Status */}
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-slate-700'
@@ -4250,34 +4237,17 @@ const TakumiGarage = () => {
                       <option value="delivered">Delivered</option>
                     </select>
                   </div>
-                  
-                  {/* Vendor */}
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-slate-700'
                     }`}>
-                      Vendor
-                    </label>
-                    <VendorSelect 
-                      value={editingPart.vendor}
-                      onChange={(value) => setEditingPart({ ...editingPart, vendor: value })}
-                      darkMode={darkMode}
-                      uniqueVendors={uniqueVendors}
-                    />
-                  </div>
-                  
-                  {/* Duties ($) - right column */}
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-slate-700'
-                    }`}>
-                      Import Duties ($)
+                      Shipping ($)
                     </label>
                     <input
                       type="number"
                       step="0.01"
-                      value={editingPart.duties}
-                      onChange={(e) => setEditingPart({ ...editingPart, duties: e.target.value })}
+                      value={editingPart.shipping}
+                      onChange={(e) => setEditingPart({ ...editingPart, shipping: e.target.value })}
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                         darkMode 
                           ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
@@ -4286,8 +4256,9 @@ const TakumiGarage = () => {
                       placeholder="0.00"
                     />
                   </div>
-
-                  {/* Project */}
+                  
+                  {/* Row 4: empty | Project | Duties */}
+                  <div></div>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${
                       darkMode ? 'text-gray-300' : 'text-slate-700'
@@ -4312,11 +4283,29 @@ const TakumiGarage = () => {
                       ))}
                     </select>
                   </div>
-                  
-                  {/* Empty cell */}
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
+                    }`}>
+                      Import Duties ($)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={editingPart.duties}
+                      onChange={(e) => setEditingPart({ ...editingPart, duties: e.target.value })}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                        darkMode 
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                      placeholder="0.00"
+                    />
+                  </div>
+
+                  {/* Row 5: empty | empty | Price Breakdown Box */}
                   <div></div>
-                  
-                  {/* Price Breakdown Box - right column, single column width */}
+                  <div></div>
                   <div className={`border rounded-lg p-4 ${
                     darkMode 
                       ? 'bg-gray-700/50 border-gray-600' 
