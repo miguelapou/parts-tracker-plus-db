@@ -5368,8 +5368,8 @@ const TakumiGarage = () => {
                     </div>
 
                     {/* Description */}
-                    <div className="mb-4" style={{ minHeight: '3rem' }}>
-                      <p className={`text-sm line-clamp-2 ${
+                    <div className="mb-4" style={{ height: '4.5rem' }}>
+                      <p className={`text-sm line-clamp-3 ${
                         project.description 
                           ? (darkMode ? 'text-gray-400' : 'text-gray-600')
                           : (darkMode ? 'text-gray-500 italic' : 'text-gray-500 italic')
@@ -7041,7 +7041,7 @@ const TakumiGarage = () => {
                         Maintenance
                       </h3>
                       {(viewingVehicle.fuel_filter || viewingVehicle.air_filter || viewingVehicle.oil_filter || viewingVehicle.oil_type || viewingVehicle.oil_capacity || viewingVehicle.oil_brand || viewingVehicle.drain_plug || viewingVehicle.battery) ? (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                           {viewingVehicle.fuel_filter && (
                             <div>
                               <p className={`text-sm font-medium mb-1 ${
