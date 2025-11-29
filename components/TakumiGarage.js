@@ -6443,7 +6443,7 @@ const TakumiGarage = () => {
                         <div className="flex items-center justify-between gap-2 flex-wrap">
                           {vehicle.vin && (
                             <span className={`inline-block px-3 py-1 rounded-full text-xs font-mono ${
-                              darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                              darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-900'
                             }`}>
                               VIN: {vehicle.vin}
                             </span>
