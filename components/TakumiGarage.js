@@ -5800,7 +5800,7 @@ const TakumiGarage = () => {
                     </button>
                   </div>
 
-                  <div className="p-6 overflow-y-auto">
+                  <div className="p-6 overflow-y-auto" style={{ minHeight: 0 }}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Left Column: Project Name, Priority/Vehicle, Budget */}
                       <div className="space-y-4">
