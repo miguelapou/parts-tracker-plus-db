@@ -3031,6 +3031,7 @@ const TakumiGarage = () => {
     const isOpen = openDropdown === part.id;
     const buttonRef = useRef(null);
     const [dropdownPosition, setDropdownPosition] = useState('bottom');
+    const [dropdownStyle, setDropdownStyle] = useState({});
     const [isPositioned, setIsPositioned] = useState(false);
     useEffect(() => {
       if (isOpen && buttonRef.current) {
@@ -3039,7 +3040,16 @@ const TakumiGarage = () => {
         const spaceBelow = window.innerHeight - rect.bottom;
         
         // Simple: open upward if not enough space below
-        setDropdownPosition(spaceBelow < dropdownHeight ? 'top' : 'bottom');
+        const openUpward = spaceBelow < dropdownHeight;
+        setDropdownPosition(openUpward ? 'top' : 'bottom');
+        
+        // Calculate fixed position
+        setDropdownStyle({
+          left: `${rect.left}px`,
+          top: openUpward ? `${rect.top - dropdownHeight - 4}px` : `${rect.bottom + 4}px`,
+          minWidth: '140px'
+        });
+        
         setIsPositioned(true);
       } else {
         setIsPositioned(false);
@@ -3070,9 +3080,10 @@ const TakumiGarage = () => {
               }}
             />
             <div 
-              className={`absolute left-0 ${dropdownPosition === 'top' ? 'bottom-full mb-1' : 'top-full mt-1'} rounded-lg shadow-lg border py-1 z-50 min-w-[140px] ${
+              className={`fixed rounded-lg shadow-lg border py-1 z-50 ${
                 darkMode ? 'bg-gray-800 border-gray-600' : 'bg-slate-50 border-slate-200'
               }`}
+              style={dropdownStyle}
             >
               <button
                 onClick={(e) => {
@@ -3142,6 +3153,7 @@ const TakumiGarage = () => {
     const selectedProject = part.projectId ? projects.find(p => p.id === part.projectId) : null;
     const buttonRef = useRef(null);
     const [dropdownPosition, setDropdownPosition] = useState('bottom');
+    const [dropdownStyle, setDropdownStyle] = useState({});
     const [isPositioned, setIsPositioned] = useState(false);
     // Get priority color for selected project
     const getPriorityButtonColor = (priority) => {
@@ -3164,7 +3176,19 @@ const TakumiGarage = () => {
         const spaceBelow = window.innerHeight - rect.bottom;
         
         // Simple: open upward if not enough space below
-        setDropdownPosition(spaceBelow < dropdownHeight ? 'top' : 'bottom');
+        const openUpward = spaceBelow < dropdownHeight;
+        setDropdownPosition(openUpward ? 'top' : 'bottom');
+        
+        // Calculate fixed position - on mobile align right, on desktop align left
+        const isMobile = window.innerWidth < 768;
+        setDropdownStyle({
+          left: isMobile ? 'auto' : `${rect.left}px`,
+          right: isMobile ? `${window.innerWidth - rect.right}px` : 'auto',
+          top: openUpward ? `${rect.top - dropdownHeight - 4}px` : `${rect.bottom + 4}px`,
+          minWidth: '180px',
+          maxHeight: '240px'
+        });
+        
         setIsPositioned(true);
       } else {
         setIsPositioned(false);
@@ -3198,10 +3222,11 @@ const TakumiGarage = () => {
               }}
             />
             <div 
-              className={`absolute right-0 md:left-0 md:right-auto ${dropdownPosition === 'top' ? 'bottom-full mb-1' : 'top-full mt-1'} rounded-lg shadow-lg border py-1 z-50 min-w-[180px] max-h-60 overflow-y-auto scrollbar-hide ${
+              className={`fixed rounded-lg shadow-lg border py-1 z-50 overflow-y-auto scrollbar-hide ${
                 darkMode ? 'bg-gray-800 border-gray-600' : 'bg-slate-50 border-slate-200'
               }`}
               style={{
+                ...dropdownStyle,
                 scrollbarWidth: 'none',
                 msOverflowStyle: 'none'
               }}
