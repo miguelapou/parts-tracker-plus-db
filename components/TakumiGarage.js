@@ -3505,7 +3505,7 @@ const TakumiGarage = () => {
             {/* Animated hover background */}
             {hoverTab && tabRefs.current[hoverTab] && (
               <div
-                className={`absolute top-0 bottom-0 rounded-t-lg transition-all duration-300 ease-out ${
+                className={`absolute top-0 bottom-1 rounded-lg transition-all duration-300 ease-out ${
                   darkMode ? 'bg-gray-700/50' : 'bg-slate-200/50'
                 }`}
                 style={{
