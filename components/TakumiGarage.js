@@ -4282,7 +4282,7 @@ const TakumiGarage = () => {
                   </div>
 
                   {/* RIGHT COLUMN - Price fields */}
-                  <div className="order-2 md:order-none space-y-4">
+                  <div className="order-2 md:order-none flex flex-col gap-4">
                     {/* Price */}
                     <div>
                       <label className={`block text-sm font-medium mb-2 ${
