@@ -1730,6 +1730,7 @@ const TakumiGarage = () => {
   const [dragOverProject, setDragOverProject] = useState(null);
   const [draggedVehicle, setDraggedVehicle] = useState(null);
   const [dragOverVehicle, setDragOverVehicle] = useState(null);
+  const [dragOverArchiveZone, setDragOverArchiveZone] = useState(false);
 
   // Track if we're transitioning between modals to prevent scroll jumping
   const isTransitioningModals = useRef(false);
@@ -2300,6 +2301,44 @@ const TakumiGarage = () => {
   const handleVehicleDragEnd = () => {
     setDraggedVehicle(null);
     setDragOverVehicle(null);
+    setDragOverArchiveZone(false);
+  };
+
+  const handleArchiveZoneDrop = (shouldArchive) => {
+    if (!draggedVehicle) return;
+
+    const draggedIsArchived = draggedVehicle.archived || false;
+    
+    // If already in the correct state, do nothing
+    if (draggedIsArchived === shouldArchive) {
+      setDraggedVehicle(null);
+      setDragOverArchiveZone(false);
+      return;
+    }
+
+    // Show confirmation dialog
+    setConfirmDialog({
+      isOpen: true,
+      title: shouldArchive ? 'Archive Vehicle' : 'Unarchive Vehicle',
+      message: shouldArchive 
+        ? `Are you sure you want to archive "${draggedVehicle.nickname || draggedVehicle.name}"? It will still be visible but with limited information.`
+        : `Are you sure you want to unarchive "${draggedVehicle.nickname || draggedVehicle.name}"?`,
+      confirmText: shouldArchive ? 'Archive' : 'Unarchive',
+      isDangerous: false,
+      onConfirm: async () => {
+        const updates = { archived: shouldArchive };
+        if (shouldArchive) {
+          // Archiving: set display_order to max + 1
+          const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
+          updates.display_order = maxOrder + 1;
+        }
+        await updateVehicle(draggedVehicle.id, updates);
+        await loadVehicles();
+      }
+    });
+
+    setDraggedVehicle(null);
+    setDragOverArchiveZone(false);
   };
 
   // Tab change handler to track animation direction
@@ -6634,9 +6673,72 @@ const TakumiGarage = () => {
               ))}
             </div>
 
+            {/* Archive Drop Zone - appears when dragging an active vehicle */}
+            {draggedVehicle && !draggedVehicle.archived && (
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setDragOverArchiveZone(true);
+                }}
+                onDragLeave={() => setDragOverArchiveZone(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  handleArchiveZoneDrop(true);
+                }}
+                className={`mt-6 p-6 rounded-lg border-2 border-dashed transition-all ${
+                  dragOverArchiveZone
+                    ? darkMode
+                      ? 'border-blue-500 bg-blue-500/10'
+                      : 'border-blue-600 bg-blue-100/50'
+                    : darkMode
+                      ? 'border-gray-600 bg-gray-800/50'
+                      : 'border-gray-300 bg-gray-100/50'
+                }`}
+              >
+                <p className={`text-center text-sm ${
+                  dragOverArchiveZone
+                    ? darkMode ? 'text-blue-400' : 'text-blue-600'
+                    : darkMode ? 'text-gray-400' : 'text-gray-600'
+                }`}>
+                  Drop here to archive
+                </p>
+              </div>
+            )}
+
             {/* Archived Vehicles Section */}
             {vehicles.filter(v => v.archived).length > 0 && (
               <>
+                {/* Unarchive Drop Zone - appears when dragging an archived vehicle */}
+                {draggedVehicle && draggedVehicle.archived && (
+                  <div
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setDragOverArchiveZone(true);
+                    }}
+                    onDragLeave={() => setDragOverArchiveZone(false)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      handleArchiveZoneDrop(false);
+                    }}
+                    className={`mb-6 p-6 rounded-lg border-2 border-dashed transition-all ${
+                      dragOverArchiveZone
+                        ? darkMode
+                          ? 'border-green-500 bg-green-500/10'
+                          : 'border-green-600 bg-green-100/50'
+                        : darkMode
+                          ? 'border-gray-600 bg-gray-800/50'
+                          : 'border-gray-300 bg-gray-100/50'
+                    }`}
+                  >
+                    <p className={`text-center text-sm ${
+                      dragOverArchiveZone
+                        ? darkMode ? 'text-green-400' : 'text-green-600'
+                        : darkMode ? 'text-gray-400' : 'text-gray-600'
+                    }`}>
+                      Drop here to unarchive
+                    </p>
+                  </div>
+                )}
                 <div className={`my-8 border-t ${
                   darkMode ? 'border-gray-700' : 'border-slate-300'
                 }`}>
