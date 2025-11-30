@@ -6774,6 +6774,7 @@ const TakumiGarage = () => {
                       {/* Drag Handle - Hidden on mobile */}
                       <div 
                         draggable="true"
+                        onMouseDown={(e) => e.stopPropagation()}
                         onDragStart={(e) => {
                           e.stopPropagation();
                           handleVehicleDragStart(e, vehicle);
