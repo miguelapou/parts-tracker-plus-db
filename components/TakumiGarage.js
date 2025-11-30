@@ -4850,7 +4850,7 @@ const TakumiGarage = () => {
           <div className="slide-in-left">
           <>
         {/* Statistics and Cost Breakdown - Side by Side */}
-        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-[2fr_1fr] gap-6 mb-6">
+        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-[1.5fr_1fr] gap-6 mb-6">
           {/* Statistics Cards - 3 column grid on mobile */}
           <div className="space-y-4 md:space-y-0 order-1 md:order-none md:flex md:flex-col md:gap-4 md:h-full md:justify-between">
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-4 md:flex-shrink-0">
@@ -5008,9 +5008,7 @@ const TakumiGarage = () => {
 
               {/* Line Items */}
               <div className="grid grid-cols-1 gap-1 md:gap-1.5 flex-1">
-                <div className={`flex items-center justify-between py-1 md:py-1.5 border-b ${
-                  darkMode ? 'border-gray-700' : 'border-gray-100'
-                }`}>
+                <div className={`flex items-center justify-between py-1 md:py-1.5`}>
                   <p className={`text-xs ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Parts</p>
@@ -5022,9 +5020,7 @@ const TakumiGarage = () => {
                     darkMode={darkMode}
                   />
                 </div>
-                <div className={`flex items-center justify-between py-1 md:py-1.5 border-b ${
-                  darkMode ? 'border-gray-700' : 'border-gray-100'
-                }`}>
+                <div className={`flex items-center justify-between py-1 md:py-1.5`}>
                   <p className={`text-xs ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Shipping</p>
@@ -5050,15 +5046,13 @@ const TakumiGarage = () => {
                     darkMode={darkMode}
                   />
                 </div>
-                <div className={`flex items-center justify-between py-1 md:py-1.5 border-b ${
-                  darkMode ? 'border-gray-700' : 'border-gray-100'
-                }`}>
-                  <p className={`text-xs font-semibold ${
-                    darkMode ? 'text-gray-300' : 'text-slate-700'
+                <div className={`flex items-center justify-between py-2 md:py-2`}>
+                  <p className={`text-sm md:text-base font-bold ${
+                    darkMode ? 'text-gray-200' : 'text-slate-800'
                   }`}>Total</p>
                   <PriceDisplay 
                     amount={stats.totalCost}
-                    className={`text-sm md:text-base font-bold truncate ${
+                    className={`text-base md:text-lg font-bold truncate ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`}
                     darkMode={darkMode}
