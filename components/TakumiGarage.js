@@ -6775,6 +6775,7 @@ const TakumiGarage = () => {
                       <div 
                         draggable="true"
                         onMouseDown={(e) => e.stopPropagation()}
+                        onClick={(e) => e.stopPropagation()}
                         onDragStart={(e) => {
                           e.stopPropagation();
                           handleVehicleDragStart(e, vehicle);
