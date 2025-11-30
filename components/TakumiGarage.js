@@ -1028,16 +1028,12 @@ const ProjectDetailView = ({
       )}
 
       {linkedParts.length === 0 && (
-        <div className={`text-center py-8 rounded-lg ${
-          darkMode ? 'bg-gray-700' : 'bg-gray-50'
+        <div className={`text-center py-8 rounded-lg border ${
+          darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
         }`}>
-          <Package className={`w-12 h-12 mx-auto mb-3 ${
-            darkMode ? 'text-gray-600' : 'text-gray-400'
-          }`} />
-          <p className={`text-sm ${
-            darkMode ? 'text-gray-400' : 'text-slate-600'
-          }`}>
-            No parts linked to this project yet
+          <Package className="w-12 h-12 mx-auto mb-2 opacity-40" />
+          <p className="text-sm">
+            No parts linked
           </p>
         </div>
       )}
@@ -5706,15 +5702,11 @@ const TakumiGarage = () => {
                               )}
                             </div>
                           ) : (
-                            <div className={`text-center py-3 rounded-lg ${
-                              darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                            <div className={`text-center py-3 rounded-lg border ${
+                              darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
                             }`}>
-                              <Package className={`w-8 h-8 mx-auto mb-1.5 ${
-                                darkMode ? 'text-gray-600' : 'text-gray-400'
-                              }`} />
-                              <p className={`text-xs ${
-                                darkMode ? 'text-gray-400' : 'text-slate-600'
-                              }`}>
+                              <Package className="w-8 h-8 mx-auto mb-1.5 opacity-40" />
+                              <p className="text-xs">
                                 No parts linked
                               </p>
                             </div>
@@ -6514,16 +6506,12 @@ const TakumiGarage = () => {
                                   )}
                                 </div>
                               ) : (
-                                <div className={`text-center py-4 rounded-lg ${
-                                  darkMode ? 'bg-gray-750' : 'bg-gray-50'
+                                <div className={`text-center py-4 rounded-lg border ${
+                                  darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
                                 }`}>
-                                  <Wrench className={`w-8 h-8 mx-auto mb-2 ${
-                                    darkMode ? 'text-gray-600' : 'text-gray-400'
-                                  }`} />
-                                  <p className={`text-xs ${
-                                    darkMode ? 'text-gray-500' : 'text-gray-500'
-                                  }`}>
-                                    No current projects
+                                  <Wrench className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                                  <p className="text-xs">
+                                    No projects linked
                                   </p>
                                 </div>
                               )}
@@ -7557,16 +7545,12 @@ const TakumiGarage = () => {
                               })}
                             </div>
                           ) : (
-                            <div className={`text-center py-8 rounded-lg ${
-                              darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                            <div className={`text-center py-8 rounded-lg border ${
+                              darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
                             }`}>
-                              <Wrench className={`w-12 h-12 mx-auto mb-3 ${
-                                darkMode ? 'text-gray-600' : 'text-gray-400'
-                              }`} />
-                              <p className={`text-sm ${
-                                darkMode ? 'text-gray-400' : 'text-slate-600'
-                              }`}>
-                                No projects linked to this vehicle yet
+                              <Wrench className="w-12 h-12 mx-auto mb-2 opacity-40" />
+                              <p className="text-sm">
+                                No projects linked
                               </p>
                             </div>
                           )}
