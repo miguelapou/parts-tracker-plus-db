@@ -5007,32 +5007,32 @@ const TakumiGarage = () => {
               </div>
 
               {/* Line Items */}
-              <div className="grid grid-cols-1 gap-0.5 md:gap-0.5 flex-1">
-                <div className={`flex items-center justify-between py-0.5 md:py-1`}>
+              <div className="grid grid-cols-1 gap-0.5 flex-1">
+                <div className={`flex items-center justify-between py-0.5`}>
                   <p className={`text-xs ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Parts</p>
                   <PriceDisplay 
                     amount={stats.totalPrice}
-                    className={`text-sm md:text-base font-semibold truncate ${
+                    className={`text-sm font-semibold truncate ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`}
                     darkMode={darkMode}
                   />
                 </div>
-                <div className={`flex items-center justify-between py-0.5 md:py-1`}>
+                <div className={`flex items-center justify-between py-0.5`}>
                   <p className={`text-xs ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Shipping</p>
                   <PriceDisplay 
                     amount={stats.totalShipping}
-                    className={`text-sm md:text-base font-semibold truncate ${
+                    className={`text-sm font-semibold truncate ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`}
                     darkMode={darkMode}
                   />
                 </div>
-                <div className={`flex items-center justify-between py-0.5 md:py-1 border-b ${
+                <div className={`flex items-center justify-between py-0.5 border-b ${
                   darkMode ? 'border-gray-700' : 'border-gray-100'
                 }`}>
                   <p className={`text-xs ${
@@ -5040,19 +5040,19 @@ const TakumiGarage = () => {
                   }`}>Import Duties</p>
                   <PriceDisplay 
                     amount={stats.totalDuties}
-                    className={`text-sm md:text-base font-semibold truncate ${
+                    className={`text-sm font-semibold truncate ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`}
                     darkMode={darkMode}
                   />
                 </div>
-                <div className={`flex items-center justify-between py-2 md:py-2`}>
-                  <p className={`text-sm md:text-base font-bold ${
+                <div className={`flex items-center justify-between`}>
+                  <p className={`text-sm font-bold ${
                     darkMode ? 'text-gray-200' : 'text-slate-800'
                   }`}>Total</p>
                   <PriceDisplay 
                     amount={stats.totalCost}
-                    className={`text-base md:text-lg font-bold truncate ${
+                    className={`text-base font-bold truncate ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`}
                     darkMode={darkMode}
