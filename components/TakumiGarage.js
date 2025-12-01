@@ -6591,7 +6591,9 @@ const TakumiGarage = () => {
           <>
             {/* Active Vehicles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {vehicles.filter(v => !v.archived).map((vehicle) => (
+              {vehicles.filter(v => !v.archived).map((vehicle) => {
+                console.log('render card', vehicle.id, vehicle.nickname || vehicle.name);
+                return (
                 <div
                   key={vehicle.id}
                   data-vehicle-id={vehicle.id}
@@ -6665,6 +6667,7 @@ const TakumiGarage = () => {
                             ? 'grayscale opacity-40' 
                             : ''
                         } ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'}`}
+                        onLoad={() => console.log('render image', vehicle.id, vehicle.nickname || vehicle.name)}
                       />
                       {vehicle.archived && (
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -6781,7 +6784,8 @@ const TakumiGarage = () => {
                     )}
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
 
             {/* Archived Vehicles Section */}
