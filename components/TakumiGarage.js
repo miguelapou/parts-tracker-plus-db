@@ -6607,7 +6607,7 @@ const TakumiGarage = () => {
                     setOriginalVehicleData({ ...vehicle }); // Save original data for unsaved changes check
                     setShowVehicleDetailModal(true);
                   }}
-                  className={`relative rounded-lg shadow-lg pt-3 ${vehicle.archived ? 'pb-3' : 'pb-4'} px-6 transition-shadow duration-200 hover:shadow-2xl cursor-pointer border-t-4 ${
+                  className={`relative rounded-lg shadow-lg pt-3 ${vehicle.archived ? 'pb-3' : 'pb-4'} px-6 transition-shadow duration-200 hover:shadow-2xl cursor-pointer border-t-4 will-change-transform hover:scale-[1.02] ${
                     draggedVehicle?.id === vehicle.id 
                       ? 'ring-2 ring-blue-500 ring-offset-2' 
                       : dragOverVehicle?.id === vehicle.id
@@ -6881,7 +6881,7 @@ const TakumiGarage = () => {
                         setOriginalVehicleData({ ...vehicle }); // Save original data for unsaved changes check
                         setShowVehicleDetailModal(true);
                       }}
-                      className={`relative rounded-lg shadow-lg pt-2 pb-2 px-3 transition-shadow duration-200 hover:shadow-2xl cursor-pointer border-t-4 ${
+                      className={`relative rounded-lg shadow-lg pt-2 pb-2 px-3 transition-shadow duration-200 hover:shadow-2xl cursor-pointer border-t-4 will-change-transform hover:scale-[1.02] ${
                         draggedVehicle?.id === vehicle.id 
                           ? 'ring-2 ring-blue-500 ring-offset-2' 
                           : dragOverVehicle?.id === vehicle.id
