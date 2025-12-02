@@ -1,6 +1,6 @@
-# Takumi Garage
+# Shako
 
-A web app to track your restoration parts with status tracking, vendor management, and cost breakdown. Additonally, you can kep track of your projects for your restorations
+A web app to track your restoration parts with status tracking, vendor management, and cost breakdown. Additonally, you can kep track of your projects and vehicles for your restorations.
 
 ## Features
 
