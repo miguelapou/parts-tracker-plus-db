@@ -1325,6 +1325,31 @@ const fontStyles = `
   .table-sorting tbody tr:nth-child(9) { animation-delay: 0.16s; }
   .table-sorting tbody tr:nth-child(10) { animation-delay: 0.18s; }
 
+  /* Status card filtering animation - slower fade-in only */
+  @keyframes tableFadeOnly {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .table-status-filtering tbody tr {
+    animation: tableFadeOnly 0.6s ease-in;
+  }
+
+  .table-status-filtering tbody tr:nth-child(1) { animation-delay: 0s; }
+  .table-status-filtering tbody tr:nth-child(2) { animation-delay: 0.03s; }
+  .table-status-filtering tbody tr:nth-child(3) { animation-delay: 0.06s; }
+  .table-status-filtering tbody tr:nth-child(4) { animation-delay: 0.09s; }
+  .table-status-filtering tbody tr:nth-child(5) { animation-delay: 0.12s; }
+  .table-status-filtering tbody tr:nth-child(6) { animation-delay: 0.15s; }
+  .table-status-filtering tbody tr:nth-child(7) { animation-delay: 0.18s; }
+  .table-status-filtering tbody tr:nth-child(8) { animation-delay: 0.21s; }
+  .table-status-filtering tbody tr:nth-child(9) { animation-delay: 0.24s; }
+  .table-status-filtering tbody tr:nth-child(10) { animation-delay: 0.27s; }
+
   /* Project filtering animations */
   @keyframes projectFilterFade {
     0% {
@@ -1815,7 +1840,6 @@ const VendorSelect = ({ value, onChange, darkMode, uniqueVendors }) => {
 };
 
 const TakumiGarage = () => {
-  console.log('=== COMPONENT RENDER ===');
   const [parts, setParts] = useState([]);
   const [projects, setProjects] = useState([]);
   const [vehicles, setVehicles] = useState([]);
@@ -2005,7 +2029,6 @@ const TakumiGarage = () => {
         setParts(formattedParts);
       }
     } catch (error) {
-      console.error('Error loading parts:', error);
       alert('Error loading parts from database');
     } finally {
       setLoading(false);
@@ -2027,7 +2050,7 @@ const TakumiGarage = () => {
         setProjects(data);
       }
     } catch (error) {
-      console.error('Error loading projects:', error);
+      // Error loading projects
     }
   };
 
@@ -2051,7 +2074,7 @@ const TakumiGarage = () => {
         setVendorColors(colorsMap);
       }
     } catch (error) {
-      console.error('Error loading vendors:', error);
+      // Error loading vendors
     }
   };
 
@@ -2075,7 +2098,6 @@ const TakumiGarage = () => {
       }));
       await loadVendors();
     } catch (error) {
-      console.error('Error updating vendor color:', error);
       alert('Error saving vendor color');
     }
   };
@@ -2099,7 +2121,6 @@ const TakumiGarage = () => {
       if (error) throw error;
       await loadProjects();
     } catch (error) {
-      console.error('Error adding project:', error);
       alert('Error adding project');
     }
   };
@@ -2135,7 +2156,6 @@ const TakumiGarage = () => {
       if (error) throw error;
       await loadProjects();
     } catch (error) {
-      console.error('Error updating project:', error);
       alert('Error updating project');
     }
   };
@@ -2150,7 +2170,6 @@ const TakumiGarage = () => {
       if (error) throw error;
       await loadProjects();
     } catch (error) {
-      console.error('Error deleting project:', error);
       alert('Error deleting project');
     }
   };
@@ -2178,7 +2197,7 @@ const TakumiGarage = () => {
         setVehicles(sorted);
       }
     } catch (error) {
-      console.error('Error loading vehicles:', error);
+      // Error loading vehicles
     }
   };
 
@@ -2192,7 +2211,6 @@ const TakumiGarage = () => {
       if (error) throw error;
       await loadVehicles();
     } catch (error) {
-      console.error('Error adding vehicle:', error);
       alert('Error adding vehicle');
     }
   };
@@ -2207,7 +2225,6 @@ const TakumiGarage = () => {
       if (error) throw error;
       await loadVehicles();
     } catch (error) {
-      console.error('Error updating vehicle:', error);
       alert('Error updating vehicle');
     }
   };
@@ -2224,7 +2241,6 @@ const TakumiGarage = () => {
       await loadVehicles();
       await loadProjects(); // Reload projects to update vehicle_id references
     } catch (error) {
-      console.error('Error deleting vehicle:', error);
       alert('Error deleting vehicle');
     }
   };
@@ -2273,7 +2289,6 @@ const TakumiGarage = () => {
       setUploadingImage(false);
       return publicUrl;
     } catch (error) {
-      console.error('Error uploading image:', error);
       setUploadingImage(false);
       alert('Error uploading image. Please try again.');
       return null;
@@ -2576,7 +2591,7 @@ const TakumiGarage = () => {
           .eq('id', update.id);
       }
     } catch (error) {
-      console.error('Error updating project order:', error);
+      // Error updating project order
     }
   };
 
@@ -2595,7 +2610,7 @@ const TakumiGarage = () => {
           .eq('id', update.id);
       }
     } catch (error) {
-      console.error('Error updating vehicle order:', error);
+      // Error updating vehicle order
     }
   };
 
@@ -2606,6 +2621,7 @@ const TakumiGarage = () => {
   const [sortBy, setSortBy] = useState('status');
   const [sortOrder, setSortOrder] = useState('asc');
   const [isSorting, setIsSorting] = useState(false);
+  const [isStatusFiltering, setIsStatusFiltering] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
@@ -2843,7 +2859,6 @@ const TakumiGarage = () => {
       }));
       setOpenDropdown(null);
     } catch (error) {
-      console.error('Error updating part status:', error);
       alert('Error updating part status. Please try again.');
     }
   };
@@ -2878,7 +2893,6 @@ const TakumiGarage = () => {
       setTrackingModalPartId(null);
       setTrackingInput('');
     } catch (error) {
-      console.error('Error saving tracking info:', error);
       alert('Error saving tracking info. Please try again.');
     }
   };
@@ -2911,7 +2925,6 @@ const TakumiGarage = () => {
       setTrackingModalPartId(null);
       setTrackingInput('');
     } catch (error) {
-      console.error('Error updating status:', error);
       alert('Error updating status. Please try again.');
     }
   };
@@ -2968,7 +2981,6 @@ const TakumiGarage = () => {
       setEditingPart(null);
       setPartModalView(null);
     } catch (error) {
-      console.error('Error saving part:', error);
       alert('Error saving part. Please try again.');
     }
   };
@@ -2984,7 +2996,6 @@ const TakumiGarage = () => {
         // Update local state
         setParts(prevParts => prevParts.filter(part => part.id !== partId));
       } catch (error) {
-        console.error('Error deleting part:', error);
         alert('Error deleting part. Please try again.');
       }
   };
@@ -3014,7 +3025,6 @@ const TakumiGarage = () => {
       }
       setEditingVendor(null);
     } catch (error) {
-      console.error('Error renaming vendor:', error);
       alert('Error renaming vendor. Please try again.');
     }
   };
@@ -3037,7 +3047,6 @@ const TakumiGarage = () => {
         setEditingPart({ ...editingPart, vendor: '' });
       }
     } catch (error) {
-      console.error('Error deleting vendor:', error);
       alert('Error deleting vendor. Please try again.');
     }
   };
@@ -3055,7 +3064,6 @@ const TakumiGarage = () => {
         part.id === partId ? { ...part, projectId: null } : part
       ));
     } catch (error) {
-      console.error('Error unlinking part:', error);
       alert('Error unlinking part. Please try again.');
     }
   };
@@ -3073,7 +3081,6 @@ const TakumiGarage = () => {
         part.id === partId ? { ...part, projectId: projectId || null } : part
       ));
     } catch (error) {
-      console.error('Error updating part project:', error);
       alert('Error updating part project. Please try again.');
     }
   };
@@ -3136,7 +3143,6 @@ const TakumiGarage = () => {
         projectId: null
       });
     } catch (error) {
-      console.error('Error adding part:', error);
       alert('Error adding part. Please try again.');
     }
   };
@@ -5139,10 +5145,10 @@ const TakumiGarage = () => {
             <div className="grid grid-cols-3 gap-3 sm:gap-4">
               <div
                 onClick={() => {
-                  setIsSorting(true);
+                  setIsStatusFiltering(true);
                   setStatusFilter(statusFilter === 'purchased' ? 'all' : 'purchased');
                   setDeliveredFilter('all');
-                  setTimeout(() => setIsSorting(false), 400);
+                  setTimeout(() => setIsStatusFiltering(false), 900);
                 }}
                 className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 border-yellow-500 relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
                   darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
@@ -5161,10 +5167,10 @@ const TakumiGarage = () => {
 
               <div
                 onClick={() => {
-                  setIsSorting(true);
+                  setIsStatusFiltering(true);
                   setStatusFilter(statusFilter === 'shipped' ? 'all' : 'shipped');
                   setDeliveredFilter('all');
-                  setTimeout(() => setIsSorting(false), 400);
+                  setTimeout(() => setIsStatusFiltering(false), 900);
                 }}
                 className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 border-blue-500 relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
                   darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
@@ -5183,14 +5189,14 @@ const TakumiGarage = () => {
 
               <div
                 onClick={() => {
-                  setIsSorting(true);
+                  setIsStatusFiltering(true);
                   // Cycle through: all -> only -> hide -> all
                   setDeliveredFilter(prev =>
                     prev === 'all' ? 'only' :
                     prev === 'only' ? 'hide' : 'all'
                   );
                   setStatusFilter('all');
-                  setTimeout(() => setIsSorting(false), 400);
+                  setTimeout(() => setIsStatusFiltering(false), 900);
                 }}
                 className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 ${
                   deliveredFilter === 'hide' ? 'border-red-500' : 'border-green-500'
@@ -5415,7 +5421,7 @@ const TakumiGarage = () => {
           darkMode ? 'bg-gray-800' : 'bg-slate-100'
         }`}>
           <div className="overflow-x-auto overflow-y-visible rounded-lg">
-            <table className={`w-full ${isSorting ? 'table-sorting' : ''}`}>
+            <table className={`w-full ${isStatusFiltering ? 'table-status-filtering' : isSorting ? 'table-sorting' : ''}`}>
               <thead className={`border-b ${
                 darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-100 border-slate-200'
               }`}>
@@ -6884,42 +6890,39 @@ const TakumiGarage = () => {
                     darkMode ? 'border-gray-700 bg-gray-800' : 'border-slate-200 bg-slate-100'
                   }`}>
                     {projectModalEditMode ? (
-                      <button
-                        onClick={() => {
-                          // Check for unsaved changes before going back
-                          if (hasUnsavedProjectChanges()) {
-                            setConfirmDialog({
-                              isOpen: true,
-                              title: 'Unsaved Changes',
-                              message: 'You have unsaved changes. Are you sure you want to go back without saving?',
-                              confirmText: 'Discard',
-                              cancelText: 'Keep Editing',
-                              onConfirm: () => {
-                                // Restore original data
-                                if (originalProjectData) {
-                                  setViewingProject({ ...originalProjectData });
-                                }
-                                setProjectModalEditMode(false);
+                      <div className="flex items-center justify-between w-full gap-2">
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <button
+                            onClick={() => {
+                              // Check for unsaved changes before going back
+                              if (hasUnsavedProjectChanges()) {
+                                setConfirmDialog({
+                                  isOpen: true,
+                                  title: 'Unsaved Changes',
+                                  message: 'You have unsaved changes. Are you sure you want to go back without saving?',
+                                  confirmText: 'Discard',
+                                  cancelText: 'Keep Editing',
+                                  onConfirm: () => {
+                                    // Restore original data
+                                    if (originalProjectData) {
+                                      setViewingProject({ ...originalProjectData });
+                                    }
+                                    setProjectModalEditMode(false);
+                                  }
+                                });
+                                return;
                               }
-                            });
-                            return;
-                          }
-                          setProjectModalEditMode(false);
-                        }}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors border ${
-                          darkMode 
-                            ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500' 
-                            : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
-                        }`}
-                        title="Back"
-                      >
-                        <ChevronDown className="w-5 h-5 rotate-90" />
-                      </button>
-                    ) : (
-                      <div></div>
-                    )}
-                    {projectModalEditMode ? (
-                      <div className="flex items-center gap-2">
+                              setProjectModalEditMode(false);
+                            }}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors border ${
+                              darkMode
+                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500'
+                                : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
+                            }`}
+                            title="Back"
+                          >
+                            <ChevronDown className="w-5 h-5 rotate-90" />
+                          </button>
                         <button
                           onClick={async () => {
                             const partsForProject = parts.filter(p => p.projectId === viewingProject.id);
@@ -6940,34 +6943,14 @@ const TakumiGarage = () => {
                               }
                             });
                           }}
-                          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm mr-4 ${
+                          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
                             darkMode
                               ? 'bg-red-900/30 hover:bg-red-900/50 text-red-400 border border-red-700'
                               : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-300'
                           }`}
                         >
                           <Trash2 className="w-4 h-4" />
-                          Delete
-                        </button>
-                        <button
-                          onClick={async () => {
-                            // Toggle on_hold status
-                            const newStatus = viewingProject.status === 'on_hold' ? 'in_progress' : 'on_hold';
-                            const updatedProject = { ...viewingProject, status: newStatus };
-                            await updateProject(viewingProject.id, {
-                              status: newStatus
-                            });
-                            setViewingProject(updatedProject);
-                          }}
-                          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
-                            viewingProject.status === 'on_hold'
-                              ? 'bg-green-600 hover:bg-green-700 text-white'
-                              : darkMode
-                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border border-gray-600'
-                                : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
-                          }`}
-                        >
-                          {viewingProject.status === 'on_hold' ? 'Resume' : 'Pause'}
+                          <span className="hidden sm:inline">Delete</span>
                         </button>
                         <button
                           onClick={async () => {
@@ -6998,7 +6981,30 @@ const TakumiGarage = () => {
                                 : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
                           }`}
                         >
-                          {viewingProject.archived ? 'Unarchive' : 'Archive'}
+                          <Archive className="w-4 h-4" />
+                          <span className="hidden sm:inline">{viewingProject.archived ? 'Unarchive' : 'Archive'}</span>
+                        </button>
+                        </div>
+                        <div className="flex items-center gap-2">
+                        <button
+                          onClick={async () => {
+                            // Toggle on_hold status
+                            const newStatus = viewingProject.status === 'on_hold' ? 'in_progress' : 'on_hold';
+                            const updatedProject = { ...viewingProject, status: newStatus };
+                            await updateProject(viewingProject.id, {
+                              status: newStatus
+                            });
+                            setViewingProject(updatedProject);
+                          }}
+                          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
+                            viewingProject.status === 'on_hold'
+                              ? 'bg-green-600 hover:bg-green-700 text-white'
+                              : darkMode
+                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border border-gray-600'
+                                : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
+                          }`}
+                        >
+                          {viewingProject.status === 'on_hold' ? 'Resume' : 'Pause'}
                         </button>
                         <PrimaryButton
                           onClick={async () => {
@@ -7023,6 +7029,7 @@ const TakumiGarage = () => {
                           <span className="sm:hidden">Save</span>
                           <span className="hidden sm:inline">Save Changes</span>
                         </PrimaryButton>
+                        </div>
                       </div>
                     ) : (
                       <PrimaryButton
@@ -7049,7 +7056,6 @@ const TakumiGarage = () => {
             {/* Active Vehicles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {vehicles.filter(v => !v.archived).map((vehicle) => {
-                console.log('render card', vehicle.id, vehicle.nickname || vehicle.name);
                 const borderColor = getMutedColor(vehicle.color, darkMode);
                 return (
                 <div
@@ -7126,7 +7132,6 @@ const TakumiGarage = () => {
                             ? 'grayscale opacity-40' 
                             : ''
                         } ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'}`}
-                        onLoad={() => console.log('render image', vehicle.id, vehicle.nickname || vehicle.name)}
                       />
                       {vehicle.archived && (
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -8886,48 +8891,41 @@ const TakumiGarage = () => {
                   <div className={`sticky bottom-0 border-t p-4 flex items-center justify-between ${
                     darkMode ? 'border-gray-700 bg-gray-800' : 'border-slate-200 bg-slate-100'
                   }`}>
-                    {(vehicleModalProjectView || vehicleModalEditMode) ? (
-                      <button
-                        onClick={() => {
-                          if (vehicleModalEditMode) {
-                            // Check for unsaved changes before going back
-                            if (hasUnsavedVehicleChanges()) {
-                              setConfirmDialog({
-                                isOpen: true,
-                                title: 'Unsaved Changes',
-                                message: 'You have unsaved changes. Are you sure you want to go back without saving?',
-                                confirmText: 'Discard',
-                                cancelText: 'Keep Editing',
-                                onConfirm: () => {
-                                  // Restore original data
-                                  if (originalVehicleData) {
-                                    setViewingVehicle({ ...originalVehicleData });
-                                  }
-                                  clearImageSelection();
-                                  setVehicleModalEditMode(null);
-                                }
-                              });
-                              return;
-                            }
-                            setVehicleModalEditMode(null);
-                          } else {
-                            setVehicleModalProjectView(null);
-                          }
-                        }}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors border ${
-                          darkMode 
-                            ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500' 
-                            : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
-                        }`}
-                        title={vehicleModalEditMode ? 'Back' : 'Back to vehicle'}
-                      >
-                        <ChevronDown className="w-5 h-5 rotate-90" />
-                      </button>
-                    ) : (
-                      <div></div>
-                    )}
                     {vehicleModalEditMode ? (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between w-full gap-2">
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <button
+                            onClick={() => {
+                              // Check for unsaved changes before going back
+                              if (hasUnsavedVehicleChanges()) {
+                                setConfirmDialog({
+                                  isOpen: true,
+                                  title: 'Unsaved Changes',
+                                  message: 'You have unsaved changes. Are you sure you want to go back without saving?',
+                                  confirmText: 'Discard',
+                                  cancelText: 'Keep Editing',
+                                  onConfirm: () => {
+                                    // Restore original data
+                                    if (originalVehicleData) {
+                                      setViewingVehicle({ ...originalVehicleData });
+                                    }
+                                    clearImageSelection();
+                                    setVehicleModalEditMode(null);
+                                  }
+                                });
+                                return;
+                              }
+                              setVehicleModalEditMode(null);
+                            }}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors border ${
+                              darkMode
+                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500'
+                                : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
+                            }`}
+                            title="Back"
+                          >
+                            <ChevronDown className="w-5 h-5 rotate-90" />
+                          </button>
                         {vehicleModalEditMode === 'vehicle' && (
                           <>
                             <button
@@ -8958,14 +8956,14 @@ const TakumiGarage = () => {
                                   }
                                 });
                               }}
-                              className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm mr-4 ${
+                              className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
                                 darkMode
                                   ? 'bg-red-900/30 hover:bg-red-900/50 text-red-400 border border-red-700'
                                   : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-300'
                               }`}
                             >
                               <Trash2 className="w-4 h-4" />
-                              Delete
+                              <span className="hidden sm:inline">Delete</span>
                             </button>
                             <button
                               onClick={async () => {
@@ -9006,10 +9004,13 @@ const TakumiGarage = () => {
                                     : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
                               }`}
                             >
-                              {viewingVehicle.archived ? 'Unarchive' : 'Archive'}
+                              <Archive className="w-4 h-4" />
+                              <span className="hidden sm:inline">{viewingVehicle.archived ? 'Unarchive' : 'Archive'}</span>
                             </button>
                           </>
                         )}
+                        </div>
+                        <div className="flex items-center gap-2">
                         {vehicleModalEditMode === 'project' && (
                           <button
                             onClick={async () => {
@@ -9077,8 +9078,34 @@ const TakumiGarage = () => {
                             </>
                           )}
                         </button>
+                        </div>
                       </div>
-                    ) : !vehicleModalProjectView ? (
+                    ) : vehicleModalProjectView ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            setVehicleModalProjectView(null);
+                          }}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors border ${
+                            darkMode
+                              ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500'
+                              : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
+                          }`}
+                          title="Back to vehicle"
+                        >
+                          <ChevronDown className="w-5 h-5 rotate-90" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setVehicleModalEditMode('project');
+                          }}
+                          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
+                        >
+                          <Edit2 className="w-3 h-3" />
+                          Edit Project
+                        </button>
+                      </>
+                    ) : (
                       <button
                         onClick={() => {
                           setVehicleModalEditMode('vehicle');
@@ -9087,16 +9114,6 @@ const TakumiGarage = () => {
                       >
                         <Edit2 className="w-3 h-3" />
                         Edit Vehicle
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          setVehicleModalEditMode('project');
-                        }}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
-                      >
-                        <Edit2 className="w-3 h-3" />
-                        Edit Project
                       </button>
                     )}
                   </div>
