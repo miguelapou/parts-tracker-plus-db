@@ -2632,17 +2632,36 @@ const Shako = () => {
 
   const onTouchStart = (e) => {
     setTouchEnd(null); // Reset touchEnd
-    setTouchStart(e.targetTouches[0].clientX);
+    setTouchStart({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    });
   };
 
   const onTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    if (!touchStart) return;
+
+    const currentX = e.targetTouches[0].clientX;
+    const currentY = e.targetTouches[0].clientY;
+
+    const diffX = Math.abs(currentX - touchStart.x);
+    const diffY = Math.abs(currentY - touchStart.y);
+
+    // If horizontal movement is greater than vertical, prevent scrolling
+    if (diffX > diffY && diffX > 10) {
+      e.preventDefault();
+    }
+
+    setTouchEnd({
+      x: currentX,
+      y: currentY
+    });
   };
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
 
-    const distance = touchStart - touchEnd;
+    const distance = touchStart.x - touchEnd.x;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
 
@@ -3778,6 +3797,19 @@ const Shako = () => {
         .vehicle-dropdown-scroll {
           scrollbar-width: none;
           -ms-overflow-style: none;
+        }
+
+        /* Disable hover effects on touch devices */
+        @media (hover: none) {
+          .hover\:scale-\[1\.02\]:hover,
+          .hover\:scale-\[1\.03\]:hover {
+            transform: none !important;
+          }
+          .hover\:shadow-lg:hover,
+          .hover\:shadow-xl:hover,
+          .hover\:shadow-2xl:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+          }
         }
 
         /* Custom 800px breakpoint */
