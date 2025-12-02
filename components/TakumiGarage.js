@@ -1934,6 +1934,9 @@ const TakumiGarage = () => {
   const [projectVehicleFilter, setProjectVehicleFilter] = useState('all'); // 'all' or vehicle ID
   const [isFilteringProjects, setIsFilteringProjects] = useState(false);
   const [showVehicleFilterDropdown, setShowVehicleFilterDropdown] = useState(false);
+  const [partsDateFilter, setPartsDateFilter] = useState('all'); // 'all', '1week', '2weeks', '1month'
+  const [isFilteringParts, setIsFilteringParts] = useState(false);
+  const [showDateFilterDropdown, setShowDateFilterDropdown] = useState(false);
   const [isArchiveCollapsed, setIsArchiveCollapsed] = useState(true);
   const [isProjectArchiveCollapsed, setIsProjectArchiveCollapsed] = useState(true);
   const [archiveStatesInitialized, setArchiveStatesInitialized] = useState(false);
@@ -1972,6 +1975,23 @@ const TakumiGarage = () => {
       localStorage.setItem('projectArchiveCollapsed', JSON.stringify(isProjectArchiveCollapsed));
     }
   }, [isProjectArchiveCollapsed, archiveStatesInitialized]);
+
+  // Initialize parts date filter from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedPartsDateFilter = localStorage.getItem('partsDateFilter');
+      if (savedPartsDateFilter !== null) {
+        setPartsDateFilter(savedPartsDateFilter);
+      }
+    }
+  }, []);
+
+  // Save parts date filter to localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined' && archiveStatesInitialized) {
+      localStorage.setItem('partsDateFilter', partsDateFilter);
+    }
+  }, [partsDateFilter, archiveStatesInitialized]);
 
   // Load parts, projects, and vendors from Supabase on mount
   useEffect(() => {
@@ -2049,7 +2069,8 @@ const TakumiGarage = () => {
           duties: parseFloat(part.duties) || 0,
           total: parseFloat(part.total) || 0,
           tracking: part.tracking || '',
-          projectId: part.project_id || null
+          projectId: part.project_id || null,
+          createdAt: part.created_at || null
         }));
         setParts(formattedParts);
       }
@@ -3122,6 +3143,7 @@ const TakumiGarage = () => {
       pending: { delivered: false, shipped: false, purchased: false }
     };
     try {
+      const createdAt = new Date().toISOString();
       // Insert into database
       const { data, error } = await supabase
         .from('parts')
@@ -3135,7 +3157,8 @@ const TakumiGarage = () => {
           duties,
           total,
           tracking: newPart.tracking,
-          project_id: newPart.projectId || null
+          project_id: newPart.projectId || null,
+          created_at: createdAt
         })
         .select()
         .single();
@@ -3152,7 +3175,8 @@ const TakumiGarage = () => {
         duties,
         total,
         tracking: newPart.tracking,
-        projectId: newPart.projectId || null
+        projectId: newPart.projectId || null,
+        createdAt: createdAt
       };
       setParts([...parts, partToAdd]);
       setShowAddModal(false);
@@ -3208,11 +3232,28 @@ const TakumiGarage = () => {
                              (statusFilter === 'purchased' && part.purchased && !part.shipped) ||
                              (statusFilter === 'pending' && !part.purchased);
         const matchesVendor = vendorFilter === 'all' || part.vendor === vendorFilter;
-        const matchesDeliveredFilter = 
+        const matchesDeliveredFilter =
           deliveredFilter === 'all' ? true :
           deliveredFilter === 'only' ? part.delivered :
           deliveredFilter === 'hide' ? !part.delivered : true;
-        return matchesSearch && matchesStatus && matchesVendor && matchesDeliveredFilter;
+
+        // Date filter logic
+        let matchesDate = true;
+        if (partsDateFilter !== 'all' && part.createdAt) {
+          const partDate = new Date(part.createdAt);
+          const now = new Date();
+          const daysDiff = (now - partDate) / (1000 * 60 * 60 * 24);
+
+          if (partsDateFilter === '1week' && daysDiff > 7) {
+            matchesDate = false;
+          } else if (partsDateFilter === '2weeks' && daysDiff > 14) {
+            matchesDate = false;
+          } else if (partsDateFilter === '1month' && daysDiff > 30) {
+            matchesDate = false;
+          }
+        }
+
+        return matchesSearch && matchesStatus && matchesVendor && matchesDeliveredFilter && matchesDate;
       })
       .sort((a, b) => {
         let aVal, bVal;
@@ -3256,7 +3297,7 @@ const TakumiGarage = () => {
         }
       });
     return sorted;
-  }, [parts, searchTerm, statusFilter, vendorFilter, sortBy, sortOrder, projects, vehicles, deliveredFilter]);
+  }, [parts, searchTerm, statusFilter, vendorFilter, sortBy, sortOrder, projects, vehicles, deliveredFilter, partsDateFilter]);
 
   // Get unique vendors from existing parts for the dropdown
   const uniqueVendors = useMemo(() => {
@@ -3670,7 +3711,7 @@ const TakumiGarage = () => {
   // Don't render main content until mounted on client to avoid hydration mismatch
   if (!mounted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="min-h-screen flex items-center justify-center bg-slate-100">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
           <p className="text-gray-600">Loading...</p>
@@ -3681,9 +3722,9 @@ const TakumiGarage = () => {
 
   return (
     <div className={`min-h-screen p-3 sm:p-6 transition-colors duration-200 ${
-      darkMode 
-        ? 'bg-gradient-to-br from-gray-900 to-gray-800 dark-scrollbar' 
-        : 'bg-gradient-to-br from-slate-200 to-slate-300'
+      darkMode
+        ? 'bg-gray-900 dark-scrollbar'
+        : 'bg-slate-200'
     }`}>
       <style>{fontStyles}{`
         /* Reserve scrollbar space to prevent layout shift */
@@ -3720,10 +3761,27 @@ const TakumiGarage = () => {
         .show-below-800 {
           display: block;
         }
+        .show-below-800.grid {
+          display: grid;
+        }
         @media (min-width: 800px) {
           .show-below-800 {
             display: none;
           }
+        }
+
+        /* Round bottom corners of parts table */
+        .parts-table-footer {
+          border-bottom-left-radius: 0.5rem;
+          border-bottom-right-radius: 0.5rem;
+        }
+
+        /* Round bottom corners of last table row cells */
+        table tbody tr:last-child td:first-child {
+          border-bottom-left-radius: 0.5rem;
+        }
+        table tbody tr:last-child td:last-child {
+          border-bottom-right-radius: 0.5rem;
         }
       `}</style>
       <div className="max-w-7xl mx-auto">
@@ -3822,6 +3880,107 @@ const TakumiGarage = () => {
                             </span>
                           </button>
                         ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+              {/* Date Filter - Only visible on Parts tab */}
+              {activeTab === 'parts' && (
+                <div className="relative">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowDateFilterDropdown(!showDateFilterDropdown);
+                    }}
+                    className={`px-3 py-2 sm:py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-left flex items-center justify-between gap-2 ${
+                      darkMode
+                        ? 'bg-gray-800 border-gray-600 text-gray-100'
+                        : 'bg-slate-100 border-slate-300 text-slate-800'
+                    }`}
+                  >
+                    <span>
+                      {partsDateFilter === 'all' && 'All'}
+                      {partsDateFilter === '1week' && <><span className="hidden sm:inline">1 week</span><span className="sm:hidden">1w</span></>}
+                      {partsDateFilter === '2weeks' && <><span className="hidden sm:inline">2 weeks</span><span className="sm:hidden">2w</span></>}
+                      {partsDateFilter === '1month' && <><span className="hidden sm:inline">1 month</span><span className="sm:hidden">1m</span></>}
+                    </span>
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  {showDateFilterDropdown && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setShowDateFilterDropdown(false)}
+                      />
+                      <div className={`absolute right-0 z-20 mt-1 w-max rounded-lg border shadow-lg py-1 ${
+                        darkMode ? 'bg-gray-800 border-gray-600' : 'bg-slate-50 border-slate-300'
+                      }`}>
+                        <div className={`px-3 py-1.5 text-xs font-medium uppercase tracking-tight border-b whitespace-nowrap ${
+                          darkMode ? 'text-gray-400 border-gray-600' : 'text-gray-500 border-slate-200'
+                        }`}>
+                          Filter by age
+                        </div>
+                        <button
+                          onClick={() => {
+                            setIsFilteringParts(true);
+                            setPartsDateFilter('all');
+                            setShowDateFilterDropdown(false);
+                            setTimeout(() => setIsFilteringParts(false), 500);
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm ${
+                            partsDateFilter === 'all'
+                              ? darkMode ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'
+                              : darkMode ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-100 text-gray-900'
+                          }`}
+                        >
+                          All
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsFilteringParts(true);
+                            setPartsDateFilter('1week');
+                            setShowDateFilterDropdown(false);
+                            setTimeout(() => setIsFilteringParts(false), 500);
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm ${
+                            partsDateFilter === '1week'
+                              ? darkMode ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'
+                              : darkMode ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-100 text-gray-900'
+                          }`}
+                        >
+                          1 week
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsFilteringParts(true);
+                            setPartsDateFilter('2weeks');
+                            setShowDateFilterDropdown(false);
+                            setTimeout(() => setIsFilteringParts(false), 500);
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm ${
+                            partsDateFilter === '2weeks'
+                              ? darkMode ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'
+                              : darkMode ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-100 text-gray-900'
+                          }`}
+                        >
+                          2 weeks
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsFilteringParts(true);
+                            setPartsDateFilter('1month');
+                            setShowDateFilterDropdown(false);
+                            setTimeout(() => setIsFilteringParts(false), 500);
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm ${
+                            partsDateFilter === '1month'
+                              ? darkMode ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'
+                              : darkMode ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-100 text-gray-900'
+                          }`}
+                        >
+                          1 month
+                        </button>
                       </div>
                     </>
                   )}
@@ -5451,7 +5610,7 @@ const TakumiGarage = () => {
           darkMode ? 'bg-gray-800' : 'bg-slate-100'
         }`}>
           <div className="overflow-x-auto overflow-y-visible rounded-lg">
-            <table className={`w-full ${isStatusFiltering ? 'table-status-filtering' : isSorting ? 'table-sorting' : ''}`}>
+            <table className={`w-full ${isStatusFiltering || isFilteringParts ? 'table-status-filtering' : isSorting ? 'table-sorting' : ''}`}>
               <thead className={`border-b ${
                 darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-100 border-slate-200'
               }`}>
@@ -5661,7 +5820,7 @@ const TakumiGarage = () => {
               </tbody>
             </table>
           </div>
-          <div className={`px-6 py-4 border-t ${
+          <div className={`px-6 py-4 border-t parts-table-footer ${
             darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-50 border-slate-200'
           }`}>
             <p className={`text-sm ${
@@ -5704,7 +5863,7 @@ const TakumiGarage = () => {
 
         {/* Mobile Card View - Visible only below 800px */}
         {filteredParts.length > 0 ? (
-        <div className={`show-below-800 grid grid-cols-1 gap-4 ${isStatusFiltering ? 'cards-status-filtering' : ''}`}>
+        <div className={`show-below-800 grid grid-cols-1 gap-4 ${isStatusFiltering || isFilteringParts ? 'cards-status-filtering' : ''}`}>
             {filteredParts.map((part) => (
               <div 
                 key={part.id}
@@ -6315,10 +6474,10 @@ const TakumiGarage = () => {
                   onClick={() => {
                     const wasCollapsed = isProjectArchiveCollapsed;
                     setIsProjectArchiveCollapsed(!isProjectArchiveCollapsed);
-                    // If opening the archive, scroll to it after a brief delay to allow expansion
-                    if (wasCollapsed && projectArchiveRef.current) {
+                    // If opening the archive, scroll to bottom of page after a brief delay to allow expansion
+                    if (wasCollapsed) {
                       setTimeout(() => {
-                        projectArchiveRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
                       }, 100);
                     }
                   }}
@@ -7346,10 +7505,10 @@ const TakumiGarage = () => {
                   onClick={() => {
                     const wasCollapsed = isArchiveCollapsed;
                     setIsArchiveCollapsed(!isArchiveCollapsed);
-                    // If opening the archive, scroll to it after a brief delay to allow expansion
-                    if (wasCollapsed && vehicleArchiveRef.current) {
+                    // If opening the archive, scroll to bottom of page after a brief delay to allow expansion
+                    if (wasCollapsed) {
                       setTimeout(() => {
-                        vehicleArchiveRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
                       }, 100);
                     }
                   }}
