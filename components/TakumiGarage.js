@@ -3670,7 +3670,7 @@ const TakumiGarage = () => {
   // Don't render main content until mounted on client to avoid hydration mismatch
   if (!mounted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="min-h-screen flex items-center justify-center bg-slate-100">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
           <p className="text-gray-600">Loading...</p>
@@ -3681,9 +3681,9 @@ const TakumiGarage = () => {
 
   return (
     <div className={`min-h-screen p-3 sm:p-6 transition-colors duration-200 ${
-      darkMode 
-        ? 'bg-gradient-to-br from-gray-900 to-gray-800 dark-scrollbar' 
-        : 'bg-gradient-to-br from-slate-200 to-slate-300'
+      darkMode
+        ? 'bg-gray-900 dark-scrollbar'
+        : 'bg-slate-200'
     }`}>
       <style>{fontStyles}{`
         /* Reserve scrollbar space to prevent layout shift */
