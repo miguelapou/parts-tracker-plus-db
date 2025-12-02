@@ -6315,10 +6315,10 @@ const TakumiGarage = () => {
                   onClick={() => {
                     const wasCollapsed = isProjectArchiveCollapsed;
                     setIsProjectArchiveCollapsed(!isProjectArchiveCollapsed);
-                    // If opening the archive, scroll to it after a brief delay to allow expansion
-                    if (wasCollapsed && projectArchiveRef.current) {
+                    // If opening the archive, scroll to bottom of page after a brief delay to allow expansion
+                    if (wasCollapsed) {
                       setTimeout(() => {
-                        projectArchiveRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
                       }, 100);
                     }
                   }}
@@ -7346,10 +7346,10 @@ const TakumiGarage = () => {
                   onClick={() => {
                     const wasCollapsed = isArchiveCollapsed;
                     setIsArchiveCollapsed(!isArchiveCollapsed);
-                    // If opening the archive, scroll to it after a brief delay to allow expansion
-                    if (wasCollapsed && vehicleArchiveRef.current) {
+                    // If opening the archive, scroll to bottom of page after a brief delay to allow expansion
+                    if (wasCollapsed) {
                       setTimeout(() => {
-                        vehicleArchiveRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
                       }, 100);
                     }
                   }}
