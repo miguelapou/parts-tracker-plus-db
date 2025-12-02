@@ -7024,7 +7024,8 @@ const TakumiGarage = () => {
                                 : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
                           }`}
                         >
-                          {viewingProject.archived ? 'Unarchive' : 'Archive'}
+                          <Archive className="w-4 h-4" />
+                          <span className="hidden sm:inline">{viewingProject.archived ? 'Unarchive' : 'Archive'}</span>
                         </button>
                         <PrimaryButton
                           onClick={async () => {
@@ -9032,7 +9033,8 @@ const TakumiGarage = () => {
                                     : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
                               }`}
                             >
-                              {viewingVehicle.archived ? 'Unarchive' : 'Archive'}
+                              <Archive className="w-4 h-4" />
+                              <span className="hidden sm:inline">{viewingVehicle.archived ? 'Unarchive' : 'Archive'}</span>
                             </button>
                           </>
                         )}
