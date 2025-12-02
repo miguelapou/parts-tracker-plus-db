@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { Search, Package, BadgeDollarSign, TrendingUp, Truck, CheckCircle, Clock, ChevronDown, Plus, X, ExternalLink, ChevronUp, Edit2, Trash2, Moon, Sun, Wrench, GripVertical, ShoppingCart, Car, Upload, Gauge, Settings, Check, Archive, ChevronRight } from 'lucide-react';
+import { Search, Package, BadgeDollarSign, TrendingUp, Truck, CheckCircle, Clock, ChevronDown, Plus, X, ExternalLink, ChevronUp, Edit2, Trash2, Moon, Sun, Wrench, GripVertical, ShoppingCart, Car, Upload, Gauge, Settings, Check, Archive, ChevronRight, Pause, Play } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 // ========================================
@@ -6891,7 +6891,7 @@ const TakumiGarage = () => {
                   }`}>
                     {projectModalEditMode ? (
                       <div className="flex items-center justify-between w-full gap-2">
-                        <div className="flex items-center gap-1 sm:gap-2">
+                        <div className="flex items-center gap-1 sm:gap-2 justify-center flex-1 sm:flex-initial sm:justify-start">
                           <button
                             onClick={() => {
                               // Check for unsaved changes before going back
@@ -6985,7 +6985,7 @@ const TakumiGarage = () => {
                           <span className="hidden sm:inline">{viewingProject.archived ? 'Unarchive' : 'Archive'}</span>
                         </button>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 justify-center flex-1">
                         <button
                           onClick={async () => {
                             // Toggle on_hold status
@@ -6996,7 +6996,7 @@ const TakumiGarage = () => {
                             });
                             setViewingProject(updatedProject);
                           }}
-                          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
+                          className={`h-10 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
                             viewingProject.status === 'on_hold'
                               ? 'bg-green-600 hover:bg-green-700 text-white'
                               : darkMode
@@ -7004,7 +7004,17 @@ const TakumiGarage = () => {
                                 : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
                           }`}
                         >
-                          {viewingProject.status === 'on_hold' ? 'Resume' : 'Pause'}
+                          {viewingProject.status === 'on_hold' ? (
+                            <>
+                              <Play className="w-4 h-4" />
+                              <span className="hidden sm:inline">Resume</span>
+                            </>
+                          ) : (
+                            <>
+                              <Pause className="w-4 h-4" />
+                              <span className="hidden sm:inline">Pause</span>
+                            </>
+                          )}
                         </button>
                         <PrimaryButton
                           onClick={async () => {
@@ -8893,7 +8903,7 @@ const TakumiGarage = () => {
                   }`}>
                     {vehicleModalEditMode ? (
                       <div className="flex items-center justify-between w-full gap-2">
-                        <div className="flex items-center gap-1 sm:gap-2">
+                        <div className="flex items-center gap-1 sm:gap-2 justify-center flex-1 sm:flex-initial sm:justify-start">
                           <button
                             onClick={() => {
                               // Check for unsaved changes before going back
@@ -9010,7 +9020,7 @@ const TakumiGarage = () => {
                           </>
                         )}
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 justify-center flex-1">
                         {vehicleModalEditMode === 'project' && (
                           <button
                             onClick={async () => {
@@ -9022,7 +9032,7 @@ const TakumiGarage = () => {
                               });
                               setVehicleModalProjectView(updatedProject);
                             }}
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
+                            className={`h-10 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
                               vehicleModalProjectView.status === 'on_hold'
                                 ? 'bg-green-600 hover:bg-green-700 text-white'
                                 : darkMode
@@ -9030,7 +9040,17 @@ const TakumiGarage = () => {
                                   : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
                             }`}
                           >
-                            {vehicleModalProjectView.status === 'on_hold' ? 'Resume' : 'Pause'}
+                            {vehicleModalProjectView.status === 'on_hold' ? (
+                              <>
+                                <Play className="w-4 h-4" />
+                                <span className="hidden sm:inline">Resume</span>
+                              </>
+                            ) : (
+                              <>
+                                <Pause className="w-4 h-4" />
+                                <span className="hidden sm:inline">Pause</span>
+                              </>
+                            )}
                           </button>
                         )}
                         <button
