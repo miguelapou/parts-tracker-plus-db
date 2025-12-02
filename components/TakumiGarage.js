@@ -1934,6 +1934,9 @@ const TakumiGarage = () => {
   const [projectVehicleFilter, setProjectVehicleFilter] = useState('all'); // 'all' or vehicle ID
   const [isFilteringProjects, setIsFilteringProjects] = useState(false);
   const [showVehicleFilterDropdown, setShowVehicleFilterDropdown] = useState(false);
+  const [partsDateFilter, setPartsDateFilter] = useState('all'); // 'all', '1week', '2weeks', '1month'
+  const [isFilteringParts, setIsFilteringParts] = useState(false);
+  const [showDateFilterDropdown, setShowDateFilterDropdown] = useState(false);
   const [isArchiveCollapsed, setIsArchiveCollapsed] = useState(true);
   const [isProjectArchiveCollapsed, setIsProjectArchiveCollapsed] = useState(true);
   const [archiveStatesInitialized, setArchiveStatesInitialized] = useState(false);
@@ -2049,7 +2052,8 @@ const TakumiGarage = () => {
           duties: parseFloat(part.duties) || 0,
           total: parseFloat(part.total) || 0,
           tracking: part.tracking || '',
-          projectId: part.project_id || null
+          projectId: part.project_id || null,
+          createdAt: part.created_at || null
         }));
         setParts(formattedParts);
       }
@@ -3122,6 +3126,7 @@ const TakumiGarage = () => {
       pending: { delivered: false, shipped: false, purchased: false }
     };
     try {
+      const createdAt = new Date().toISOString();
       // Insert into database
       const { data, error } = await supabase
         .from('parts')
@@ -3135,7 +3140,8 @@ const TakumiGarage = () => {
           duties,
           total,
           tracking: newPart.tracking,
-          project_id: newPart.projectId || null
+          project_id: newPart.projectId || null,
+          created_at: createdAt
         })
         .select()
         .single();
@@ -3152,7 +3158,8 @@ const TakumiGarage = () => {
         duties,
         total,
         tracking: newPart.tracking,
-        projectId: newPart.projectId || null
+        projectId: newPart.projectId || null,
+        createdAt: createdAt
       };
       setParts([...parts, partToAdd]);
       setShowAddModal(false);
@@ -3208,11 +3215,28 @@ const TakumiGarage = () => {
                              (statusFilter === 'purchased' && part.purchased && !part.shipped) ||
                              (statusFilter === 'pending' && !part.purchased);
         const matchesVendor = vendorFilter === 'all' || part.vendor === vendorFilter;
-        const matchesDeliveredFilter = 
+        const matchesDeliveredFilter =
           deliveredFilter === 'all' ? true :
           deliveredFilter === 'only' ? part.delivered :
           deliveredFilter === 'hide' ? !part.delivered : true;
-        return matchesSearch && matchesStatus && matchesVendor && matchesDeliveredFilter;
+
+        // Date filter logic
+        let matchesDate = true;
+        if (partsDateFilter !== 'all' && part.createdAt) {
+          const partDate = new Date(part.createdAt);
+          const now = new Date();
+          const daysDiff = (now - partDate) / (1000 * 60 * 60 * 24);
+
+          if (partsDateFilter === '1week' && daysDiff > 7) {
+            matchesDate = false;
+          } else if (partsDateFilter === '2weeks' && daysDiff > 14) {
+            matchesDate = false;
+          } else if (partsDateFilter === '1month' && daysDiff > 30) {
+            matchesDate = false;
+          }
+        }
+
+        return matchesSearch && matchesStatus && matchesVendor && matchesDeliveredFilter && matchesDate;
       })
       .sort((a, b) => {
         let aVal, bVal;
@@ -3256,7 +3280,7 @@ const TakumiGarage = () => {
         }
       });
     return sorted;
-  }, [parts, searchTerm, statusFilter, vendorFilter, sortBy, sortOrder, projects, vehicles, deliveredFilter]);
+  }, [parts, searchTerm, statusFilter, vendorFilter, sortBy, sortOrder, projects, vehicles, deliveredFilter, partsDateFilter]);
 
   // Get unique vendors from existing parts for the dropdown
   const uniqueVendors = useMemo(() => {
@@ -3836,6 +3860,102 @@ const TakumiGarage = () => {
                             </span>
                           </button>
                         ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+              {/* Date Filter - Only visible on Parts tab */}
+              {activeTab === 'parts' && (
+                <div className="relative">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowDateFilterDropdown(!showDateFilterDropdown);
+                    }}
+                    className={`px-3 py-2 sm:py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-left flex items-center justify-between gap-2 ${
+                      darkMode
+                        ? 'bg-gray-800 border-gray-600 text-gray-100'
+                        : 'bg-slate-100 border-slate-300 text-slate-800'
+                    }`}
+                  >
+                    <span>
+                      {partsDateFilter === 'all' && 'All'}
+                      {partsDateFilter === '1week' && <><span className="hidden sm:inline">1 week</span><span className="sm:hidden">1w</span></>}
+                      {partsDateFilter === '2weeks' && <><span className="hidden sm:inline">2 weeks</span><span className="sm:hidden">2w</span></>}
+                      {partsDateFilter === '1month' && <><span className="hidden sm:inline">1 month</span><span className="sm:hidden">1m</span></>}
+                    </span>
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  {showDateFilterDropdown && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setShowDateFilterDropdown(false)}
+                      />
+                      <div className={`absolute right-0 z-20 mt-1 min-w-[160px] w-max rounded-lg border shadow-lg py-1 ${
+                        darkMode ? 'bg-gray-800 border-gray-600' : 'bg-slate-50 border-slate-300'
+                      }`}>
+                        <button
+                          onClick={() => {
+                            setIsFilteringParts(true);
+                            setPartsDateFilter('all');
+                            setShowDateFilterDropdown(false);
+                            setTimeout(() => setIsFilteringParts(false), 500);
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm ${
+                            partsDateFilter === 'all'
+                              ? darkMode ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'
+                              : darkMode ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-100 text-gray-900'
+                          }`}
+                        >
+                          All
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsFilteringParts(true);
+                            setPartsDateFilter('1week');
+                            setShowDateFilterDropdown(false);
+                            setTimeout(() => setIsFilteringParts(false), 500);
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm ${
+                            partsDateFilter === '1week'
+                              ? darkMode ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'
+                              : darkMode ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-100 text-gray-900'
+                          }`}
+                        >
+                          1 week
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsFilteringParts(true);
+                            setPartsDateFilter('2weeks');
+                            setShowDateFilterDropdown(false);
+                            setTimeout(() => setIsFilteringParts(false), 500);
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm ${
+                            partsDateFilter === '2weeks'
+                              ? darkMode ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'
+                              : darkMode ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-100 text-gray-900'
+                          }`}
+                        >
+                          2 weeks
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsFilteringParts(true);
+                            setPartsDateFilter('1month');
+                            setShowDateFilterDropdown(false);
+                            setTimeout(() => setIsFilteringParts(false), 500);
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm ${
+                            partsDateFilter === '1month'
+                              ? darkMode ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'
+                              : darkMode ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-100 text-gray-900'
+                          }`}
+                        >
+                          1 month
+                        </button>
                       </div>
                     </>
                   )}
