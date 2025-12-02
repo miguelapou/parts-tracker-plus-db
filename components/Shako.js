@@ -1886,6 +1886,10 @@ const Shako = () => {
   const [hoverTab, setHoverTab] = useState(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
+  // Swipe detection state
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
   // Detect touch device on mount
   useEffect(() => {
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
@@ -2620,6 +2624,39 @@ const Shako = () => {
   const handleTabChange = (newTab) => {
     setPreviousTab(activeTab);
     setActiveTab(newTab);
+  };
+
+  // Swipe gesture handlers for tab navigation
+  const minSwipeDistance = 50; // Minimum distance for a swipe
+  const tabs = ['vehicles', 'projects', 'parts'];
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null); // Reset touchEnd
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe || isRightSwipe) {
+      const currentIndex = tabs.indexOf(activeTab);
+
+      if (isLeftSwipe && currentIndex < tabs.length - 1) {
+        // Swipe left: go to next tab
+        handleTabChange(tabs[currentIndex + 1]);
+      } else if (isRightSwipe && currentIndex > 0) {
+        // Swipe right: go to previous tab
+        handleTabChange(tabs[currentIndex - 1]);
+      }
+    }
   };
 
   const updateProjectsOrder = async (orderedProjects) => {
@@ -5296,7 +5333,12 @@ const Shako = () => {
 
         {/* PARTS TAB CONTENT */}
         {activeTab === 'parts' && (
-          <div className="slide-in-left">
+          <div
+            className="slide-in-left"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
           <>
         {/* Statistics and Cost Breakdown - Side by Side */}
         <div className="flex flex-col gap-6 mb-6 stats-container-800">
@@ -6153,7 +6195,12 @@ const Shako = () => {
 
         {/* PROJECTS TAB CONTENT */}
         {activeTab === 'projects' && (
-          <div className={previousTab === 'vehicles' ? 'slide-in-left' : 'slide-in-right'}>
+          <div
+            className={previousTab === 'vehicles' ? 'slide-in-left' : 'slide-in-right'}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
           <>
             {/* Projects Grid */}
             <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${isFilteringProjects ? 'projects-filtering' : ''}`}>
@@ -7266,7 +7313,12 @@ const Shako = () => {
 
         {/* VEHICLES TAB CONTENT */}
         {activeTab === 'vehicles' && (
-          <div className="slide-in-right">
+          <div
+            className="slide-in-right"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
           <>
             {/* Active Vehicles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
