@@ -1988,10 +1988,10 @@ const TakumiGarage = () => {
 
   // Save parts date filter to localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined' && mounted) {
+    if (typeof window !== 'undefined' && archiveStatesInitialized) {
       localStorage.setItem('partsDateFilter', partsDateFilter);
     }
-  }, [partsDateFilter, mounted]);
+  }, [partsDateFilter, archiveStatesInitialized]);
 
   // Load parts, projects, and vendors from Supabase on mount
   useEffect(() => {
