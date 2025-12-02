@@ -7038,7 +7038,6 @@ const TakumiGarage = () => {
                           <span className="sm:hidden">Save</span>
                           <span className="hidden sm:inline">Save Changes</span>
                         </PrimaryButton>
-                        </div>
                       </div>
                     ) : (
                       <PrimaryButton
@@ -9096,7 +9095,6 @@ const TakumiGarage = () => {
                             </>
                           )}
                         </button>
-                        </div>
                       </div>
                     ) : vehicleModalProjectView ? (
                       <>
