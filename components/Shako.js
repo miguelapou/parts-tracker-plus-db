@@ -1886,6 +1886,9 @@ const Shako = () => {
   const [hoverTab, setHoverTab] = useState(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
+  // Refs for swipe detection on tab content
+  const tabContentRef = useRef(null);
+
   // Swipe detection state
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
@@ -2626,57 +2629,77 @@ const Shako = () => {
     setActiveTab(newTab);
   };
 
-  // Swipe gesture handlers for tab navigation
-  const minSwipeDistance = 50; // Minimum distance for a swipe
+  // Swipe gesture handlers for tab navigation using native events
+  const minSwipeDistance = 50;
   const tabs = ['vehicles', 'projects', 'parts'];
 
-  const onTouchStart = (e) => {
-    setTouchEnd(null); // Reset touchEnd
-    setTouchStart({
-      x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY
-    });
-  };
+  useEffect(() => {
+    const element = tabContentRef.current;
+    if (!element) return;
 
-  const onTouchMove = (e) => {
-    if (!touchStart) return;
+    let touchStartPos = null;
+    let touchEndPos = null;
 
-    const currentX = e.targetTouches[0].clientX;
-    const currentY = e.targetTouches[0].clientY;
+    const handleTouchStart = (e) => {
+      touchEndPos = null;
+      touchStartPos = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY
+      };
+    };
 
-    const diffX = Math.abs(currentX - touchStart.x);
-    const diffY = Math.abs(currentY - touchStart.y);
+    const handleTouchMove = (e) => {
+      if (!touchStartPos) return;
 
-    // If horizontal movement is greater than vertical, prevent scrolling
-    if (diffX > diffY && diffX > 10) {
-      e.preventDefault();
-    }
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
 
-    setTouchEnd({
-      x: currentX,
-      y: currentY
-    });
-  };
+      const diffX = Math.abs(currentX - touchStartPos.x);
+      const diffY = Math.abs(currentY - touchStartPos.y);
 
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-
-    const distance = touchStart.x - touchEnd.x;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (isLeftSwipe || isRightSwipe) {
-      const currentIndex = tabs.indexOf(activeTab);
-
-      if (isLeftSwipe && currentIndex < tabs.length - 1) {
-        // Swipe left: go to next tab
-        handleTabChange(tabs[currentIndex + 1]);
-      } else if (isRightSwipe && currentIndex > 0) {
-        // Swipe right: go to previous tab
-        handleTabChange(tabs[currentIndex - 1]);
+      // If horizontal movement is greater than vertical, prevent scrolling
+      if (diffX > diffY && diffX > 10) {
+        e.preventDefault();
       }
-    }
-  };
+
+      touchEndPos = {
+        x: currentX,
+        y: currentY
+      };
+    };
+
+    const handleTouchEnd = () => {
+      if (!touchStartPos || !touchEndPos) return;
+
+      const distance = touchStartPos.x - touchEndPos.x;
+      const isLeftSwipe = distance > minSwipeDistance;
+      const isRightSwipe = distance < -minSwipeDistance;
+
+      if (isLeftSwipe || isRightSwipe) {
+        const currentIndex = tabs.indexOf(activeTab);
+
+        if (isLeftSwipe && currentIndex < tabs.length - 1) {
+          handleTabChange(tabs[currentIndex + 1]);
+        } else if (isRightSwipe && currentIndex > 0) {
+          handleTabChange(tabs[currentIndex - 1]);
+        }
+      }
+
+      touchStartPos = null;
+      touchEndPos = null;
+    };
+
+    // Add event listeners with passive: false to allow preventDefault
+    element.addEventListener('touchstart', handleTouchStart, { passive: true });
+    element.addEventListener('touchmove', handleTouchMove, { passive: false });
+    element.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      element.removeEventListener('touchstart', handleTouchStart);
+      element.removeEventListener('touchmove', handleTouchMove);
+      element.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [activeTab]);
 
   const updateProjectsOrder = async (orderedProjects) => {
     try {
@@ -5366,10 +5389,8 @@ const Shako = () => {
         {/* PARTS TAB CONTENT */}
         {activeTab === 'parts' && (
           <div
+            ref={tabContentRef}
             className="slide-in-left"
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
           >
           <>
         {/* Statistics and Cost Breakdown - Side by Side */}
@@ -6228,10 +6249,8 @@ const Shako = () => {
         {/* PROJECTS TAB CONTENT */}
         {activeTab === 'projects' && (
           <div
+            ref={tabContentRef}
             className={previousTab === 'vehicles' ? 'slide-in-left' : 'slide-in-right'}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
           >
           <>
             {/* Projects Grid */}
@@ -7346,10 +7365,8 @@ const Shako = () => {
         {/* VEHICLES TAB CONTENT */}
         {activeTab === 'vehicles' && (
           <div
+            ref={tabContentRef}
             className="slide-in-right"
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
           >
           <>
             {/* Active Vehicles Grid */}
