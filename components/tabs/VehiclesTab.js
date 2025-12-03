@@ -24,6 +24,7 @@ const VehiclesTab = ({
   setShowAddVehicleModal,
   setShowVehicleDetailModal,
   setViewingVehicle,
+  vehicleModalEditMode,
   setVehicleModalEditMode,
   handleVehicleDragStart,
   handleVehicleDragOver,
@@ -41,9 +42,13 @@ const VehiclesTab = ({
   newVehicle,
   setNewVehicle,
   vehicleImagePreview,
+  setVehicleImagePreview,
   vehicleImageFile,
+  setVehicleImageFile,
   uploadingImage,
+  setUploadingImage,
   isDraggingImage,
+  setIsDraggingImage,
   isModalClosing,
   handleCloseModal,
   addVehicle,
@@ -67,10 +72,17 @@ const VehiclesTab = ({
   hasUnsavedVehicleChanges,
   updateVehicle,
   deleteVehicle,
+  loadVehicles,
   updateProject,
   unlinkPartFromProject,
   loadProjects,
-  setConfirmDialog
+  setConfirmDialog,
+  getStatusColors,
+  getPriorityColors,
+  getStatusText,
+  getStatusTextColor,
+  getVendorColor,
+  calculateProjectTotal
 }) => {
   return (
     <div
