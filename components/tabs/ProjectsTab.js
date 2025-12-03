@@ -31,6 +31,7 @@ const ProjectsTab = ({
   dragOverProjectArchiveZone,
   setDragOverProjectArchiveZone,
   setShowAddProjectModal,
+  showProjectDetailModal,
   setShowProjectDetailModal,
   setViewingProject,
   setProjectModalEditMode,
