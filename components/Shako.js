@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { Search, Package, BadgeDollarSign, TrendingUp, Truck, CheckCircle, Clock, ChevronDown, Plus, X, ExternalLink, ChevronUp, Edit2, Trash2, Moon, Sun, Wrench, GripVertical, ShoppingCart, Car, Upload, Gauge, Settings, Check, Archive, ChevronRight, Pause, Play } from 'lucide-react';
+import { Search, Package, PackageOpen, BadgeDollarSign, TrendingUp, Truck, CheckCircle, Clock, ChevronDown, Plus, X, ExternalLink, ChevronUp, Edit2, Trash2, Moon, Sun, Wrench, GripVertical, ShoppingCart, Car, Upload, Gauge, Settings, Check, Archive, ChevronRight, Pause, Play } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 // Utilities
@@ -2147,7 +2147,7 @@ const Shako = () => {
                     : 'text-slate-600'
               }`}
             >
-              <Package className="w-5 h-5" />
+              {activeTab === 'parts' ? <PackageOpen className="w-5 h-5" /> : <Package className="w-5 h-5" />}
               <span className="text-sm sm:text-base">Parts</span>
             </button>
             {/* Animated hover background */}
