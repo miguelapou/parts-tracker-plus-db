@@ -253,6 +253,22 @@ select {
 .cards-status-filtering > div:nth-child(9) { animation-delay: 0.24s; }
 .cards-status-filtering > div:nth-child(10) { animation-delay: 0.27s; }
 
+/* Status Card Content Fade-in Animation */
+.status-card-content {
+  animation: statusCardFadeIn 0.3s ease-in-out;
+}
+
+@keyframes statusCardFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Project Filtering Animation */
 .projects-filtering > div {
   animation: projectFilterFade 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
