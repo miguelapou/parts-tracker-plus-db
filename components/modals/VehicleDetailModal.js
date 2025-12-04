@@ -339,12 +339,14 @@ const VehicleDetailModal = ({
                     />
                   </div>
                 ) : (
-                  <div className="order-first md:order-last rounded-lg flex flex-col items-center justify-center min-h-[300px]">
-                    <Camera className={`w-16 h-16 mb-3 opacity-40 ${
-                      darkMode ? 'text-gray-600' : 'text-gray-400'
+                  <div className={`order-first md:order-last rounded-lg border min-h-[300px] flex flex-col items-center justify-center ${
+                    darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-gray-50 border-gray-200'
+                  }`}>
+                    <Camera className={`w-12 h-12 mx-auto mb-2 opacity-40 ${
+                      darkMode ? 'text-gray-400' : 'text-gray-500'
                     }`} />
                     <p className={`text-sm ${
-                      darkMode ? 'text-gray-500' : 'text-gray-500'
+                      darkMode ? 'text-gray-400' : 'text-gray-500'
                     }`}>
                       No image
                     </p>
