@@ -749,8 +749,8 @@ const PartsTab = ({
                       setViewingPart(part);
                       setShowPartDetailModal(true);
                     }}
-                    className={`transition-colors cursor-pointer ${
-                      darkMode ? 'hover:bg-gray-700' : 'hover:bg-slate-50'
+                    className={`transition-colors cursor-pointer parts-table-row ${
+                      darkMode ? 'dark' : 'light'
                     }`}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
