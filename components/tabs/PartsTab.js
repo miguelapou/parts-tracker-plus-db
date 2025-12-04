@@ -416,13 +416,13 @@ const PartsTab = ({
                 <CheckCircle className={`w-6 h-6 sm:w-8 sm:h-8 ${
                   deliveredFilter === 'hide' ? 'text-red-500' : 'text-green-500'
                 } opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4`} />
-                <div>
+                <div key={deliveredFilter} className="status-card-content">
                   <p className={`text-xs sm:text-sm mb-1 sm:mb-2 md:mb-3 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
-                  }`}>Delivered</p>
+                  }`}>{deliveredFilter === 'hide' ? 'Undelivered' : 'Delivered'}</p>
                   <p className={`text-xl sm:text-2xl md:text-2xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
-                  }`}>{stats.delivered}</p>
+                  }`}>{deliveredFilter === 'hide' ? stats.undelivered : stats.delivered}</p>
                 </div>
               </div>
             </div>
