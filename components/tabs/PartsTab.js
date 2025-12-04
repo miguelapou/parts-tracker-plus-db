@@ -589,7 +589,7 @@ const PartsTab = ({
         </div>
 
         {/* Search Box - Mobile only */}
-        <div className={`show-below-800 rounded-lg shadow-md p-3 order-3 ${
+        <div className={`show-below-800 rounded-lg shadow-md p-3 order-3 mb-6 ${
           darkMode ? 'bg-gray-800' : 'bg-slate-100'
         }`}>
           <div className="relative">
