@@ -674,7 +674,7 @@ const PartsTab = ({
                       {getSortIcon('status')}
                     </div>
                   </th>
-                  <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
+                  <th className={`w-64 px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
                     darkMode ? 'text-gray-300' : 'text-slate-700'
                   }`}>Part</th>
                   <th className={`hidden px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
