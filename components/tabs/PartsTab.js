@@ -416,7 +416,7 @@ const PartsTab = ({
                 <CheckCircle className={`w-6 h-6 sm:w-8 sm:h-8 ${
                   deliveredFilter === 'hide' ? 'text-red-500' : 'text-green-500'
                 } opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4`} />
-                <div key={deliveredFilter} className="status-card-content">
+                <div key={deliveredFilter} className={deliveredFilter === 'hide' ? 'status-card-content' : ''}>
                   <p className={`text-xs sm:text-sm mb-1 sm:mb-2 md:mb-3 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>{deliveredFilter === 'hide' ? 'Undelivered' : 'Delivered'}</p>
