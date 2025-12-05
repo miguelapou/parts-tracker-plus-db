@@ -475,8 +475,8 @@ const ProjectsTab = ({
 
           <div
             ref={projectArchiveRef}
-            className={`transition-all duration-300 ease-in-out overflow-hidden ${
-              isProjectArchiveCollapsed ? 'max-h-0 opacity-0' : 'max-h-[5000px] opacity-100'
+            className={`transition-all duration-300 ease-in-out ${
+              isProjectArchiveCollapsed ? 'max-h-0 opacity-0 overflow-hidden' : 'max-h-[5000px] opacity-100 overflow-visible'
             }`}
           >
             {projects.filter(p => p.archived).length > 0 ? (
