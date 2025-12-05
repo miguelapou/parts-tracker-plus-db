@@ -379,8 +379,8 @@ const VehiclesTab = ({
 
           <div
             ref={archiveRef}
-            className={`transition-all duration-300 ease-in-out overflow-hidden ${
-              isArchiveCollapsed ? 'max-h-0 opacity-0' : 'max-h-[5000px] opacity-100'
+            className={`transition-all duration-300 ease-in-out ${
+              isArchiveCollapsed ? 'max-h-0 opacity-0 overflow-hidden' : 'max-h-[5000px] opacity-100 overflow-visible'
             }`}
           >
             {vehicles.filter(v => v.archived).length > 0 ? (
