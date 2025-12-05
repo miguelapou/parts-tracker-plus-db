@@ -649,10 +649,10 @@ const ProjectDetailView = ({
                     Part #: {part.partNumber}
                   </p>
                 )}
-                <div className={`border-t ${
+                <div className={`border-t mt-auto ${
                   darkMode ? 'border-gray-600' : 'border-gray-200'
                 }`}>
-                  <div className="pt-3 space-y-2 mt-auto">
+                  <div className="pt-3 space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
                         Part Price:
