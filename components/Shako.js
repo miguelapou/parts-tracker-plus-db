@@ -599,9 +599,17 @@ const Shako = () => {
   const filteredParts = useMemo(() => {
     let sorted = parts
       .filter(part => {
-        const matchesSearch = part.part.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            part.partNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            part.vendor.toLowerCase().includes(searchTerm.toLowerCase());
+        // Get project and vehicle for this part
+        const partProject = part.projectId ? projects.find(p => p.id === part.projectId) : null;
+        const partVehicle = partProject?.vehicle_id ? vehicles.find(v => v.id === partProject.vehicle_id) : null;
+
+        const searchLower = searchTerm.toLowerCase();
+        const matchesSearch = part.part.toLowerCase().includes(searchLower) ||
+                            part.partNumber.toLowerCase().includes(searchLower) ||
+                            part.vendor.toLowerCase().includes(searchLower) ||
+                            (partProject?.name?.toLowerCase().includes(searchLower)) ||
+                            (partVehicle?.name?.toLowerCase().includes(searchLower)) ||
+                            (partVehicle?.nickname?.toLowerCase().includes(searchLower));
         const matchesStatus = statusFilter === 'all' ||
                              (statusFilter === 'delivered' && part.delivered) ||
                              (statusFilter === 'shipped' && part.shipped && !part.delivered) ||
