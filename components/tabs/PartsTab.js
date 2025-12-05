@@ -391,7 +391,8 @@ const PartsTab = ({
           <div className="space-y-4 order-2 stats-cards-800">
             <div className="grid grid-cols-3 gap-3 sm:gap-4">
               <div
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   setIsStatusFiltering(true);
                   setStatusFilter(statusFilter === 'purchased' ? 'all' : 'purchased');
                   setDeliveredFilter('all');
@@ -413,7 +414,8 @@ const PartsTab = ({
               </div>
 
               <div
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   setIsStatusFiltering(true);
                   setStatusFilter(statusFilter === 'shipped' ? 'all' : 'shipped');
                   setDeliveredFilter('all');
@@ -435,7 +437,8 @@ const PartsTab = ({
               </div>
 
               <div
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   setIsStatusFiltering(true);
                   // Cycle through: all -> only -> hide -> all
                   setDeliveredFilter(prev =>
