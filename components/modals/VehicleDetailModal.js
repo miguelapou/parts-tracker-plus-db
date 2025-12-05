@@ -271,7 +271,7 @@ const VehicleDetailModal = ({
                           <p className={`text-base ${
                             darkMode ? 'text-gray-100' : 'text-slate-800'
                           }`}>
-                            {parseInt(viewingVehicle.odometer_range).toLocaleString()} {viewingVehicle.odometer_unit === 'mi' ? 'miles' : 'km'}
+                            ~{parseInt(viewingVehicle.odometer_range).toLocaleString()} {viewingVehicle.odometer_unit === 'mi' ? 'miles' : 'km'}
                           </p>
                         </div>
                       )}
