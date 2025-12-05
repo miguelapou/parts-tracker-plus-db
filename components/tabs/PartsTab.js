@@ -374,7 +374,7 @@ const PartsTab = ({
                 margin-bottom: 0 !important;
               }
               .cost-breakdown-800 {
-                order: -1 !important;
+                order: 0 !important;
               }
               .search-box-800 {
                 display: block !important;
