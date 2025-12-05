@@ -23,6 +23,7 @@ const useFilters = () => {
   const [sortOrder, setSortOrder] = useState('asc');
   const [isSorting, setIsSorting] = useState(false);
   const [isStatusFiltering, setIsStatusFiltering] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [partsDateFilter, setPartsDateFilter] = useState('all'); // 'all', '1week', '2weeks', '1month'
   const [isFilteringParts, setIsFilteringParts] = useState(false);
   const [showDateFilterDropdown, setShowDateFilterDropdown] = useState(false);
@@ -31,6 +32,8 @@ const useFilters = () => {
   const [projectVehicleFilter, setProjectVehicleFilter] = useState('all'); // 'all' or vehicle ID
   const [isFilteringProjects, setIsFilteringProjects] = useState(false);
   const [showVehicleFilterDropdown, setShowVehicleFilterDropdown] = useState(false);
+  const [vehicleFilterDropdownClosing, setVehicleFilterDropdownClosing] = useState(false);
+  const [dateFilterDropdownClosing, setDateFilterDropdownClosing] = useState(false);
 
   // Archive states
   const [isArchiveCollapsed, setIsArchiveCollapsed] = useState(true);
@@ -39,6 +42,23 @@ const useFilters = () => {
 
   // Dropdown management
   const [openDropdown, setOpenDropdown] = useState(null);
+
+  // Helper functions for dropdown close animations
+  const closeVehicleFilterDropdown = () => {
+    setVehicleFilterDropdownClosing(true);
+    setTimeout(() => {
+      setShowVehicleFilterDropdown(false);
+      setVehicleFilterDropdownClosing(false);
+    }, 150); // Match animation duration
+  };
+
+  const closeDateFilterDropdown = () => {
+    setDateFilterDropdownClosing(true);
+    setTimeout(() => {
+      setShowDateFilterDropdown(false);
+      setDateFilterDropdownClosing(false);
+    }, 150); // Match animation duration
+  };
 
   // Initialize archive collapsed states from localStorage after mount to avoid hydration mismatch
   useEffect(() => {
@@ -106,6 +126,8 @@ const useFilters = () => {
     setIsSorting,
     isStatusFiltering,
     setIsStatusFiltering,
+    isSearching,
+    setIsSearching,
     partsDateFilter,
     setPartsDateFilter,
     isFilteringParts,
@@ -120,6 +142,10 @@ const useFilters = () => {
     setIsFilteringProjects,
     showVehicleFilterDropdown,
     setShowVehicleFilterDropdown,
+    vehicleFilterDropdownClosing,
+    closeVehicleFilterDropdown,
+    dateFilterDropdownClosing,
+    closeDateFilterDropdown,
 
     // Archive states
     isArchiveCollapsed,
