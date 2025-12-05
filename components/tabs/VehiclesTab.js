@@ -196,7 +196,7 @@ const VehiclesTab = ({
               )}
 
               {/* Vehicle Header */}
-              <div className="mb-4">
+              <div>
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <h3 className={`text-xl font-bold ${
                     darkMode ? 'text-gray-100' : 'text-slate-800'
@@ -244,8 +244,8 @@ const VehiclesTab = ({
                                 </span>
                               ))}
                               {vehicleProjects.length > 4 && (
-                                <div className="w-full text-center">
-                                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs ${
+                                <div className="w-full text-center mt-1">
+                                  <span className={`text-xs ${
                                     darkMode ? 'text-gray-500' : 'text-gray-600'
                                   }`}>
                                     +{vehicleProjects.length - 4} more
@@ -254,8 +254,8 @@ const VehiclesTab = ({
                               )}
                             </div>
                           ) : (
-                            <div className="text-center py-4">
-                              <Wrench className={`w-8 h-8 mx-auto mb-2 opacity-40 ${
+                            <div className="text-center py-2">
+                              <Wrench className={`w-6 h-6 mx-auto mb-1 opacity-40 ${
                                 darkMode ? 'text-gray-400' : 'text-gray-500'
                               }`} />
                               <p className={`text-xs ${
