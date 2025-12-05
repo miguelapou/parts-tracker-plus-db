@@ -276,11 +276,12 @@ const VehicleDetailModal = ({
                         </div>
                       )}
                     </div>
-                    {/* Total Spent on Linked Projects */}
+                    {/* Budget Progress for Linked Projects */}
                     {(() => {
                       const vehicleProjects = projects.filter(p => p.vehicle_id === viewingVehicle.id);
                       const totalSpent = calculateVehicleTotalSpent(viewingVehicle.id, projects, parts);
                       const totalBudget = vehicleProjects.reduce((sum, project) => sum + (project.budget || 0), 0);
+                      const progress = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
                       const linkedPartsCount = vehicleProjects.reduce((count, project) => {
                         return count + parts.filter(part => part.projectId === project.id).length;
                       }, 0);
@@ -288,41 +289,52 @@ const VehicleDetailModal = ({
                         <div className={`col-span-2 pt-4 mt-4 border-t ${
                           darkMode ? 'border-gray-600' : 'border-gray-300'
                         }`}>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <p className={`text-sm font-medium mb-2 ${
-                                darkMode ? 'text-gray-400' : 'text-slate-600'
-                              }`}>Total Spent</p>
-                              <p className={`text-2xl font-bold ${
-                                darkMode ? 'text-green-400' : 'text-green-600'
-                              }`}>${totalSpent.toFixed(2)}</p>
+                          <div className="flex items-center justify-between mb-2">
+                            <p className={`text-sm font-medium ${
+                              darkMode ? 'text-gray-400' : 'text-slate-600'
+                            }`}>Budget Used</p>
+                            <div className={`flex items-center gap-4 text-xs ${
+                              darkMode ? 'text-gray-500' : 'text-gray-500'
+                            }`}>
+                              {vehicleProjects.length > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <Wrench className="w-3.5 h-3.5" />
+                                  {vehicleProjects.length}
+                                </span>
+                              )}
+                              {linkedPartsCount > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <Package className="w-3.5 h-3.5" />
+                                  {linkedPartsCount}
+                                </span>
+                              )}
                             </div>
-                            <div className="flex flex-col">
-                              <div className="flex-1">
-                                <p className={`text-sm font-medium mb-2 ${
-                                  darkMode ? 'text-gray-400' : 'text-slate-600'
-                                }`}>Total Budget</p>
-                                <p className={`text-2xl font-bold ${
-                                  darkMode ? 'text-gray-100' : 'text-slate-800'
-                                }`}>${Math.round(totalBudget)}</p>
-                              </div>
-                              <div className={`flex items-center justify-end gap-4 mt-4 text-xs ${
-                                darkMode ? 'text-gray-500' : 'text-gray-500'
-                              }`}>
-                                {vehicleProjects.length > 0 && (
-                                  <span className="flex items-center gap-1">
-                                    <Wrench className="w-3.5 h-3.5" />
-                                    {vehicleProjects.length}
-                                  </span>
-                                )}
-                                {linkedPartsCount > 0 && (
-                                  <span className="flex items-center gap-1">
-                                    <Package className="w-3.5 h-3.5" />
-                                    {linkedPartsCount}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
+                          </div>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className={`text-sm font-medium ${
+                              darkMode ? 'text-gray-300' : 'text-slate-700'
+                            }`}>
+                              ${totalSpent.toFixed(2)} / ${Math.round(totalBudget)}
+                            </span>
+                            <span className={`text-sm font-bold ${
+                              darkMode ? 'text-gray-200' : 'text-gray-900'
+                            }`}>
+                              {progress.toFixed(0)}%
+                            </span>
+                          </div>
+                          <div className={`w-full rounded-full h-4 ${
+                            darkMode ? 'bg-gray-600' : 'bg-gray-200'
+                          }`}>
+                            <div
+                              className={`h-4 rounded-full transition-all ${
+                                progress > 90
+                                  ? 'bg-red-500'
+                                  : progress > 70
+                                  ? 'bg-yellow-500'
+                                  : 'bg-green-500'
+                              }`}
+                              style={{ width: `${Math.min(progress, 100)}%` }}
+                            />
                           </div>
                         </div>
                       );
