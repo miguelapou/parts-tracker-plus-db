@@ -407,7 +407,7 @@ const PartsTab = ({
           `}</style>
           {/* Statistics Cards - 3 column grid on mobile */}
           <div className="space-y-4 order-2 stats-cards-800">
-            <div className="grid grid-cols-3 gap-3 sm:gap-4">
+            <div className="grid grid-cols-3 gap-3">
               <div
                 onClick={(e) => {
                   e.stopPropagation();
@@ -434,17 +434,17 @@ const PartsTab = ({
                     setTimeout(() => setContainerMinHeight('auto'), 50);
                   }
                 }}
-                className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 border-yellow-500 relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
+                className={`rounded-lg shadow-md p-3 border-l-4 border-yellow-500 relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
                   darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
                 } ${statusFilter === 'purchased' ? 'ring-2 ring-yellow-500' : ''}`}
                 style={{ touchAction: 'manipulation' }}
               >
-                <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
+                <ShoppingCart className="w-6 h-6 text-yellow-500 opacity-20 absolute top-2 right-2" />
                 <div>
-                  <p className={`text-xs sm:text-sm mb-1 sm:mb-2 md:mb-3 ${
+                  <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Ordered</p>
-                  <p className={`text-xl sm:text-2xl md:text-2xl font-bold truncate ${
+                  <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{stats.purchased}</p>
                 </div>
@@ -476,17 +476,17 @@ const PartsTab = ({
                     setTimeout(() => setContainerMinHeight('auto'), 50);
                   }
                 }}
-                className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 border-blue-500 relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
+                className={`rounded-lg shadow-md p-3 border-l-4 border-blue-500 relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
                   darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
                 } ${statusFilter === 'shipped' ? 'ring-2 ring-blue-500' : ''}`}
                 style={{ touchAction: 'manipulation' }}
               >
-                <Truck className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
+                <Truck className="w-6 h-6 text-blue-500 opacity-20 absolute top-2 right-2" />
                 <div>
-                  <p className={`text-xs sm:text-sm mb-1 sm:mb-2 md:mb-3 ${
+                  <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Shipped</p>
-                  <p className={`text-xl sm:text-2xl md:text-2xl font-bold truncate ${
+                  <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{stats.shipped}</p>
                 </div>
@@ -522,7 +522,7 @@ const PartsTab = ({
                     setTimeout(() => setContainerMinHeight('auto'), 50);
                   }
                 }}
-                className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 ${
+                className={`rounded-lg shadow-md p-3 border-l-4 ${
                   deliveredFilter === 'hide' ? 'border-red-500' : 'border-green-500'
                 } relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
                   deliveredFilter === 'hide'
@@ -531,14 +531,14 @@ const PartsTab = ({
                 } ${deliveredFilter !== 'all' ? `ring-2 ${deliveredFilter === 'hide' ? 'ring-red-500' : 'ring-green-500'}` : ''}`}
                 style={{ touchAction: 'manipulation' }}
               >
-                <CheckCircle className={`w-6 h-6 sm:w-8 sm:h-8 ${
+                <CheckCircle className={`w-6 h-6 ${
                   deliveredFilter === 'hide' ? 'text-red-500' : 'text-green-500'
-                } opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4`} />
+                } opacity-20 absolute top-2 right-2`} />
                 <div key={deliveredFilter} className={deliveredFilter === 'hide' ? 'status-card-content' : ''}>
-                  <p className={`text-xs sm:text-sm mb-1 sm:mb-2 md:mb-3 ${
+                  <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>{deliveredFilter === 'hide' ? 'Undelivered' : 'Delivered'}</p>
-                  <p className={`text-xl sm:text-2xl md:text-2xl font-bold truncate ${
+                  <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{deliveredFilter === 'hide' ? stats.undelivered : stats.delivered}</p>
                 </div>
