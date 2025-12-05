@@ -2,6 +2,14 @@
 
 This file provides guidance for Claude Code when working with this codebase.
 
+## Guiding Principles
+
+1. **Syntax Verification**: After every code change, verify the entire file(s) being edited for correct syntax, missing characters, and nesting errors (unclosed brackets, parentheses, tags).
+
+2. **Clean Final Code**: When fixing or iterating on a solution, once the desired result is achieved, review the final code to ensure it is the cleanest and most efficient version. No band-aids or temporary workarounds should remain.
+
+3. **Debug Logging for Persistent Issues**: If a problem persists after initial attempts, automatically add `console.log` statements to help troubleshoot. Remove all debug logging once the fix is confirmed working.
+
 ## Project Overview
 
 **Shako** is a vehicle restoration parts tracking web application. It allows users to:
