@@ -411,18 +411,23 @@ const PartsTab = ({
               <div
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Set page height before filtering to prevent scroll jumping
+                  const isActivating = statusFilter !== 'purchased';
+
                   if (typeof window !== 'undefined' && window.innerWidth < 800) {
-                    const currentHeight = document.documentElement.scrollHeight;
-                    setContainerMinHeight(`${currentHeight}px`);
+                    if (isActivating) {
+                      // Set page height when activating filter to prevent scroll jumping
+                      const currentHeight = document.documentElement.scrollHeight;
+                      setContainerMinHeight(`${currentHeight}px`);
+                    } else {
+                      // Reset height when deactivating filter (going back to 'all')
+                      setContainerMinHeight('auto');
+                    }
                   }
+
                   setIsStatusFiltering(true);
                   setStatusFilter(statusFilter === 'purchased' ? 'all' : 'purchased');
                   setDeliveredFilter('all');
-                  setTimeout(() => {
-                    setIsStatusFiltering(false);
-                    setContainerMinHeight('auto');
-                  }, 900);
+                  setTimeout(() => setIsStatusFiltering(false), 900);
                 }}
                 className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 border-yellow-500 relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
                   darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
@@ -443,18 +448,23 @@ const PartsTab = ({
               <div
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Set page height before filtering to prevent scroll jumping
+                  const isActivating = statusFilter !== 'shipped';
+
                   if (typeof window !== 'undefined' && window.innerWidth < 800) {
-                    const currentHeight = document.documentElement.scrollHeight;
-                    setContainerMinHeight(`${currentHeight}px`);
+                    if (isActivating) {
+                      // Set page height when activating filter to prevent scroll jumping
+                      const currentHeight = document.documentElement.scrollHeight;
+                      setContainerMinHeight(`${currentHeight}px`);
+                    } else {
+                      // Reset height when deactivating filter (going back to 'all')
+                      setContainerMinHeight('auto');
+                    }
                   }
+
                   setIsStatusFiltering(true);
                   setStatusFilter(statusFilter === 'shipped' ? 'all' : 'shipped');
                   setDeliveredFilter('all');
-                  setTimeout(() => {
-                    setIsStatusFiltering(false);
-                    setContainerMinHeight('auto');
-                  }, 900);
+                  setTimeout(() => setIsStatusFiltering(false), 900);
                 }}
                 className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 border-blue-500 relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
                   darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
@@ -475,11 +485,19 @@ const PartsTab = ({
               <div
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Set page height before filtering to prevent scroll jumping
+                  const isGoingToAll = deliveredFilter === 'hide'; // Next click goes to 'all'
+
                   if (typeof window !== 'undefined' && window.innerWidth < 800) {
-                    const currentHeight = document.documentElement.scrollHeight;
-                    setContainerMinHeight(`${currentHeight}px`);
+                    if (!isGoingToAll) {
+                      // Set page height when activating filter to prevent scroll jumping
+                      const currentHeight = document.documentElement.scrollHeight;
+                      setContainerMinHeight(`${currentHeight}px`);
+                    } else {
+                      // Reset height when going back to 'all'
+                      setContainerMinHeight('auto');
+                    }
                   }
+
                   setIsStatusFiltering(true);
                   // Cycle through: all -> only -> hide -> all
                   setDeliveredFilter(prev =>
@@ -487,10 +505,7 @@ const PartsTab = ({
                     prev === 'only' ? 'hide' : 'all'
                   );
                   setStatusFilter('all');
-                  setTimeout(() => {
-                    setIsStatusFiltering(false);
-                    setContainerMinHeight('auto');
-                  }, 900);
+                  setTimeout(() => setIsStatusFiltering(false), 900);
                 }}
                 className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 ${
                   deliveredFilter === 'hide' ? 'border-red-500' : 'border-green-500'
