@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { X, Car, ChevronDown } from 'lucide-react';
 
 const AddProjectModal = ({
@@ -14,7 +14,22 @@ const AddProjectModal = ({
   addProject,
   onClose
 }) => {
+  const vehicleButtonRef = useRef(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+
   if (!isOpen) return null;
+
+  const handleVehicleDropdownToggle = (e) => {
+    e.stopPropagation();
+    if (!showAddProjectVehicleDropdown && vehicleButtonRef.current) {
+      const rect = vehicleButtonRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 4,
+        left: rect.left
+      });
+    }
+    setShowAddProjectVehicleDropdown(!showAddProjectVehicleDropdown);
+  };
 
   const handleAddProject = async () => {
     if (!newProject.name) {
@@ -40,7 +55,7 @@ const AddProjectModal = ({
       onClick={() => handleCloseModal(onClose)}
     >
       <div
-        className={`rounded-lg shadow-xl max-w-4xl w-full overflow-hidden modal-content grid ${
+        className={`rounded-lg shadow-xl max-w-4xl w-full modal-content grid ${
           isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
         } ${darkMode ? 'bg-gray-800' : 'bg-slate-100'}`}
         style={{
@@ -69,7 +84,7 @@ const AddProjectModal = ({
         </div>
 
         {/* Content - takes flexible space */}
-        <div className="p-6 pb-6 md:pb-64 overflow-y-auto" style={{ minHeight: 0 }}>
+        <div className="p-6 overflow-visible" style={{ minHeight: 0 }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Left Column: Project Name, Priority/Vehicle, Budget */}
             <div className="space-y-4">
@@ -104,7 +119,7 @@ const AddProjectModal = ({
                   <select
                     value={newProject.priority}
                     onChange={(e) => setNewProject({ ...newProject, priority: e.target.value })}
-                    className={`w-full px-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none min-h-[42px] box-border ${
                       darkMode
                         ? 'bg-gray-700 border-gray-600 text-gray-100'
                         : 'bg-slate-50 border-slate-300 text-slate-800'
@@ -128,12 +143,10 @@ const AddProjectModal = ({
                   </label>
                   <div className="relative">
                     <button
+                      ref={vehicleButtonRef}
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowAddProjectVehicleDropdown(!showAddProjectVehicleDropdown);
-                      }}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-left flex items-center justify-between gap-2 ${
+                      onClick={handleVehicleDropdownToggle}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-left flex items-center justify-between gap-2 min-h-[42px] box-border ${
                         darkMode
                           ? 'bg-gray-700 border-gray-600 text-gray-100'
                           : 'bg-slate-50 border-slate-300 text-slate-800'
@@ -161,14 +174,16 @@ const AddProjectModal = ({
                     {showAddProjectVehicleDropdown && (
                       <>
                         <div
-                          className="fixed inset-0 z-10"
+                          className="fixed inset-0 z-[60]"
                           onClick={() => setShowAddProjectVehicleDropdown(false)}
                         />
-                        <div className={`absolute right-0 md:left-0 z-20 mt-1 rounded-lg border shadow-lg py-1 ${
+                        <div className={`fixed z-[70] rounded-lg border shadow-lg py-1 ${
                           darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-50 border-slate-300'
                         }`}
                         style={{
-                          minWidth: '200px'
+                          minWidth: '200px',
+                          top: dropdownPosition.top,
+                          left: dropdownPosition.left
                         }}
                         >
                           <button
