@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Plus, ChevronDown, ChevronRight, Edit2, GripVertical,
+  Plus, ChevronDown, ChevronRight, GripVertical,
   Car, Archive, Package, Wrench, FolderLock, FolderOpen, Camera
 } from 'lucide-react';
 import { getMutedColor, getPriorityBorderColor } from '../../utils/colorUtils';
@@ -137,25 +137,6 @@ const VehiclesTab = ({
                 <GripVertical className="w-5 h-5" />
               </div>
 
-              {/* Edit Button - Top Right */}
-              <div className="absolute top-2 right-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setViewingVehicle(vehicle);
-                    setOriginalVehicleData({ ...vehicle }); // Save original data for unsaved changes check
-                    setVehicleModalEditMode('vehicle');
-                    setShowVehicleDetailModal(true);
-                  }}
-                  className={`p-2 rounded-md transition-colors ${
-                    darkMode ? 'hover:bg-gray-700 text-gray-500 hover:text-blue-400' : 'hover:bg-gray-100 text-gray-500 hover:text-blue-600'
-                  }`}
-                  title="Edit vehicle"
-                >
-                  <Edit2 className="w-5 h-5" />
-                </button>
-              </div>
-
               {/* Vehicle Image */}
               {vehicle.image_url ? (
                 <div className="mb-4 mt-10 relative">
@@ -195,38 +176,38 @@ const VehiclesTab = ({
                 </div>
               )}
 
-              {/* Vehicle Header */}
-              <div className="mb-4">
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h3 className={`text-xl font-bold ${
-                    darkMode ? 'text-gray-100' : 'text-slate-800'
-                  }`}>
-                    {vehicle.nickname || [vehicle.year, vehicle.make, vehicle.name].filter(Boolean).join(' ')}
-                  </h3>
-                  {vehicle.nickname && (
-                    <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${
-                      darkMode ? 'bg-blue-600 text-blue-100' : 'bg-blue-100 text-blue-800'
+              {/* Vehicle Header - Two column layout on mobile */}
+              {!vehicle.archived ? (
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Left Column: Nickname + Badge */}
+                  <div>
+                    <h3 className={`text-xl font-bold mb-2 ${
+                      darkMode ? 'text-gray-100' : 'text-slate-800'
                     }`}>
-                      {[vehicle.year, vehicle.make, vehicle.name].filter(Boolean).join(' ')}
-                    </span>
-                  )}
-                </div>
-                {!vehicle.archived && (
-                  <>
-                    {/* Project Badges */}
+                      {vehicle.nickname || [vehicle.year, vehicle.name].filter(Boolean).join(' ')}
+                    </h3>
+                    {vehicle.nickname && (
+                      <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium ${
+                        darkMode ? 'bg-blue-600 text-blue-100' : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {[vehicle.year, vehicle.name].filter(Boolean).join(' ')}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Right Column: Projects stacked */}
+                  <div>
                     {(() => {
                       const vehicleProjects = getVehicleProjects(vehicle.id);
                       return (
-                        <div className={`mt-4 pt-4 border-t ${
-                          darkMode ? 'border-gray-700' : 'border-slate-200'
-                        }`}>
+                        <>
                           <h4 className={`text-xs font-semibold mb-2 uppercase tracking-wider ${
                             darkMode ? 'text-gray-400' : 'text-slate-600'
                           }`}>
                             Projects ({vehicleProjects.length})
                           </h4>
                           {vehicleProjects.length > 0 ? (
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-col gap-1">
                               {vehicleProjects.slice(0, 4).map((project) => (
                                 <span
                                   key={project.id}
@@ -235,8 +216,7 @@ const VehiclesTab = ({
                                   }`}
                                   style={{
                                     borderLeftWidth: '3px',
-                                    borderLeftColor: getPriorityBorderColor(project.priority),
-                                    width: 'calc(50% - 4px)'
+                                    borderLeftColor: getPriorityBorderColor(project.priority)
                                   }}
                                 >
                                   <Wrench className="w-3 h-3 mr-1 flex-shrink-0" />
@@ -244,42 +224,52 @@ const VehiclesTab = ({
                                 </span>
                               ))}
                               {vehicleProjects.length > 4 && (
-                                <div className="w-full text-center">
-                                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs ${
-                                    darkMode ? 'text-gray-500' : 'text-gray-600'
-                                  }`}>
-                                    +{vehicleProjects.length - 4} more
-                                  </span>
-                                </div>
+                                <span className={`text-xs ${
+                                  darkMode ? 'text-gray-500' : 'text-gray-600'
+                                }`}>
+                                  +{vehicleProjects.length - 4} more
+                                </span>
                               )}
                             </div>
                           ) : (
-                            <div className="text-center py-4">
-                              <Wrench className={`w-8 h-8 mx-auto mb-2 opacity-40 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-500'
-                              }`} />
+                            <div className="py-2">
                               <p className={`text-xs ${
-                                darkMode ? 'text-gray-400' : 'text-gray-500'
+                                darkMode ? 'text-gray-500' : 'text-gray-500'
                               }`}>
-                                No projects linked
+                                No projects
                               </p>
                             </div>
                           )}
-                        </div>
+                        </>
                       );
                     })()}
-                  </>
-                )}
-                {vehicle.archived && vehicle.vin && (
-                  <div className="mt-2">
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-mono ${
-                      darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-900'
-                    }`}>
-                      VIN: {vehicle.vin}
-                    </span>
                   </div>
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="mb-4">
+                  <h3 className={`text-xl font-bold ${
+                    darkMode ? 'text-gray-100' : 'text-slate-800'
+                  }`}>
+                    {vehicle.nickname || [vehicle.year, vehicle.name].filter(Boolean).join(' ')}
+                  </h3>
+                  {vehicle.nickname && (
+                    <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium mt-2 ${
+                      darkMode ? 'bg-blue-600 text-blue-100' : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {[vehicle.year, vehicle.name].filter(Boolean).join(' ')}
+                    </span>
+                  )}
+                  {vehicle.vin && (
+                    <div className="mt-2">
+                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-mono ${
+                        darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-900'
+                      }`}>
+                        VIN: {vehicle.vin}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           );
           })}
@@ -470,13 +460,13 @@ const VehiclesTab = ({
                     <h3 className={`text-base font-bold ${
                       darkMode ? 'text-gray-100' : 'text-slate-800'
                     }`}>
-                      {vehicle.nickname || [vehicle.year, vehicle.make, vehicle.name].filter(Boolean).join(' ')}
+                      {vehicle.nickname || [vehicle.year, vehicle.name].filter(Boolean).join(' ')}
                     </h3>
                     {vehicle.nickname && (
                       <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap mt-1 ${
                         darkMode ? 'bg-blue-600 text-blue-100' : 'bg-blue-100 text-blue-800'
                       }`}>
-                        {[vehicle.year, vehicle.make, vehicle.name].filter(Boolean).join(' ')}
+                        {[vehicle.year, vehicle.name].filter(Boolean).join(' ')}
                       </span>
                     )}
                   </div>
