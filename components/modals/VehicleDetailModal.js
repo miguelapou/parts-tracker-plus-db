@@ -268,10 +268,9 @@ const VehicleDetailModal = ({
                           <p className={`text-sm font-medium mb-2 ${
                             darkMode ? 'text-gray-400' : 'text-slate-600'
                           }`}>Odometer Range</p>
-                          <span
-                            className="inline-block px-3 py-1 rounded text-sm font-medium text-white"
-                            style={{ backgroundColor: viewingVehicle.color || '#3B82F6' }}
-                          >
+                          <span className={`inline-block px-3 py-1 rounded text-sm font-medium ${
+                            darkMode ? 'bg-blue-600 text-blue-100' : 'bg-blue-100 text-blue-800'
+                          }`}>
                             {parseInt(viewingVehicle.odometer_range).toLocaleString()} km
                           </span>
                         </div>
