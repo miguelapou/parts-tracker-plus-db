@@ -229,6 +229,7 @@ const AddProjectModal = ({
                   <input
                     type="number"
                     step="0.01"
+                    inputMode="decimal"
                     value={newProject.budget}
                     onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
                     className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
