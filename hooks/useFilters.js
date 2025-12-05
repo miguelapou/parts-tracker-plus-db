@@ -31,6 +31,8 @@ const useFilters = () => {
   const [projectVehicleFilter, setProjectVehicleFilter] = useState('all'); // 'all' or vehicle ID
   const [isFilteringProjects, setIsFilteringProjects] = useState(false);
   const [showVehicleFilterDropdown, setShowVehicleFilterDropdown] = useState(false);
+  const [vehicleFilterDropdownClosing, setVehicleFilterDropdownClosing] = useState(false);
+  const [dateFilterDropdownClosing, setDateFilterDropdownClosing] = useState(false);
 
   // Archive states
   const [isArchiveCollapsed, setIsArchiveCollapsed] = useState(true);
@@ -39,6 +41,23 @@ const useFilters = () => {
 
   // Dropdown management
   const [openDropdown, setOpenDropdown] = useState(null);
+
+  // Helper functions for dropdown close animations
+  const closeVehicleFilterDropdown = () => {
+    setVehicleFilterDropdownClosing(true);
+    setTimeout(() => {
+      setShowVehicleFilterDropdown(false);
+      setVehicleFilterDropdownClosing(false);
+    }, 150); // Match animation duration
+  };
+
+  const closeDateFilterDropdown = () => {
+    setDateFilterDropdownClosing(true);
+    setTimeout(() => {
+      setShowDateFilterDropdown(false);
+      setDateFilterDropdownClosing(false);
+    }, 150); // Match animation duration
+  };
 
   // Initialize archive collapsed states from localStorage after mount to avoid hydration mismatch
   useEffect(() => {
@@ -120,6 +139,10 @@ const useFilters = () => {
     setIsFilteringProjects,
     showVehicleFilterDropdown,
     setShowVehicleFilterDropdown,
+    vehicleFilterDropdownClosing,
+    closeVehicleFilterDropdown,
+    dateFilterDropdownClosing,
+    closeDateFilterDropdown,
 
     // Archive states
     isArchiveCollapsed,

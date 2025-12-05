@@ -176,6 +176,10 @@ const Shako = () => {
     setIsFilteringProjects,
     showVehicleFilterDropdown,
     setShowVehicleFilterDropdown,
+    vehicleFilterDropdownClosing,
+    closeVehicleFilterDropdown,
+    dateFilterDropdownClosing,
+    closeDateFilterDropdown,
     isArchiveCollapsed,
     setIsArchiveCollapsed,
     isProjectArchiveCollapsed,
@@ -976,11 +980,13 @@ const Shako = () => {
                   </button>
                   {showVehicleFilterDropdown && (
                     <>
-                      <div 
+                      <div
                         className="fixed inset-0 z-10"
-                        onClick={() => setShowVehicleFilterDropdown(false)}
+                        onClick={closeVehicleFilterDropdown}
                       />
-                      <div className={`absolute right-0 z-20 mt-1 min-w-[200px] w-max rounded-lg border shadow-lg py-1 dropdown-fade-in ${
+                      <div className={`absolute right-0 z-20 mt-1 min-w-[200px] w-max rounded-lg border shadow-lg py-1 ${
+                        vehicleFilterDropdownClosing ? 'dropdown-fade-out' : 'dropdown-fade-in'
+                      } ${
                         darkMode ? 'bg-gray-800 border-gray-600' : 'bg-slate-50 border-slate-300'
                       }`} style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif' }}>
                         <div className={`px-3 py-1.5 text-xs font-medium uppercase tracking-tight border-b whitespace-nowrap ${
@@ -992,7 +998,7 @@ const Shako = () => {
                           onClick={() => {
                             setIsFilteringProjects(true);
                             setProjectVehicleFilter('all');
-                            setShowVehicleFilterDropdown(false);
+                            closeVehicleFilterDropdown();
                             setTimeout(() => setIsFilteringProjects(false), 500);
                           }}
                           className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 ${
@@ -1016,7 +1022,7 @@ const Shako = () => {
                             onClick={() => {
                               setIsFilteringProjects(true);
                               setProjectVehicleFilter(String(vehicle.id));
-                              setShowVehicleFilterDropdown(false);
+                              closeVehicleFilterDropdown();
                               setTimeout(() => setIsFilteringProjects(false), 500);
                             }}
                             className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 ${
@@ -1025,9 +1031,9 @@ const Shako = () => {
                                 : darkMode ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-100 text-gray-900'
                             }`}
                           >
-                            <div 
+                            <div
                               className="w-3 h-3 rounded-full border flex-shrink-0"
-                              style={{ 
+                              style={{
                                 backgroundColor: vehicle.color || '#3B82F6',
                                 borderColor: darkMode ? '#4B5563' : '#D1D5DB'
                               }}
@@ -1070,9 +1076,11 @@ const Shako = () => {
                     <>
                       <div
                         className="fixed inset-0 z-10"
-                        onClick={() => setShowDateFilterDropdown(false)}
+                        onClick={closeDateFilterDropdown}
                       />
-                      <div className={`absolute right-0 z-20 mt-1 w-auto rounded-lg border shadow-lg py-1 dropdown-fade-in ${
+                      <div className={`absolute right-0 z-20 mt-1 w-auto rounded-lg border shadow-lg py-1 ${
+                        dateFilterDropdownClosing ? 'dropdown-fade-out' : 'dropdown-fade-in'
+                      } ${
                         darkMode ? 'bg-gray-800 border-gray-600' : 'bg-slate-50 border-slate-300'
                       }`} style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif' }}>
                         <div className={`px-3 py-1.5 text-xs font-medium uppercase tracking-tight border-b whitespace-nowrap ${
@@ -1084,7 +1092,7 @@ const Shako = () => {
                           onClick={() => {
                             setIsFilteringParts(true);
                             setPartsDateFilter('all');
-                            setShowDateFilterDropdown(false);
+                            closeDateFilterDropdown();
                             setTimeout(() => setIsFilteringParts(false), 500);
                           }}
                           className={`w-full px-3 py-2 text-left text-sm ${
@@ -1099,7 +1107,7 @@ const Shako = () => {
                           onClick={() => {
                             setIsFilteringParts(true);
                             setPartsDateFilter('1week');
-                            setShowDateFilterDropdown(false);
+                            closeDateFilterDropdown();
                             setTimeout(() => setIsFilteringParts(false), 500);
                           }}
                           className={`w-full px-3 py-2 text-left text-sm ${
@@ -1114,7 +1122,7 @@ const Shako = () => {
                           onClick={() => {
                             setIsFilteringParts(true);
                             setPartsDateFilter('2weeks');
-                            setShowDateFilterDropdown(false);
+                            closeDateFilterDropdown();
                             setTimeout(() => setIsFilteringParts(false), 500);
                           }}
                           className={`w-full px-3 py-2 text-left text-sm ${
@@ -1129,7 +1137,7 @@ const Shako = () => {
                           onClick={() => {
                             setIsFilteringParts(true);
                             setPartsDateFilter('1month');
-                            setShowDateFilterDropdown(false);
+                            closeDateFilterDropdown();
                             setTimeout(() => setIsFilteringParts(false), 500);
                           }}
                           className={`w-full px-3 py-2 text-left text-sm ${

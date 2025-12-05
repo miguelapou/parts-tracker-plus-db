@@ -205,6 +205,21 @@ select {
   animation: dropdownFadeIn 0.2s ease-out;
 }
 
+@keyframes dropdownFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.dropdown-fade-out {
+  animation: dropdownFadeOut 0.15s ease-in forwards;
+}
+
 .slide-in-right {
   animation: slideInFromRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
