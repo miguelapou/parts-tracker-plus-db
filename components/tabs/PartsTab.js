@@ -400,6 +400,7 @@ const PartsTab = ({
                 className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 border-yellow-500 relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
                   darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
                 } ${statusFilter === 'purchased' ? 'ring-2 ring-yellow-500' : ''}`}
+                style={{ touchAction: 'manipulation' }}
               >
                 <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
                 <div>
@@ -422,6 +423,7 @@ const PartsTab = ({
                 className={`rounded-lg shadow-md p-3 sm:p-4 md:p-4 border-l-4 border-blue-500 relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
                   darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
                 } ${statusFilter === 'shipped' ? 'ring-2 ring-blue-500' : ''}`}
+                style={{ touchAction: 'manipulation' }}
               >
                 <Truck className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 opacity-20 absolute top-2 sm:top-4 right-2 sm:right-4" />
                 <div>
@@ -452,6 +454,7 @@ const PartsTab = ({
                     ? (darkMode ? 'bg-gray-900' : 'bg-gray-300')
                     : (darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50')
                 } ${deliveredFilter !== 'all' ? `ring-2 ${deliveredFilter === 'hide' ? 'ring-red-500' : 'ring-green-500'}` : ''}`}
+                style={{ touchAction: 'manipulation' }}
               >
                 <CheckCircle className={`w-6 h-6 sm:w-8 sm:h-8 ${
                   deliveredFilter === 'hide' ? 'text-red-500' : 'text-green-500'
