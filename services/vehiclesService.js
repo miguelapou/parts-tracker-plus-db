@@ -36,14 +36,19 @@ const VALID_VEHICLE_COLUMNS = [
 
 /**
  * Filter object to only include valid database columns
+ * Also removes empty string values to avoid type mismatches with numeric columns
  * @param {Object} data - Data object to filter
- * @returns {Object} Filtered object with only valid columns
+ * @returns {Object} Filtered object with only valid columns and non-empty values
  */
 const filterValidColumns = (data) => {
   const filtered = {};
   for (const key of Object.keys(data)) {
     if (VALID_VEHICLE_COLUMNS.includes(key)) {
-      filtered[key] = data[key];
+      const value = data[key];
+      // Skip empty strings to let database use defaults
+      if (value !== '' && value !== null && value !== undefined) {
+        filtered[key] = value;
+      }
     }
   }
   return filtered;
