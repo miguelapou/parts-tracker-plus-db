@@ -89,6 +89,8 @@ const VehicleDetailModal = ({
   uploadingDocument,
   showAddDocumentModal,
   setShowAddDocumentModal,
+  isDocumentModalClosing,
+  handleCloseDocumentModal,
   newDocumentTitle,
   setNewDocumentTitle,
   newDocumentFile,
@@ -616,16 +618,15 @@ const VehicleDetailModal = ({
                 {/* Add Document Modal */}
                 {showAddDocumentModal && (
                   <div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] modal-backdrop modal-backdrop-enter"
-                    onClick={() => {
-                      setShowAddDocumentModal(false);
-                      clearDocumentSelection();
-                    }}
+                    className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] modal-backdrop ${
+                      isDocumentModalClosing ? 'modal-backdrop-exit' : 'modal-backdrop-enter'
+                    }`}
+                    onClick={handleCloseDocumentModal}
                   >
                     <div
-                      className={`rounded-lg shadow-xl max-w-md w-full mx-4 modal-content modal-popup-enter ${
-                        darkMode ? 'bg-gray-800' : 'bg-slate-200'
-                      }`}
+                      className={`rounded-lg shadow-xl max-w-md w-full mx-4 modal-content ${
+                        isDocumentModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
+                      } ${darkMode ? 'bg-gray-800' : 'bg-slate-200'}`}
                       onClick={(e) => e.stopPropagation()}
                     >
                       <div className={`px-6 py-4 border-b flex items-center justify-between ${
@@ -637,10 +638,7 @@ const VehicleDetailModal = ({
                           Add Document
                         </h3>
                         <button
-                          onClick={() => {
-                            setShowAddDocumentModal(false);
-                            clearDocumentSelection();
-                          }}
+                          onClick={handleCloseDocumentModal}
                           className={`p-1 rounded transition-colors ${
                             darkMode ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
                           }`}
@@ -754,10 +752,7 @@ const VehicleDetailModal = ({
                         darkMode ? 'border-gray-700' : 'border-gray-200'
                       }`}>
                         <button
-                          onClick={() => {
-                            setShowAddDocumentModal(false);
-                            clearDocumentSelection();
-                          }}
+                          onClick={handleCloseDocumentModal}
                           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                             darkMode
                               ? 'bg-gray-700 hover:bg-gray-600 text-gray-100'
