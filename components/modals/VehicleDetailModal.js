@@ -143,7 +143,7 @@ const VehicleDetailModal = ({
       <div
         className={`rounded-lg shadow-xl max-w-5xl w-full overflow-hidden modal-content transition-all duration-700 ease-in-out grid ${
           isModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
-        } ${darkMode ? 'bg-gray-800' : 'bg-slate-100'}`}
+        } ${darkMode ? 'bg-gray-800' : 'bg-slate-200'}`}
         style={{
           gridTemplateRows: 'auto 1fr auto',
           maxHeight: vehicleModalEditMode ? '90vh' : '85vh',
@@ -336,14 +336,23 @@ const VehicleDetailModal = ({
                         <div className={`col-span-2 pt-4 mt-4 border-t ${
                           darkMode ? 'border-gray-600' : 'border-gray-300'
                         }`}>
-                          <p className={`text-sm font-medium mb-2 ${
-                            darkMode ? 'text-gray-400' : 'text-slate-600'
+                          <p className={`text-sm font-semibold mb-2 ${
+                            darkMode ? 'text-gray-300' : 'text-slate-700'
                           }`}>Budget Used</p>
                           <div className="flex justify-between items-center mb-2">
-                            <span className={`text-sm font-medium ${
-                              darkMode ? 'text-gray-300' : 'text-slate-700'
-                            }`}>
-                              ${totalSpent.toFixed(2)} / ${Math.round(totalBudget)}
+                            <span className="text-sm font-medium">
+                              <span className={
+                                progress > 90
+                                  ? (darkMode ? 'text-red-400' : 'text-red-600')
+                                  : progress > 70
+                                  ? (darkMode ? 'text-yellow-400' : 'text-yellow-600')
+                                  : (darkMode ? 'text-green-400' : 'text-green-600')
+                              }>
+                                ${totalSpent.toFixed(2)}
+                              </span>
+                              <span className={darkMode ? 'text-gray-300' : 'text-slate-700'}>
+                                {' '}/ ${Math.round(totalBudget)}
+                              </span>
                             </span>
                             <span className={`text-sm font-bold ${
                               darkMode ? 'text-gray-200' : 'text-gray-900'
@@ -407,8 +416,8 @@ const VehicleDetailModal = ({
                   Maintenance
                 </h3>
                 {(viewingVehicle.fuel_filter || viewingVehicle.air_filter || viewingVehicle.oil_filter || viewingVehicle.oil_type || viewingVehicle.oil_capacity || viewingVehicle.oil_brand || viewingVehicle.drain_plug || viewingVehicle.battery) ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {/* Mobile order: fuel filter, air filter, battery, oil filter, oil capacity, oil type, oil brand, drain plug */}
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* Mobile two-column layout: Left (fuel filter, air filter, battery, drain plug) | Right (oil filter, oil capacity, oil type, oil brand) */}
                     {viewingVehicle.fuel_filter && (
                       <div>
                         <p className={`text-sm font-medium mb-1 ${
@@ -417,26 +426,6 @@ const VehicleDetailModal = ({
                         <p className={`text-base ${
                           darkMode ? 'text-gray-100' : 'text-slate-800'
                         }`}>{viewingVehicle.fuel_filter}</p>
-                      </div>
-                    )}
-                    {viewingVehicle.air_filter && (
-                      <div>
-                        <p className={`text-sm font-medium mb-1 ${
-                          darkMode ? 'text-gray-400' : 'text-slate-600'
-                        }`}>Air Filter</p>
-                        <p className={`text-base ${
-                          darkMode ? 'text-gray-100' : 'text-slate-800'
-                        }`}>{viewingVehicle.air_filter}</p>
-                      </div>
-                    )}
-                    {viewingVehicle.battery && (
-                      <div>
-                        <p className={`text-sm font-medium mb-1 ${
-                          darkMode ? 'text-gray-400' : 'text-slate-600'
-                        }`}>Battery Type</p>
-                        <p className={`text-base ${
-                          darkMode ? 'text-gray-100' : 'text-slate-800'
-                        }`}>{viewingVehicle.battery}</p>
                       </div>
                     )}
                     {viewingVehicle.oil_filter && (
@@ -449,6 +438,16 @@ const VehicleDetailModal = ({
                         }`}>{viewingVehicle.oil_filter}</p>
                       </div>
                     )}
+                    {viewingVehicle.air_filter && (
+                      <div>
+                        <p className={`text-sm font-medium mb-1 ${
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
+                        }`}>Air Filter</p>
+                        <p className={`text-base ${
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
+                        }`}>{viewingVehicle.air_filter}</p>
+                      </div>
+                    )}
                     {viewingVehicle.oil_capacity && (
                       <div>
                         <p className={`text-sm font-medium mb-1 ${
@@ -457,6 +456,16 @@ const VehicleDetailModal = ({
                         <p className={`text-base ${
                           darkMode ? 'text-gray-100' : 'text-slate-800'
                         }`}>{viewingVehicle.oil_capacity}</p>
+                      </div>
+                    )}
+                    {viewingVehicle.battery && (
+                      <div>
+                        <p className={`text-sm font-medium mb-1 ${
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
+                        }`}>Battery Type</p>
+                        <p className={`text-base ${
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
+                        }`}>{viewingVehicle.battery}</p>
                       </div>
                     )}
                     {viewingVehicle.oil_type && (
@@ -469,16 +478,6 @@ const VehicleDetailModal = ({
                         }`}>{viewingVehicle.oil_type}</p>
                       </div>
                     )}
-                    {viewingVehicle.oil_brand && (
-                      <div>
-                        <p className={`text-sm font-medium mb-1 ${
-                          darkMode ? 'text-gray-400' : 'text-slate-600'
-                        }`}>Oil Brand</p>
-                        <p className={`text-base ${
-                          darkMode ? 'text-gray-100' : 'text-slate-800'
-                        }`}>{viewingVehicle.oil_brand}</p>
-                      </div>
-                    )}
                     {viewingVehicle.drain_plug && (
                       <div>
                         <p className={`text-sm font-medium mb-1 ${
@@ -487,6 +486,16 @@ const VehicleDetailModal = ({
                         <p className={`text-base ${
                           darkMode ? 'text-gray-100' : 'text-slate-800'
                         }`}>{viewingVehicle.drain_plug}</p>
+                      </div>
+                    )}
+                    {viewingVehicle.oil_brand && (
+                      <div>
+                        <p className={`text-sm font-medium mb-1 ${
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
+                        }`}>Oil Brand</p>
+                        <p className={`text-base ${
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
+                        }`}>{viewingVehicle.oil_brand}</p>
                       </div>
                     )}
                   </div>
@@ -608,7 +617,7 @@ const VehicleDetailModal = ({
                   >
                     <div
                       className={`rounded-lg shadow-xl max-w-md w-full mx-4 ${
-                        darkMode ? 'bg-gray-800' : 'bg-white'
+                        darkMode ? 'bg-gray-800' : 'bg-slate-200'
                       }`}
                       onClick={(e) => e.stopPropagation()}
                     >
