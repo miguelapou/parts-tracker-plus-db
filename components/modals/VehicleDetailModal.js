@@ -340,14 +340,19 @@ const VehicleDetailModal = ({
                             darkMode ? 'text-gray-400' : 'text-slate-600'
                           }`}>Budget Used</p>
                           <div className="flex justify-between items-center mb-2">
-                            <span className={`text-sm font-medium ${
-                              progress > 66
-                                ? (darkMode ? 'text-red-400' : 'text-red-600')
-                                : progress > 33
-                                ? (darkMode ? 'text-yellow-400' : 'text-yellow-600')
-                                : (darkMode ? 'text-green-400' : 'text-green-600')
-                            }`}>
-                              ${totalSpent.toFixed(2)} / ${Math.round(totalBudget)}
+                            <span className="text-sm font-medium">
+                              <span className={
+                                progress > 66
+                                  ? (darkMode ? 'text-red-400' : 'text-red-600')
+                                  : progress > 33
+                                  ? (darkMode ? 'text-yellow-400' : 'text-yellow-600')
+                                  : (darkMode ? 'text-green-400' : 'text-green-600')
+                              }>
+                                ${totalSpent.toFixed(2)}
+                              </span>
+                              <span className={darkMode ? 'text-gray-300' : 'text-slate-700'}>
+                                {' '}/ ${Math.round(totalBudget)}
+                              </span>
                             </span>
                             <span className={`text-sm font-bold ${
                               darkMode ? 'text-gray-200' : 'text-gray-900'
