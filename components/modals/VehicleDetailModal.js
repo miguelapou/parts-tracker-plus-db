@@ -521,17 +521,6 @@ const VehicleDetailModal = ({
                   }`}>
                     Documents ({documents.length})
                   </h3>
-                  <button
-                    onClick={() => setShowAddDocumentModal(true)}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                      darkMode
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add
-                  </button>
                 </div>
                 {loadingDocuments ? (
                   <div className={`text-center py-8 ${
@@ -539,7 +528,7 @@ const VehicleDetailModal = ({
                   }`}>
                     Loading documents...
                   </div>
-                ) : documents.length > 0 ? (
+                ) : (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {documents.map((doc) => (
                       <div
@@ -594,15 +583,33 @@ const VehicleDetailModal = ({
                         }`} />
                       </div>
                     ))}
-                  </div>
-                ) : (
-                  <div className={`text-center py-8 rounded-lg border ${
-                    darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
-                  }`}>
-                    <FileText className="w-12 h-12 mx-auto mb-2 opacity-40" />
-                    <p className="text-sm">
-                      No documents uploaded yet
-                    </p>
+                    {/* Add new document card */}
+                    <div
+                      onClick={() => setShowAddDocumentModal(true)}
+                      className={`group relative rounded-lg p-3 border-2 border-dashed transition-all cursor-pointer hover:shadow-md ${
+                        darkMode
+                          ? 'border-gray-600 hover:border-blue-500 hover:bg-gray-700/50'
+                          : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50/50'
+                      }`}
+                    >
+                      <div className="flex items-start gap-2">
+                        <Plus className={`w-8 h-8 flex-shrink-0 ${
+                          darkMode ? 'text-gray-500 group-hover:text-blue-400' : 'text-gray-400 group-hover:text-blue-600'
+                        } transition-colors`} />
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm font-medium ${
+                            darkMode ? 'text-gray-400 group-hover:text-gray-200' : 'text-gray-500 group-hover:text-gray-700'
+                          } transition-colors`}>
+                            Add document
+                          </p>
+                          <p className={`text-xs ${
+                            darkMode ? 'text-gray-600' : 'text-gray-400'
+                          }`}>
+                            Click to upload
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
