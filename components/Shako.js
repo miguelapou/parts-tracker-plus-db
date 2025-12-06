@@ -810,6 +810,24 @@ const Shako = () => {
     };
   }, [parts]);
 
+  // Stats calculated from filtered parts for dynamic cost breakdown
+  const filteredStats = useMemo(() => {
+    // Filter out pending items (items where purchased is false) for cost calculations
+    const purchasedFilteredParts = filteredParts.filter(p => p.purchased);
+    return {
+      total: filteredParts.length,
+      delivered: filteredParts.filter(p => p.delivered).length,
+      undelivered: filteredParts.filter(p => !p.delivered).length,
+      shipped: filteredParts.filter(p => p.shipped && !p.delivered).length,
+      purchased: filteredParts.filter(p => p.purchased && !p.shipped).length,
+      pending: filteredParts.filter(p => !p.purchased).length,
+      totalCost: purchasedFilteredParts.reduce((sum, p) => sum + p.total, 0),
+      totalPrice: purchasedFilteredParts.reduce((sum, p) => sum + p.price, 0),
+      totalShipping: purchasedFilteredParts.reduce((sum, p) => sum + p.shipping, 0),
+      totalDuties: purchasedFilteredParts.reduce((sum, p) => sum + p.duties, 0),
+    };
+  }, [filteredParts]);
+
   const getStatusIcon = (part) => {
     if (part.delivered) return <CheckCircle className="w-4 h-4 text-green-600" />;
     if (part.shipped) return <Truck className="w-4 h-4 text-blue-600" />;
@@ -1589,6 +1607,7 @@ const Shako = () => {
           <PartsTab
             tabContentRef={tabContentRef}
             stats={stats}
+            filteredStats={filteredStats}
             filteredParts={filteredParts}
             darkMode={darkMode}
             searchTerm={searchTerm}

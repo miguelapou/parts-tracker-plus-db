@@ -11,6 +11,7 @@ import { getTrackingUrl, getCarrierName } from '../../utils/trackingUtils';
 const PartsTab = ({
   tabContentRef,
   stats,
+  filteredStats,
   filteredParts,
   darkMode,
   searchTerm,
@@ -748,14 +749,14 @@ const PartsTab = ({
                       strokeWidth="8"
                       fill="none"
                       strokeDasharray={`${2 * Math.PI * 40}`}
-                      strokeDashoffset={`${2 * Math.PI * 40 * (1 - (stats.delivered / stats.total))}`}
+                      strokeDashoffset={`${2 * Math.PI * 40 * (1 - (filteredStats.total > 0 ? filteredStats.delivered / filteredStats.total : 0))}`}
                       className="text-green-500 transition-all duration-500"
                       strokeLinecap="round"
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <span className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
-                      {Math.round((stats.delivered / stats.total) * 100)}%
+                      {filteredStats.total > 0 ? Math.round((filteredStats.delivered / filteredStats.total) * 100) : 0}%
                     </span>
                   </div>
                 </div>
@@ -768,7 +769,7 @@ const PartsTab = ({
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Parts</p>
                   <PriceDisplay
-                    amount={stats.totalPrice}
+                    amount={filteredStats.totalPrice}
                     className={`text-sm font-semibold truncate ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`}
@@ -780,7 +781,7 @@ const PartsTab = ({
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Shipping</p>
                   <PriceDisplay
-                    amount={stats.totalShipping}
+                    amount={filteredStats.totalShipping}
                     className={`text-sm font-semibold truncate ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`}
@@ -794,7 +795,7 @@ const PartsTab = ({
                     darkMode ? 'text-gray-400' : 'text-slate-600'
                   }`}>Import Duties</p>
                   <PriceDisplay
-                    amount={stats.totalDuties}
+                    amount={filteredStats.totalDuties}
                     className={`text-sm font-semibold truncate ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`}
@@ -806,7 +807,7 @@ const PartsTab = ({
                     darkMode ? 'text-gray-200' : 'text-slate-800'
                   }`}>Total</p>
                   <PriceDisplay
-                    amount={stats.totalCost}
+                    amount={filteredStats.totalCost}
                     className={`text-base font-bold truncate ${
                       darkMode ? 'text-gray-100' : 'text-gray-800'
                     }`}
@@ -833,13 +834,13 @@ const PartsTab = ({
                 }`}>
                   <div
                     className="bg-green-500 h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${(stats.delivered / stats.total) * 100}%` }}
+                    style={{ width: `${filteredStats.total > 0 ? (filteredStats.delivered / filteredStats.total) * 100 : 0}%` }}
                   />
                 </div>
                 <span className={`text-xs font-semibold ${
                   darkMode ? 'text-gray-300' : 'text-slate-700'
                 }`}>
-                  {Math.round((stats.delivered / stats.total) * 100)}%
+                  {filteredStats.total > 0 ? Math.round((filteredStats.delivered / filteredStats.total) * 100) : 0}%
                 </span>
               </div>
             </div>
