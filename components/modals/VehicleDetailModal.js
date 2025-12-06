@@ -608,7 +608,7 @@ const VehicleDetailModal = ({
                   >
                     <div
                       className={`rounded-lg shadow-xl max-w-md w-full mx-4 ${
-                        darkMode ? 'bg-gray-800' : 'bg-white'
+                        darkMode ? 'bg-gray-800' : 'bg-slate-100'
                       }`}
                       onClick={(e) => e.stopPropagation()}
                     >
