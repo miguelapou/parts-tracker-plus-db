@@ -858,7 +858,7 @@ const PartsTab = ({
           <div className="overflow-x-auto overflow-y-visible rounded-lg">
             <table className={`w-full min-w-[900px] ${isStatusFiltering || isFilteringParts || isSearching ? 'table-status-filtering' : isSorting ? 'table-sorting' : isPaginating ? 'table-status-filtering' : ''}`}>
               <thead className={`border-b ${
-                darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-100 border-slate-200'
+                darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-50 border-slate-200'
               }`}>
                 <tr>
                   <th
