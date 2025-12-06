@@ -44,6 +44,8 @@ import LinkedPartsSection from './ui/LinkedPartsSection';
 
 // Modal Components
 import AddPartModal from './modals/AddPartModal';
+import AddPartOptionsModal from './modals/AddPartOptionsModal';
+import CSVImportModal from './modals/CSVImportModal';
 import TrackingModal from './modals/TrackingModal';
 import PartDetailModal from './modals/PartDetailModal';
 import AddProjectModal from './modals/AddProjectModal';
@@ -113,7 +115,8 @@ const Shako = () => {
     deleteVendor,
     unlinkPartFromProject,
     updatePartProject,
-    getUniqueVendors
+    getUniqueVendors,
+    importPartsFromCSV
   } = useParts(userId);
 
   // Projects hook
@@ -235,8 +238,14 @@ const Shako = () => {
 
   // Modals hook
   const {
+    showAddPartOptionsModal,
+    setShowAddPartOptionsModal,
     showAddModal,
     setShowAddModal,
+    showCSVImportModal,
+    setShowCSVImportModal,
+    csvFile,
+    setCsvFile,
     showTrackingModal,
     setShowTrackingModal,
     showPartDetailModal,
@@ -1426,7 +1435,7 @@ const Shako = () => {
               )}
               <button
                 onClick={() => {
-                  if (activeTab === 'parts') setShowAddModal(true);
+                  if (activeTab === 'parts') setShowAddPartOptionsModal(true);
                   else if (activeTab === 'projects') setShowAddProjectModal(true);
                   else if (activeTab === 'vehicles') setShowAddVehicleModal(true);
                 }}
@@ -1546,6 +1555,46 @@ const Shako = () => {
         {/* Content - Only show when not loading */}
         {!loading && (
           <>
+        {/* Add Part Options Modal */}
+        <AddPartOptionsModal
+          isOpen={showAddPartOptionsModal}
+          darkMode={darkMode}
+          isModalClosing={isModalClosing}
+          handleCloseModal={handleCloseModal}
+          onClose={() => setShowAddPartOptionsModal(false)}
+          onSinglePartClick={() => {
+            setShowAddPartOptionsModal(false);
+            setShowAddModal(true);
+          }}
+          onCSVUpload={(file) => {
+            setCsvFile(file);
+            setShowAddPartOptionsModal(false);
+            setShowCSVImportModal(true);
+          }}
+        />
+
+        {/* CSV Import Modal */}
+        <CSVImportModal
+          isOpen={showCSVImportModal}
+          darkMode={darkMode}
+          csvFile={csvFile}
+          projects={projects}
+          isModalClosing={isModalClosing}
+          handleCloseModal={handleCloseModal}
+          onClose={() => {
+            setShowCSVImportModal(false);
+            setCsvFile(null);
+          }}
+          onImport={async (partsToImport) => {
+            const importedCount = await importPartsFromCSV(partsToImport);
+            setShowCSVImportModal(false);
+            setCsvFile(null);
+            if (importedCount > 0) {
+              alert(`Successfully imported ${importedCount} part${importedCount !== 1 ? 's' : ''}`);
+            }
+          }}
+        />
+
         {/* Add New Part Modal */}
         <AddPartModal
           isOpen={showAddModal}

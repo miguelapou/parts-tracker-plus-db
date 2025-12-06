@@ -16,7 +16,10 @@ import { useState, useEffect, useRef } from 'react';
  */
 const useModals = () => {
   // Part modals
+  const [showAddPartOptionsModal, setShowAddPartOptionsModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showCSVImportModal, setShowCSVImportModal] = useState(false);
+  const [csvFile, setCsvFile] = useState(null);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const [showPartDetailModal, setShowPartDetailModal] = useState(false);
   const [viewingPart, setViewingPart] = useState(null);
@@ -90,7 +93,8 @@ const useModals = () => {
 
   // Lock body scroll when any modal is open
   useEffect(() => {
-    const isAnyModalOpen = showAddModal || showTrackingModal ||
+    const isAnyModalOpen = showAddPartOptionsModal || showAddModal || showCSVImportModal ||
+                          showTrackingModal ||
                           showAddProjectModal || showProjectDetailModal ||
                           showAddVehicleModal || showVehicleDetailModal ||
                           showPartDetailModal;
@@ -137,13 +141,19 @@ const useModals = () => {
         });
       }
     };
-  }, [showAddModal, showTrackingModal, showAddProjectModal,
+  }, [showAddPartOptionsModal, showAddModal, showCSVImportModal, showTrackingModal, showAddProjectModal,
       showProjectDetailModal, showAddVehicleModal, showVehicleDetailModal, showPartDetailModal]);
 
   return {
     // Part modals
+    showAddPartOptionsModal,
+    setShowAddPartOptionsModal,
     showAddModal,
     setShowAddModal,
+    showCSVImportModal,
+    setShowCSVImportModal,
+    csvFile,
+    setCsvFile,
     showTrackingModal,
     setShowTrackingModal,
     showPartDetailModal,
