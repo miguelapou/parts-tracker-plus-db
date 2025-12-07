@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   Car,
@@ -94,6 +94,19 @@ const PartDetailModal = ({
       setIsRefreshingTracking(false);
     }
   };
+
+  // Auto-refresh tracking when modal opens with tracking but no status
+  useEffect(() => {
+    if (
+      isOpen &&
+      viewingPart?.tracking &&
+      !viewingPart.tracking.startsWith('http') &&
+      !viewingPart.tracking_status &&
+      !isRefreshingTracking
+    ) {
+      handleRefreshTracking();
+    }
+  }, [isOpen, viewingPart?.id, viewingPart?.tracking]);
 
   if (!isOpen || !viewingPart) return null;
 
