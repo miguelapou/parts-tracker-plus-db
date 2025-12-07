@@ -77,23 +77,26 @@ export const createAfterShipTracking = async (trackingNumber, carrier = null, ti
   try {
     const slug = carrier ? CARRIER_SLUGS[carrier] : detectCarrierSlug(trackingNumber);
 
-    const trackingData = {
-      tracking_number: trackingNumber,
-      title: title || undefined
+    // Build request body - SDK 2025-07 format (no wrapper object)
+    const requestBody = {
+      tracking_number: trackingNumber
     };
 
     if (slug) {
-      trackingData.slug = slug;
+      requestBody.slug = slug;
     }
 
-    const response = await client.tracking.createTracking({
-      tracking: trackingData
-    });
+    if (title) {
+      requestBody.title = title;
+    }
+
+    const response = await client.tracking.createTracking(requestBody);
 
     return response.data?.tracking || response.data;
   } catch (error) {
-    // Handle duplicate tracking
-    if (error.message?.includes('duplicate') || error.code === 4003) {
+    // Handle duplicate tracking (error code 4003)
+    if (error.code === 4003 || error.meta_code === 4003 || error.message?.includes('duplicate')) {
+      const slug = carrier ? CARRIER_SLUGS[carrier] : detectCarrierSlug(trackingNumber);
       // Try to get existing tracking instead
       return getAfterShipTrackingByNumber(trackingNumber, slug);
     }
@@ -114,9 +117,8 @@ export const getAfterShipTracking = async (trackingId) => {
   }
 
   try {
-    const response = await client.tracking.getTrackingById({
-      tracking_id: trackingId
-    });
+    // SDK 2025-07 format - pass tracking_id directly
+    const response = await client.tracking.getTrackingById(trackingId);
 
     return response.data?.tracking || response.data;
   } catch (error) {
@@ -140,10 +142,11 @@ export const getAfterShipTrackingByNumber = async (trackingNumber, slug = null) 
   try {
     const detectedSlug = slug || detectCarrierSlug(trackingNumber);
 
-    const response = await client.tracking.getTrackingByTrackingNumber({
-      tracking_number: trackingNumber,
-      slug: detectedSlug
-    });
+    // SDK 2025-07 format - pass slug and tracking_number as separate params
+    const response = await client.tracking.getTrackingBySlugAndTrackingNumber(
+      detectedSlug,
+      trackingNumber
+    );
 
     return response.data?.tracking || response.data;
   } catch (error) {
@@ -164,9 +167,8 @@ export const deleteAfterShipTracking = async (trackingId) => {
   }
 
   try {
-    await client.tracking.deleteTrackingById({
-      tracking_id: trackingId
-    });
+    // SDK 2025-07 format - pass tracking_id directly
+    await client.tracking.deleteTrackingById(trackingId);
   } catch (error) {
     // Ignore if tracking doesn't exist
     if (!error.message?.includes('not found')) {
