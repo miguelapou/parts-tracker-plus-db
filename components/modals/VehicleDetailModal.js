@@ -516,7 +516,7 @@ const VehicleDetailModal = ({
                                   ? 'bg-gray-700/50 border-gray-600 hover:border-gray-500'
                                   : 'bg-gray-50 border-gray-200 hover:border-gray-300'
                               }`}>
-                                <div className="flex items-start justify-between gap-2">
+                                <div className="flex items-stretch justify-between gap-2">
                                   <div className="flex-1 min-w-0">
                                     <p className={`text-sm font-medium ${
                                       darkMode ? 'text-gray-200' : 'text-gray-800'
@@ -548,10 +548,10 @@ const VehicleDetailModal = ({
                                     </div>
                                   </div>
                                   {/* Actions */}
-                                  <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <div className="flex items-stretch gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button
                                       onClick={() => openEditServiceEventModal(event)}
-                                      className={`p-1.5 rounded transition-colors ${
+                                      className={`px-1.5 rounded transition-colors flex items-center ${
                                         darkMode
                                           ? 'hover:bg-gray-600 text-gray-400 hover:text-gray-200'
                                           : 'hover:bg-gray-200 text-gray-500 hover:text-gray-700'
@@ -569,7 +569,7 @@ const VehicleDetailModal = ({
                                           onConfirm: () => deleteServiceEvent(event.id)
                                         });
                                       }}
-                                      className={`hidden md:block p-1.5 rounded transition-colors ${
+                                      className={`hidden md:flex px-1.5 rounded transition-colors items-center ${
                                         darkMode
                                           ? 'hover:bg-red-900/50 text-gray-400 hover:text-red-400'
                                           : 'hover:bg-red-100 text-gray-500 hover:text-red-600'
@@ -1544,7 +1544,7 @@ const VehicleDetailModal = ({
         </div>
 
         {/* Footer with Edit Button */}
-        <div className={`sticky bottom-0 border-t p-4 flex items-center justify-between ${
+        <div className={`sticky bottom-0 z-10 border-t p-4 flex items-center justify-between ${
           darkMode ? 'border-gray-700 bg-gray-800' : 'border-slate-200 bg-slate-100'
         }`}>
           {vehicleModalEditMode ? (
