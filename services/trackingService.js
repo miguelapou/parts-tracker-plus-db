@@ -128,10 +128,10 @@ export const getAfterShipTracking = async (trackingId) => {
 };
 
 /**
- * Get tracking by tracking number and slug
- * Uses direct API call since SDK method doesn't exist
+ * Get tracking by tracking number using list endpoint
+ * Uses list endpoint to search by tracking number regardless of carrier slug
  * @param {string} trackingNumber - Tracking number
- * @param {string} slug - Carrier slug
+ * @param {string} slug - Carrier slug (optional, not used but kept for compatibility)
  * @returns {Promise<Object>} Tracking data
  */
 export const getAfterShipTrackingByNumber = async (trackingNumber, slug = null) => {
@@ -141,15 +141,9 @@ export const getAfterShipTrackingByNumber = async (trackingNumber, slug = null) 
   }
 
   try {
-    const detectedSlug = slug || detectCarrierSlug(trackingNumber);
-
-    if (!detectedSlug) {
-      throw new Error('Could not determine carrier for tracking number');
-    }
-
-    // Use direct API call since SDK method doesn't exist
+    // Use list endpoint to search by tracking number - this works regardless of slug
     const response = await fetch(
-      `https://api.aftership.com/tracking/2025-07/trackings/${detectedSlug}/${trackingNumber}`,
+      `https://api.aftership.com/tracking/2025-07/trackings?tracking_numbers=${encodeURIComponent(trackingNumber)}`,
       {
         method: 'GET',
         headers: {
@@ -165,7 +159,14 @@ export const getAfterShipTrackingByNumber = async (trackingNumber, slug = null) 
     }
 
     const data = await response.json();
-    return data.data?.tracking || data.data;
+    const trackings = data.data?.trackings || [];
+
+    if (trackings.length === 0) {
+      throw new Error('Tracking not found');
+    }
+
+    // Return the first matching tracking
+    return trackings[0];
   } catch (error) {
     error.message = `Failed to get AfterShip tracking: ${error.message}`;
     throw error;
