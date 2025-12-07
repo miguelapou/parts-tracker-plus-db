@@ -271,10 +271,10 @@ const ManageVendorsModal = ({
                                   onConfirm: () => deleteVendor(vendor)
                                 });
                               }}
-                              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+                              className={`px-3 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
                                 darkMode
-                                  ? 'hover:bg-red-900/50 text-gray-400 hover:text-red-400'
-                                  : 'hover:bg-red-100 text-gray-500 hover:text-red-600'
+                                  ? 'bg-red-900/30 hover:bg-red-900/50 text-red-400 border border-red-700'
+                                  : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-300'
                               }`}
                             >
                               <Trash2 className="w-4 h-4" />
