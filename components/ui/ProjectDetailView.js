@@ -34,7 +34,7 @@ const ProjectDetailView = ({
   // FLIP animation for todos
   const todoRefs = useRef({});
   const prevPositions = useRef({});
-  const [isAnimating, setIsAnimating] = useState(false);
+  const isAnimatingRef = useRef(false);
   const hasInitialized = useRef(false);
   const [isNewTodoFocused, setIsNewTodoFocused] = useState(false);
   const [showCompletedTodos, setShowCompletedTodos] = useState(false);
@@ -127,7 +127,8 @@ const ProjectDetailView = ({
       hasInitialized.current = true;
       return; // Don't animate on first render
     }
-    if (isAnimating) {
+    // Use ref for synchronous check - prevents race condition with rapid clicks
+    if (isAnimatingRef.current) {
       return; // Don't interrupt ongoing animations
     }
     // Capture the old positions before React updates the DOM
@@ -141,6 +142,8 @@ const ProjectDetailView = ({
         newPositions[todo.id] = element.getBoundingClientRect().top;
       }
     });
+    // Track if any animation will run
+    let willAnimate = false;
     // Now set up animations and update stored positions
     sortedTodos.forEach(todo => {
       const element = todoRefs.current[todo.id];
@@ -148,28 +151,41 @@ const ProjectDetailView = ({
         const newPos = newPositions[todo.id];
         const oldPos = oldPositions[todo.id];
         if (hasOldPositions && oldPos !== undefined && newPos !== oldPos) {
+          willAnimate = true;
           // Calculate how far the element has moved
           const deltaY = oldPos - newPos;
           // Immediately move it back to the old position
           element.style.transform = `translateY(${deltaY}px)`;
           element.style.transition = 'none';
-          setIsAnimating(true);
-          // Then animate it to the new position
-          requestAnimationFrame(() => {
-            element.style.transition = 'transform 0.3s ease-out';
-            element.style.transform = 'translateY(0)';
-            // Clear animation state after animation completes
-            setTimeout(() => {
-              setIsAnimating(false);
-              element.style.transition = '';
-            }, 300);
-          });
         }
         // Store new position for next time
         prevPositions.current[todo.id] = newPos;
       }
     });
-  }, [sortedTodos, isAnimating]);
+    // Start animations if any elements need to move
+    if (willAnimate) {
+      isAnimatingRef.current = true;
+      requestAnimationFrame(() => {
+        sortedTodos.forEach(todo => {
+          const element = todoRefs.current[todo.id];
+          if (element && element.style.transform) {
+            element.style.transition = 'transform 0.3s ease-out';
+            element.style.transform = 'translateY(0)';
+          }
+        });
+        // Clear animation state after animation completes
+        setTimeout(() => {
+          isAnimatingRef.current = false;
+          sortedTodos.forEach(todo => {
+            const element = todoRefs.current[todo.id];
+            if (element) {
+              element.style.transition = '';
+            }
+          });
+        }, 300);
+      });
+    }
+  }, [sortedTodos]);
 
   const renderTodoItem = (todo) => (
     <div
