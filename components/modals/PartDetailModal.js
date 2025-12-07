@@ -1015,9 +1015,14 @@ const PartDetailModal = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={async () => {
+                  const trackingChanged = editingPart.tracking &&
+                    editingPart.tracking !== viewingPart.tracking &&
+                    !editingPart.tracking.startsWith('http');
+
                   await saveEditedPart();
+
                   // Update viewingPart with the saved changes
-                  setViewingPart({
+                  const updatedPart = {
                     ...viewingPart,
                     ...editingPart,
                     price: parseFloat(editingPart.price) || 0,
@@ -1035,8 +1040,29 @@ const PartDetailModal = ({
                       editingPart.status === 'delivered' ||
                       editingPart.status === 'shipped' ||
                       editingPart.status === 'purchased'
-                  });
+                  };
+                  setViewingPart(updatedPart);
                   setPartDetailView('detail');
+
+                  // Auto-refresh tracking if tracking number was added/changed
+                  if (trackingChanged) {
+                    try {
+                      const response = await fetch(`/api/tracking/${viewingPart.id}`);
+                      const data = await response.json();
+                      if (data.success && data.tracking) {
+                        setViewingPart(prev => ({
+                          ...prev,
+                          ...data.tracking,
+                          delivered: data.tracking.tracking_status === 'Delivered' ? true : prev.delivered
+                        }));
+                        if (onRefreshTracking) {
+                          onRefreshTracking(viewingPart.id, data.tracking);
+                        }
+                      }
+                    } catch (error) {
+                      console.error('Failed to refresh tracking:', error);
+                    }
+                  }
                 }}
                 disabled={!editingPart.part}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
