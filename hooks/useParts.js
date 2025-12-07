@@ -429,6 +429,69 @@ const useParts = (userId) => {
     return [...new Set(parts.filter(p => p.vendor).map(p => p.vendor))].sort();
   };
 
+  /**
+   * Import multiple parts from CSV
+   */
+  const importPartsFromCSV = async (partsToImport) => {
+    if (!userId) return;
+
+    const createdParts = [];
+
+    for (const partData of partsToImport) {
+      const price = parseFloat(partData.price) || 0;
+      const shipping = parseFloat(partData.shipping) || 0;
+      const duties = parseFloat(partData.duties) || 0;
+      const total = price + shipping + duties;
+      const statusMap = {
+        delivered: { delivered: true, shipped: true, purchased: true },
+        shipped: { delivered: false, shipped: true, purchased: true },
+        purchased: { delivered: false, shipped: false, purchased: true },
+        pending: { delivered: false, shipped: false, purchased: false }
+      };
+      const status = partData.status || 'pending';
+
+      try {
+        const createdAt = new Date().toISOString();
+        const data = await partsService.createPart({
+          ...statusMap[status],
+          part: partData.part,
+          part_number: partData.partNumber || '',
+          vendor: partData.vendor || '',
+          price,
+          shipping,
+          duties,
+          total,
+          tracking: partData.tracking || '',
+          project_id: partData.projectId || null,
+          created_at: createdAt
+        }, userId);
+
+        createdParts.push({
+          id: data.id,
+          ...statusMap[status],
+          part: partData.part,
+          partNumber: partData.partNumber || '',
+          vendor: partData.vendor || '',
+          price,
+          shipping,
+          duties,
+          total,
+          tracking: partData.tracking || '',
+          projectId: partData.projectId || null,
+          createdAt: createdAt
+        });
+      } catch (error) {
+        console.error('Error importing part:', partData.part, error);
+      }
+    }
+
+    if (createdParts.length > 0) {
+      setParts(prevParts => [...prevParts, ...createdParts]);
+    }
+
+    return createdParts.length;
+  };
+
   return {
     // State
     parts,
@@ -453,7 +516,8 @@ const useParts = (userId) => {
     deleteVendor,
     unlinkPartFromProject,
     updatePartProject,
-    getUniqueVendors
+    getUniqueVendors,
+    importPartsFromCSV
   };
 };
 
