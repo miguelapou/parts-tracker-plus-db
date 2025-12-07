@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import * as serviceEventsService from '../services/serviceEventsService';
+import { validateOdometer } from '../utils/validationUtils';
 
 const ServiceEventContext = createContext(null);
 
@@ -39,6 +40,15 @@ export const ServiceEventProvider = ({ children, userId, toast }) => {
   const addServiceEvent = useCallback(async (vehicleId, eventDate, description, odometer) => {
     if (!vehicleId || !eventDate || !description || !userId) return null;
 
+    // Validate odometer if provided
+    if (odometer) {
+      const odometerValidation = validateOdometer(odometer);
+      if (!odometerValidation.isValid) {
+        toast?.warning(odometerValidation.error);
+        return null;
+      }
+    }
+
     try {
       setSavingServiceEvent(true);
 
@@ -68,6 +78,15 @@ export const ServiceEventProvider = ({ children, userId, toast }) => {
 
   // Update a service event
   const updateServiceEvent = useCallback(async (eventId, updates) => {
+    // Validate odometer if being updated
+    if (updates.odometer !== undefined && updates.odometer !== null && updates.odometer !== '') {
+      const odometerValidation = validateOdometer(updates.odometer);
+      if (!odometerValidation.isValid) {
+        toast?.warning(odometerValidation.error);
+        return null;
+      }
+    }
+
     try {
       setSavingServiceEvent(true);
       const updatedEvent = await serviceEventsService.updateServiceEvent(eventId, updates);

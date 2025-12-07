@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import * as projectsService from '../services/projectsService';
+import { validateBudget } from '../utils/validationUtils';
 
 /**
  * Custom hook for managing projects data and CRUD operations
@@ -72,12 +73,19 @@ const useProjects = (userId, toast) => {
    */
   const addProject = async (projectData) => {
     if (!userId) return;
+
+    // Validate budget
+    const budgetValidation = validateBudget(projectData.budget, toast);
+    if (!budgetValidation.isValid) {
+      return; // Toast already shown by validateBudget
+    }
+
     try {
       await projectsService.createProject({
         name: projectData.name,
         description: projectData.description,
         status: projectData.status || 'planning',
-        budget: parseFloat(projectData.budget) || 0,
+        budget: budgetValidation.value,
         spent: 0,
         priority: projectData.priority || 'medium',
         vehicle_id: projectData.vehicle_id || null,
