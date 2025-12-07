@@ -446,9 +446,9 @@ const VehicleDetailModal = ({
                     {/* Timeline items */}
                     <div className="flex flex-col gap-4">
                       {serviceEvents && [...serviceEvents].sort((a, b) =>
-                        new Date(a.event_date) - new Date(b.event_date)
+                        new Date(a.event_date + 'T00:00:00') - new Date(b.event_date + 'T00:00:00')
                       ).map((event, index, arr) => {
-                        const eventDate = new Date(event.event_date);
+                        const eventDate = new Date(event.event_date + 'T00:00:00');
                         const formattedDate = eventDate.toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
