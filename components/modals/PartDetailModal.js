@@ -494,8 +494,8 @@ const PartDetailModal = ({
                       )}
                     </div>
 
-                    {/* Tracking timeline */}
-                    {viewingPart.tracking_checkpoints && viewingPart.tracking_checkpoints.length > 0 && (
+                    {/* Tracking timeline or loading state */}
+                    {viewingPart.tracking_checkpoints && viewingPart.tracking_checkpoints.length > 0 ? (
                       <div
                         className={`rounded-lg p-4 ${
                           darkMode ? 'bg-gray-700' : 'bg-gray-50'
@@ -509,7 +509,20 @@ const PartDetailModal = ({
                           showProgress={true}
                         />
                       </div>
-                    )}
+                    ) : isRefreshingTracking ? (
+                      <div
+                        className={`rounded-lg p-4 ${
+                          darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <RefreshCw className={`w-4 h-4 animate-spin ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                          <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                            Loading tracking updates...
+                          </span>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 ) : (
                   /* Fallback for URL tracking */
