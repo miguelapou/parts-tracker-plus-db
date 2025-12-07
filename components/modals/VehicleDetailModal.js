@@ -456,6 +456,18 @@ const VehicleDetailModal = ({
                         });
                         const isLast = index === arr.length - 1;
 
+                        // Calculate mileage difference from previous event with same description
+                        let mileageDiff = null;
+                        if (event.odometer) {
+                          const previousSameEvent = arr
+                            .slice(0, index)
+                            .filter(e => e.description.toLowerCase() === event.description.toLowerCase() && e.odometer)
+                            .pop();
+                          if (previousSameEvent) {
+                            mileageDiff = event.odometer - previousSameEvent.odometer;
+                          }
+                        }
+
                         return (
                           <div
                             key={event.id}
@@ -508,6 +520,13 @@ const VehicleDetailModal = ({
                                         }`}>
                                           <Gauge className="w-3 h-3 flex-shrink-0" />
                                           {event.odometer.toLocaleString()}{viewingVehicle.odometer_unit ? ` ${viewingVehicle.odometer_unit}` : ''}
+                                          {mileageDiff !== null && (
+                                            <span className={`${
+                                              darkMode ? 'text-gray-500' : 'text-gray-400'
+                                            }`}>
+                                              (+{mileageDiff.toLocaleString()})
+                                            </span>
+                                          )}
                                         </span>
                                       )}
                                     </div>
