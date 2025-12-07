@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import * as serviceEventsService from '../services/serviceEventsService';
+import { validateOdometer } from '../utils/validationUtils';
 
 const ServiceEventContext = createContext(null);
 
-export const ServiceEventProvider = ({ children, userId }) => {
+export const ServiceEventProvider = ({ children, userId, toast }) => {
   // Service events list state
   const [serviceEvents, setServiceEvents] = useState([]);
   const [loadingServiceEvents, setLoadingServiceEvents] = useState(false);
@@ -39,6 +40,15 @@ export const ServiceEventProvider = ({ children, userId }) => {
   const addServiceEvent = useCallback(async (vehicleId, eventDate, description, odometer) => {
     if (!vehicleId || !eventDate || !description || !userId) return null;
 
+    // Validate odometer if provided
+    if (odometer) {
+      const odometerValidation = validateOdometer(odometer);
+      if (!odometerValidation.isValid) {
+        toast?.warning(odometerValidation.error);
+        return null;
+      }
+    }
+
     try {
       setSavingServiceEvent(true);
 
@@ -59,15 +69,24 @@ export const ServiceEventProvider = ({ children, userId }) => {
 
       return newEvent;
     } catch (error) {
-      alert('Error creating service event. Please try again.');
+      toast?.error('Error creating service event. Please try again.');
       return null;
     } finally {
       setSavingServiceEvent(false);
     }
-  }, [userId]);
+  }, [userId, toast]);
 
   // Update a service event
   const updateServiceEvent = useCallback(async (eventId, updates) => {
+    // Validate odometer if being updated
+    if (updates.odometer !== undefined && updates.odometer !== null && updates.odometer !== '') {
+      const odometerValidation = validateOdometer(updates.odometer);
+      if (!odometerValidation.isValid) {
+        toast?.warning(odometerValidation.error);
+        return null;
+      }
+    }
+
     try {
       setSavingServiceEvent(true);
       const updatedEvent = await serviceEventsService.updateServiceEvent(eventId, updates);
@@ -81,12 +100,12 @@ export const ServiceEventProvider = ({ children, userId }) => {
 
       return updatedEvent;
     } catch (error) {
-      alert('Error updating service event');
+      toast?.error('Error updating service event');
       return null;
     } finally {
       setSavingServiceEvent(false);
     }
-  }, []);
+  }, [toast]);
 
   // Delete a service event
   const deleteServiceEvent = useCallback(async (eventId) => {
@@ -94,9 +113,9 @@ export const ServiceEventProvider = ({ children, userId }) => {
       await serviceEventsService.deleteServiceEvent(eventId);
       setServiceEvents(prev => prev.filter(event => event.id !== eventId));
     } catch (error) {
-      alert('Error deleting service event');
+      toast?.error('Error deleting service event');
     }
-  }, []);
+  }, [toast]);
 
   // Reset form fields
   const resetForm = useCallback(() => {
