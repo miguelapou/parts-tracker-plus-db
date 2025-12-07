@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import * as projectsService from '../services/projectsService';
+import { validateBudget } from '../utils/validationUtils';
 
 /**
  * Custom hook for managing projects data and CRUD operations
@@ -12,9 +13,10 @@ import * as projectsService from '../services/projectsService';
  * - Helper functions for vehicle-project relationships
  *
  * @param {string} userId - Current user's ID for data isolation
+ * @param {Object} toast - Toast notification functions { error, success, warning, info }
  * @returns {Object} Projects state and operations
  */
-const useProjects = (userId) => {
+const useProjects = (userId, toast) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newProject, setNewProject] = useState({
@@ -41,7 +43,7 @@ const useProjects = (userId) => {
         setProjects([]);
       }
     } catch (error) {
-      // Error loading projects
+      // Error loading projects - silent fail
     } finally {
       setLoading(false);
     }
@@ -71,12 +73,19 @@ const useProjects = (userId) => {
    */
   const addProject = async (projectData) => {
     if (!userId) return;
+
+    // Validate budget
+    const budgetValidation = validateBudget(projectData.budget, toast);
+    if (!budgetValidation.isValid) {
+      return; // Toast already shown by validateBudget
+    }
+
     try {
       await projectsService.createProject({
         name: projectData.name,
         description: projectData.description,
         status: projectData.status || 'planning',
-        budget: parseFloat(projectData.budget) || 0,
+        budget: budgetValidation.value,
         spent: 0,
         priority: projectData.priority || 'medium',
         vehicle_id: projectData.vehicle_id || null,
@@ -84,7 +93,7 @@ const useProjects = (userId) => {
       }, userId);
       await loadProjects();
     } catch (error) {
-      alert('Error adding project');
+      toast?.error('Error adding project');
     }
   };
 
@@ -112,7 +121,7 @@ const useProjects = (userId) => {
       await projectsService.updateProject(projectId, updates);
     } catch (error) {
       // On error, reload from database to get true state
-      alert('Error updating project');
+      toast?.error('Error updating project');
       await loadProjects();
     }
   };
@@ -125,7 +134,7 @@ const useProjects = (userId) => {
       await projectsService.deleteProject(projectId);
       await loadProjects();
     } catch (error) {
-      alert('Error deleting project');
+      toast?.error('Error deleting project');
     }
   };
 
@@ -139,7 +148,7 @@ const useProjects = (userId) => {
         await projectsService.updateProjectDisplayOrder(orderedProjects[i].id, i);
       }
     } catch (error) {
-      // Error updating project order
+      // Error updating project order - silent fail
     }
   };
 
