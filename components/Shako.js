@@ -68,9 +68,10 @@ import useDragDrop from '../hooks/useDragDrop';
 import useParts from '../hooks/useParts';
 import useProjects from '../hooks/useProjects';
 import useVehicles from '../hooks/useVehicles';
-import useDocuments from '../hooks/useDocuments';
-import useServiceEvents from '../hooks/useServiceEvents';
 import { useAuthContext } from './AuthProvider';
+
+// Context Providers
+import { AppProviders } from '../contexts';
 
 // ========================================
 // MAIN SHAKO COMPONENT
@@ -166,54 +167,8 @@ const Shako = () => {
     handleImageDrop
   } = useVehicles(userId);
 
-  // Documents hook
-  const {
-    documents,
-    setDocuments,
-    loadingDocuments,
-    uploadingDocument,
-    showAddDocumentModal,
-    setShowAddDocumentModal,
-    newDocumentTitle,
-    setNewDocumentTitle,
-    newDocumentFile,
-    setNewDocumentFile,
-    isDraggingDocument,
-    loadDocuments,
-    addDocument,
-    updateDocumentTitle,
-    deleteDocument,
-    handleDocumentFileChange,
-    openDocument,
-    handleDocumentDragEnter,
-    handleDocumentDragLeave,
-    handleDocumentDragOver,
-    handleDocumentDrop
-  } = useDocuments(userId);
-
-  // Service events hook
-  const {
-    serviceEvents,
-    setServiceEvents,
-    loadingServiceEvents,
-    savingServiceEvent,
-    showAddServiceEventModal,
-    setShowAddServiceEventModal,
-    newEventDate,
-    setNewEventDate,
-    newEventDescription,
-    setNewEventDescription,
-    newEventOdometer,
-    setNewEventOdometer,
-    editingServiceEvent,
-    loadServiceEvents,
-    addServiceEvent,
-    updateServiceEvent,
-    deleteServiceEvent,
-    openAddModal: openAddServiceEventModal,
-    openEditModal: openEditServiceEventModal,
-    handleCloseServiceEventModal
-  } = useServiceEvents(userId);
+  // Note: Document and service event state is now managed via context (DocumentContext, ServiceEventContext)
+  // and consumed directly by VehicleDetailModal
 
   // Filters hook
   const {
@@ -704,14 +659,7 @@ const Shako = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [activeTab]);
 
-  // Load documents and service events when viewing a vehicle
-  useEffect(() => {
-    if (viewingVehicle?.id && showVehicleDetailModal) {
-      loadDocuments(viewingVehicle.id);
-      loadServiceEvents(viewingVehicle.id);
-    }
-  }, [viewingVehicle?.id, showVehicleDetailModal]);
-
+  // Note: Document and service event loading is now handled in VehicleDetailModal via context
 
   const handleSort = (field) => {
     // Trigger animation
@@ -917,84 +865,7 @@ const Shako = () => {
     return darkMode ? 'text-gray-400' : 'text-gray-700';
   };
 
-  const getTrackingUrl = (tracking) => {
-    if (!tracking) return null;
-    // If it's already a full URL, return it
-    if (tracking.startsWith('http')) {
-      return tracking;
-    }
-    // Check if it's an Orange Connex tracking number (starts with EX)
-    if (tracking.startsWith('EX')) {
-      return `https://www.orangeconnex.com/tracking?language=en&trackingnumber=${tracking}`;
-    }
-    // Check if it's an ECMS tracking number (starts with ECSDT)
-    if (tracking.startsWith('ECSDT')) {
-      return `https://www.ecmsglobal.com/en-us/tracking.html?orderNumber=${tracking}`;
-    }
-    // Check if it's a UPS tracking number
-    if (tracking.startsWith('1Z')) {
-      return `https://www.ups.com/track?tracknum=${tracking}&loc=en_US&requester=ST/trackdetails`;
-    }
-    // Check if it's a FedEx tracking number (12-14 digits)
-    if (/^\d{12,14}$/.test(tracking)) {
-      return `https://www.fedex.com/fedextrack/?trknbr=${tracking}`;
-    }
-    // Check if it's a USPS tracking number (20-22 digits or specific patterns)
-    if (/^\d{20,22}$/.test(tracking) || /^(94|92|93)\d{20}$/.test(tracking)) {
-      return `https://tools.usps.com/go/TrackConfirmAction?tLabels=${tracking}`;
-    }
-    // Check if it's a DHL tracking number (10-11 digits)
-    if (/^\d{10,11}$/.test(tracking)) {
-      return `https://www.dhl.com/us-en/home/tracking/tracking-express.html?submit=1&tracking-id=${tracking}`;
-    }
-    // For generic text like "Local", "USPS", "FedEx" without tracking number
-    return null;
-  };
-
-  const getCarrierName = (tracking) => {
-    if (!tracking) return null;
-    // Check if it's an Amazon URL or tracking
-    if (tracking.toLowerCase().includes('amazon.com') || tracking.toLowerCase().includes('amzn')) {
-      return 'Amazon';
-    }
-    // Check if it's a FedEx URL
-    if (tracking.toLowerCase().includes('fedex.com')) {
-      return 'FedEx';
-    }
-    // Check if it's an Orange Connex tracking number (starts with EX)
-    if (tracking.startsWith('EX')) {
-      return 'Orange Connex';
-    }
-    // Check if it's an ECMS tracking number (starts with ECSDT)
-    if (tracking.startsWith('ECSDT')) {
-      return 'ECMS';
-    }
-    // Check if it's a UPS tracking number
-    if (tracking.startsWith('1Z')) {
-      return 'UPS';
-    }
-    // Check if it's a FedEx tracking number (12-14 digits)
-    if (/^\d{12,14}$/.test(tracking)) {
-      return 'FedEx';
-    }
-    // Check if it's a USPS tracking number
-    if (/^\d{20,22}$/.test(tracking) || /^(94|92|93)\d{20}$/.test(tracking)) {
-      return 'USPS';
-    }
-    // Check if it's a DHL tracking number
-    if (/^\d{10,11}$/.test(tracking)) {
-      return 'DHL';
-    }
-    // For text like "Local", "USPS", "FedEx", "ECMS" etc.
-    const upper = tracking.toUpperCase();
-    if (upper.includes('UPS')) return 'UPS';
-    if (upper.includes('FEDEX')) return 'FedEx';
-    if (upper.includes('USPS')) return 'USPS';
-    if (upper.includes('DHL')) return 'DHL';
-    if (upper.includes('ECMS')) return 'ECMS';
-    if (upper.includes('LOCAL')) return 'Local';
-    return tracking; // Return as-is if unknown
-  };
+  // Note: getTrackingUrl and getCarrierName are imported from utils/trackingUtils.js
 
   // Don't render main content until mounted on client to avoid hydration mismatch
   if (!mounted) {
@@ -1009,6 +880,7 @@ const Shako = () => {
   }
 
   return (
+    <AppProviders darkMode={darkMode} setDarkMode={setDarkMode} userId={userId}>
     <div className={`min-h-screen p-3 sm:p-6 transition-colors duration-200 ${
       darkMode
         ? 'bg-gray-900 dark-scrollbar'
@@ -1876,45 +1748,6 @@ const Shako = () => {
             unlinkPartFromProject={unlinkPartFromProject}
             loadProjects={loadProjects}
             updateProject={updateProject}
-            // Document props
-            documents={documents}
-            loadingDocuments={loadingDocuments}
-            uploadingDocument={uploadingDocument}
-            showAddDocumentModal={showAddDocumentModal}
-            setShowAddDocumentModal={setShowAddDocumentModal}
-            newDocumentTitle={newDocumentTitle}
-            setNewDocumentTitle={setNewDocumentTitle}
-            newDocumentFile={newDocumentFile}
-            setNewDocumentFile={setNewDocumentFile}
-            isDraggingDocument={isDraggingDocument}
-            loadDocuments={loadDocuments}
-            addDocument={addDocument}
-            deleteDocument={deleteDocument}
-            handleDocumentFileChange={handleDocumentFileChange}
-            openDocument={openDocument}
-            handleDocumentDragEnter={handleDocumentDragEnter}
-            handleDocumentDragLeave={handleDocumentDragLeave}
-            handleDocumentDragOver={handleDocumentDragOver}
-            handleDocumentDrop={handleDocumentDrop}
-            // Service events props
-            serviceEvents={serviceEvents}
-            loadingServiceEvents={loadingServiceEvents}
-            savingServiceEvent={savingServiceEvent}
-            showAddServiceEventModal={showAddServiceEventModal}
-            setShowAddServiceEventModal={setShowAddServiceEventModal}
-            newEventDate={newEventDate}
-            setNewEventDate={setNewEventDate}
-            newEventDescription={newEventDescription}
-            setNewEventDescription={setNewEventDescription}
-            newEventOdometer={newEventOdometer}
-            setNewEventOdometer={setNewEventOdometer}
-            editingServiceEvent={editingServiceEvent}
-            addServiceEvent={addServiceEvent}
-            updateServiceEvent={updateServiceEvent}
-            deleteServiceEvent={deleteServiceEvent}
-            openAddServiceEventModal={openAddServiceEventModal}
-            openEditServiceEventModal={openEditServiceEventModal}
-            handleCloseServiceEventModal={handleCloseServiceEventModal}
           />
         )}
 
@@ -1959,6 +1792,7 @@ const Shako = () => {
         handleCloseModal={handleCloseModal}
       />
     </div>
+    </AppProviders>
   );
 };
 
