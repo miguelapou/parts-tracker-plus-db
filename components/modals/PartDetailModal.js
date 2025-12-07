@@ -451,48 +451,29 @@ const PartDetailModal = ({
                 {/* Tracking status and timeline */}
                 {!viewingPart.tracking.startsWith('http') ? (
                   <div className="space-y-4">
-                    {/* Order status badge with track link */}
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex flex-col items-start gap-1">
-                        <div
-                          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border w-fit ${getStatusColor(
-                            viewingPart
-                          )}`}
-                        >
-                          {getStatusIcon(viewingPart)}
-                          <span>{getStatusText(viewingPart)}</span>
-                        </div>
-                        {/* Location and updated at info */}
-                        {(viewingPart.tracking_location || viewingPart.tracking_updated_at) && (
-                          <div className={`text-xs space-y-0.5 mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                            {viewingPart.tracking_location && (
-                              <div>{viewingPart.tracking_location}</div>
-                            )}
-                            {viewingPart.tracking_updated_at && (
-                              <div>
-                                Updated {formatRelativeTime(viewingPart.tracking_updated_at)}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                      {/* Refresh button */}
-                      <button
-                        onClick={handleRefreshTracking}
-                        disabled={isRefreshingTracking}
-                        className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0 ${
-                          isRefreshingTracking
-                            ? darkMode
-                              ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                            : darkMode
-                              ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                              : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                        }`}
+                    {/* Order status badge */}
+                    <div className="flex flex-col items-start gap-1">
+                      <div
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border w-fit ${getStatusColor(
+                          viewingPart
+                        )}`}
                       >
-                        <RefreshCw className={`w-4 h-4 ${isRefreshingTracking ? 'animate-spin' : ''}`} />
-                        {isRefreshingTracking ? 'Updating...' : 'Refresh'}
-                      </button>
+                        {getStatusIcon(viewingPart)}
+                        <span>{getStatusText(viewingPart)}</span>
+                      </div>
+                      {/* Location and updated at info */}
+                      {(viewingPart.tracking_location || viewingPart.tracking_updated_at) && (
+                        <div className={`text-xs space-y-0.5 mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          {viewingPart.tracking_location && (
+                            <div>{viewingPart.tracking_location}</div>
+                          )}
+                          {viewingPart.tracking_updated_at && (
+                            <div>
+                              Updated {formatRelativeTime(viewingPart.tracking_updated_at)}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {/* Tracking timeline */}
@@ -552,26 +533,47 @@ const PartDetailModal = ({
                 </a>
               )}
             </div>
-            <PrimaryButton
-              onClick={() => {
-                const partData = {
-                  ...viewingPart,
-                  status: viewingPart.delivered
-                    ? 'delivered'
-                    : viewingPart.shipped
-                      ? 'shipped'
-                      : viewingPart.purchased
-                        ? 'purchased'
-                        : 'pending'
-                };
-                setEditingPart(partData);
-                setOriginalPartData({ ...partData });
-                setPartDetailView('edit');
-              }}
-              icon={Edit2}
-            >
-              Edit
-            </PrimaryButton>
+            {/* Refresh and Edit buttons on the right */}
+            <div className="flex items-center gap-2">
+              {viewingPart.tracking && !viewingPart.tracking.startsWith('http') && (
+                <button
+                  onClick={handleRefreshTracking}
+                  disabled={isRefreshingTracking}
+                  className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    isRefreshingTracking
+                      ? darkMode
+                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : darkMode
+                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                        : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                  }`}
+                >
+                  <RefreshCw className={`w-4 h-4 ${isRefreshingTracking ? 'animate-spin' : ''}`} />
+                  {isRefreshingTracking ? 'Updating...' : 'Refresh'}
+                </button>
+              )}
+              <PrimaryButton
+                onClick={() => {
+                  const partData = {
+                    ...viewingPart,
+                    status: viewingPart.delivered
+                      ? 'delivered'
+                      : viewingPart.shipped
+                        ? 'shipped'
+                        : viewingPart.purchased
+                          ? 'purchased'
+                          : 'pending'
+                  };
+                  setEditingPart(partData);
+                  setOriginalPartData({ ...partData });
+                  setPartDetailView('edit');
+                }}
+                icon={Edit2}
+              >
+                Edit
+              </PrimaryButton>
+            </div>
           </div>
         )}
 
