@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import * as partsService from '../services/partsService';
 import * as vendorsService from '../services/vendorsService';
+import { validatePartCosts } from '../utils/validationUtils';
 
 /**
  * Custom hook for managing parts data and CRUD operations
@@ -118,10 +119,19 @@ const useParts = (userId, toast) => {
    */
   const addNewPart = async (setShowAddModal) => {
     if (!userId) return;
-    const price = parseFloat(newPart.price) || 0;
-    const shipping = parseFloat(newPart.shipping) || 0;
-    const duties = parseFloat(newPart.duties) || 0;
-    const total = price + shipping + duties;
+
+    // Validate cost fields
+    const costValidation = validatePartCosts({
+      price: newPart.price,
+      shipping: newPart.shipping,
+      duties: newPart.duties
+    }, toast);
+
+    if (!costValidation.isValid) {
+      return; // Toast already shown by validatePartCosts
+    }
+
+    const { price, shipping, duties, total } = costValidation.values;
     const statusMap = {
       delivered: { delivered: true, shipped: true, purchased: true },
       shipped: { delivered: false, shipped: true, purchased: true },
@@ -278,10 +288,18 @@ const useParts = (userId, toast) => {
    * Save edited part
    */
   const saveEditedPart = async (editingPart, setEditingPart, setPartModalView) => {
-    const price = parseFloat(editingPart.price) || 0;
-    const shipping = parseFloat(editingPart.shipping) || 0;
-    const duties = parseFloat(editingPart.duties) || 0;
-    const total = price + shipping + duties;
+    // Validate cost fields
+    const costValidation = validatePartCosts({
+      price: editingPart.price,
+      shipping: editingPart.shipping,
+      duties: editingPart.duties
+    }, toast);
+
+    if (!costValidation.isValid) {
+      return; // Toast already shown by validatePartCosts
+    }
+
+    const { price, shipping, duties, total } = costValidation.values;
     const statusMap = {
       delivered: { delivered: true, shipped: true, purchased: true },
       shipped: { delivered: false, shipped: true, purchased: true },
@@ -432,6 +450,8 @@ const useParts = (userId, toast) => {
 
   /**
    * Import multiple parts from CSV
+   * Note: For bulk imports, we sanitize values silently (defaulting to 0)
+   * rather than showing individual validation toasts
    */
   const importPartsFromCSV = async (partsToImport) => {
     if (!userId) return;
@@ -439,9 +459,10 @@ const useParts = (userId, toast) => {
     const createdParts = [];
 
     for (const partData of partsToImport) {
-      const price = parseFloat(partData.price) || 0;
-      const shipping = parseFloat(partData.shipping) || 0;
-      const duties = parseFloat(partData.duties) || 0;
+      // Sanitize cost values - default to 0 for invalid/negative values
+      const price = Math.max(0, parseFloat(partData.price) || 0);
+      const shipping = Math.max(0, parseFloat(partData.shipping) || 0);
+      const duties = Math.max(0, parseFloat(partData.duties) || 0);
       const total = price + shipping + duties;
       const statusMap = {
         delivered: { delivered: true, shipped: true, purchased: true },
