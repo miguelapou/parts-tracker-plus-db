@@ -178,12 +178,19 @@ const useDocuments = (userId) => {
    * Handle closing the add document modal with animation
    */
   const handleCloseDocumentModal = useCallback(() => {
+    // Start closing animation
     setIsDocumentModalClosing(true);
-    setTimeout(() => {
-      setIsDocumentModalClosing(false);
-      setShowAddDocumentModal(false);
-      clearDocumentSelection();
-    }, 150);
+
+    // Use requestAnimationFrame to ensure state update is processed
+    // before starting the timeout for the animation
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        setShowAddDocumentModal(false);
+        setIsDocumentModalClosing(false);
+        setNewDocumentFile(null);
+        setNewDocumentTitle('');
+      }, 150);
+    });
   }, []);
 
   // ========================================
