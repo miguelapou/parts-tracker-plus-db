@@ -441,14 +441,7 @@ const VehicleDetailModal = ({
                     Service History ({serviceEvents?.length || 0})
                   </h3>
                 </div>
-                {loadingServiceEvents ? (
-                  <div className={`text-center py-8 ${
-                    darkMode ? 'text-gray-400' : 'text-gray-500'
-                  }`}>
-                    Loading service history...
-                  </div>
-                ) : (
-                  <div className="relative">
+                <div className="relative">
                     {/* Timeline items */}
                     <div className="flex flex-col gap-4">
                       {serviceEvents && [...serviceEvents].sort((a, b) =>
@@ -595,7 +588,6 @@ const VehicleDetailModal = ({
                       </div>
                     </div>
                   </div>
-                )}
 
                 {/* Add Service Event Modal */}
                 <AddServiceEventModal
