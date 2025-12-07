@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Calendar, FileText, Gauge } from 'lucide-react';
+import { X } from 'lucide-react';
 
 /**
  * Modal for adding/editing a service event for a vehicle
@@ -90,7 +90,6 @@ const AddServiceEventModal = ({
             <label className={`block text-sm font-medium mb-2 ${
               darkMode ? 'text-gray-300' : 'text-gray-700'
             }`}>
-              <Calendar className="w-4 h-4 inline mr-2" />
               Date *
             </label>
             <input
@@ -110,7 +109,6 @@ const AddServiceEventModal = ({
             <label className={`block text-sm font-medium mb-2 ${
               darkMode ? 'text-gray-300' : 'text-gray-700'
             }`}>
-              <FileText className="w-4 h-4 inline mr-2" />
               Description *
             </label>
             <input
@@ -131,7 +129,6 @@ const AddServiceEventModal = ({
             <label className={`block text-sm font-medium mb-2 ${
               darkMode ? 'text-gray-300' : 'text-gray-700'
             }`}>
-              <Gauge className="w-4 h-4 inline mr-2" />
               Odometer
             </label>
             <input
