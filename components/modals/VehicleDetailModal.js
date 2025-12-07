@@ -448,9 +448,9 @@ const VehicleDetailModal = ({
                 ) : (
                   <div className="relative">
                     {/* Timeline items */}
-                    <div className="space-y-0">
+                    <div className="flex flex-col gap-4">
                       {serviceEvents && [...serviceEvents].sort((a, b) =>
-                        new Date(b.event_date) - new Date(a.event_date)
+                        new Date(a.event_date) - new Date(b.event_date)
                       ).map((event, index, arr) => {
                         const eventDate = new Date(event.event_date);
                         const formattedDate = eventDate.toLocaleDateString('en-US', {
@@ -463,29 +463,30 @@ const VehicleDetailModal = ({
                         return (
                           <div
                             key={event.id}
-                            className="relative flex items-center gap-4 group"
+                            className="relative flex items-stretch gap-4 group"
                           >
-                            {/* Timeline line segment - connects to next item */}
-                            <div
-                              className={`absolute left-[19px] top-1/2 bottom-0 w-0.5 ${
-                                isLast
-                                  ? (darkMode ? 'border-l-2 border-dashed border-gray-600' : 'border-l-2 border-dashed border-gray-300')
-                                  : (darkMode ? 'bg-gray-600' : 'bg-gray-300')
-                              }`}
-                              style={isLast ? { background: 'none' } : {}}
-                            />
-
-                            {/* Timeline dot */}
-                            <div className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-                              darkMode ? 'bg-gray-700 border-2 border-gray-600' : 'bg-white border-2 border-gray-300'
-                            } group-hover:border-blue-500 transition-colors`}>
-                              <Wrench className={`w-4 h-4 ${
-                                darkMode ? 'text-gray-400' : 'text-gray-500'
-                              } group-hover:text-blue-500 transition-colors`} />
+                            {/* Timeline column with icon and line */}
+                            <div className="relative flex flex-col items-center">
+                              {/* Timeline dot */}
+                              <div className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                                darkMode ? 'bg-gray-700 border-2 border-gray-600' : 'bg-white border-2 border-gray-300'
+                              } group-hover:border-blue-500 transition-colors`}>
+                                <Wrench className={`w-4 h-4 ${
+                                  darkMode ? 'text-gray-400' : 'text-gray-500'
+                                } group-hover:text-blue-500 transition-colors`} />
+                              </div>
+                              {/* Line extending down */}
+                              <div
+                                className={`flex-1 w-0.5 ${
+                                  isLast
+                                    ? (darkMode ? 'border-l-2 border-dashed border-gray-600 bg-transparent' : 'border-l-2 border-dashed border-gray-300 bg-transparent')
+                                    : (darkMode ? 'bg-gray-600' : 'bg-gray-300')
+                                }`}
+                              />
                             </div>
 
                             {/* Event content */}
-                            <div className={`flex-1 min-w-0 ${isLast ? 'pb-0' : 'pb-6'}`}>
+                            <div className="flex-1 min-w-0 pb-0">
                               <div className={`rounded-lg p-3 border transition-all ${
                                 darkMode
                                   ? 'bg-gray-700/50 border-gray-600 hover:border-gray-500'
@@ -556,17 +557,20 @@ const VehicleDetailModal = ({
                       {/* Add new service event card */}
                       <div
                         onClick={openAddServiceEventModal}
-                        className="relative flex items-center gap-4 cursor-pointer group pt-6"
+                        className="relative flex items-stretch gap-4 cursor-pointer group"
                       >
-                        {/* Timeline dot for add card - with background to cover line */}
-                        <div className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border-2 border-dashed ${
-                          darkMode
-                            ? 'bg-gray-800 border-gray-600 group-hover:border-blue-500'
-                            : 'bg-slate-200 border-gray-300 group-hover:border-blue-500'
-                        } transition-colors`}>
-                          <Plus className={`w-4 h-4 ${
-                            darkMode ? 'text-gray-500 group-hover:text-blue-400' : 'text-gray-400 group-hover:text-blue-600'
-                          } transition-colors`} />
+                        {/* Timeline column with icon */}
+                        <div className="relative flex flex-col items-center">
+                          {/* Timeline dot for add card - with background to cover line */}
+                          <div className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border-2 border-dashed ${
+                            darkMode
+                              ? 'bg-gray-800 border-gray-600 group-hover:border-blue-500'
+                              : 'bg-slate-200 border-gray-300 group-hover:border-blue-500'
+                          } transition-colors`}>
+                            <Plus className={`w-4 h-4 ${
+                              darkMode ? 'text-gray-500 group-hover:text-blue-400' : 'text-gray-400 group-hover:text-blue-600'
+                            } transition-colors`} />
+                          </div>
                         </div>
 
                         {/* Add card content */}
