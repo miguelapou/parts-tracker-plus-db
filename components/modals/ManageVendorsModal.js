@@ -125,8 +125,10 @@ const ManageVendorsModal = ({
                             }
                             onBlur={() => setEditingVendor(null)}
                             onKeyDown={(e) => {
-                              if (e.key === 'Enter' && editingVendor.newName.trim() && editingVendor.newName !== vendor) {
-                                renameVendor(vendor, editingVendor.newName);
+                              if (e.key === 'Enter' && editingVendor.newName.trim()) {
+                                if (editingVendor.newName !== vendor) {
+                                  renameVendor(vendor, editingVendor.newName);
+                                }
                                 setEditingVendor(null);
                               } else if (e.key === 'Escape') {
                                 setEditingVendor(null);
@@ -142,13 +144,13 @@ const ManageVendorsModal = ({
                         ) : (
                           <>
                             <span
-                              className={`text-sm flex items-center gap-1 ${
+                              className={`text-sm flex items-center gap-1 min-w-[3rem] ${
                                 darkMode
                                   ? 'text-gray-400'
                                   : 'text-slate-600'
                               }`}
                             >
-                              {partCount}
+                              <span className="w-4 text-right">{partCount}</span>
                               <Package className="w-3.5 h-3.5" />
                             </span>
                             {vendorColors[vendor] ? (
@@ -271,10 +273,10 @@ const ManageVendorsModal = ({
                                   onConfirm: () => deleteVendor(vendor)
                                 });
                               }}
-                              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+                              className={`px-3 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
                                 darkMode
-                                  ? 'hover:bg-red-900/50 text-gray-400 hover:text-red-400'
-                                  : 'hover:bg-red-100 text-gray-500 hover:text-red-600'
+                                  ? 'hover:bg-red-900/50 text-red-400 border border-red-700'
+                                  : 'hover:bg-red-100 text-red-600 border border-red-300'
                               }`}
                             >
                               <Trash2 className="w-4 h-4" />
