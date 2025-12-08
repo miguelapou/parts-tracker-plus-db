@@ -200,16 +200,17 @@ const useParts = (userId, toast) => {
    * Update part status
    */
   const updatePartStatus = async (partId, newStatus, setTrackingModalPartId, setShowTrackingModal, setOpenDropdown) => {
-    // If changing to shipped, show tracking modal
-    if (newStatus === 'shipped') {
-      if (setTrackingModalPartId) setTrackingModalPartId(partId);
-      if (setShowTrackingModal) setShowTrackingModal(true);
+    // If changing to shipped and tracking modal callbacks are provided, show tracking modal
+    if (newStatus === 'shipped' && setTrackingModalPartId && setShowTrackingModal) {
+      setTrackingModalPartId(partId);
+      setShowTrackingModal(true);
       if (setOpenDropdown) setOpenDropdown(null);
       return;
     }
     try {
       const statusMap = {
         delivered: { delivered: true, shipped: true, purchased: true },
+        shipped: { delivered: false, shipped: true, purchased: true },
         purchased: { delivered: false, shipped: false, purchased: true },
         pending: { delivered: false, shipped: false, purchased: false }
       };
