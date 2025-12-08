@@ -787,14 +787,59 @@ const PartDetailModal = ({
                 : 'border-slate-200 bg-slate-100'
             }`}
           >
-            {/* Track button on the left */}
-            <div>
+            {/* Navigation and Track button on the left */}
+            <div className="flex items-center gap-3">
+              {/* Navigation controls */}
+              {filteredParts.length > 1 && currentIndex !== -1 && (
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToPrevPart();
+                    }}
+                    disabled={!hasPrev}
+                    className={`p-1.5 rounded transition-colors ${
+                      hasPrev
+                        ? darkMode
+                          ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700'
+                          : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200'
+                        : darkMode
+                          ? 'text-gray-600 cursor-not-allowed'
+                          : 'text-gray-300 cursor-not-allowed'
+                    }`}
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <span className={`text-xs font-medium min-w-[3rem] text-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                    {currentIndex + 1} / {filteredParts.length}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToNextPart();
+                    }}
+                    disabled={!hasNext}
+                    className={`p-1.5 rounded transition-colors ${
+                      hasNext
+                        ? darkMode
+                          ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700'
+                          : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200'
+                        : darkMode
+                          ? 'text-gray-600 cursor-not-allowed'
+                          : 'text-gray-300 cursor-not-allowed'
+                    }`}
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
+              {/* Track button */}
               {viewingPart.tracking && getTrackingUrl(viewingPart.tracking) && (
                 <a
                   href={getTrackingUrl(viewingPart.tracking)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
                   Track
