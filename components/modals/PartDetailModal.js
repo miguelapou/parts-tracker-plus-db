@@ -45,6 +45,7 @@ const PartDetailModal = ({
   getStatusIcon,
   getStatusText,
   onRefreshTracking,
+  onStatusChange,
   filteredParts = []
 }) => {
   const [isRefreshingTracking, setIsRefreshingTracking] = useState(false);
@@ -179,6 +180,39 @@ const PartDetailModal = ({
     } finally {
       setIsRefreshingTracking(false);
     }
+  };
+
+  // Handle status change from dropdown
+  const handleStatusChange = async (newStatus) => {
+    if (!onStatusChange || !viewingPart?.id) return;
+
+    // Map status to boolean flags
+    const statusMap = {
+      delivered: { delivered: true, shipped: true, purchased: true },
+      shipped: { delivered: false, shipped: true, purchased: true },
+      purchased: { delivered: false, shipped: false, purchased: true },
+      pending: { delivered: false, shipped: false, purchased: false }
+    };
+
+    const updates = statusMap[newStatus];
+    if (!updates) return;
+
+    // Update local state immediately for responsive UI
+    setViewingPart({
+      ...viewingPart,
+      ...updates
+    });
+
+    // Call the parent handler to persist the change
+    await onStatusChange(viewingPart.id, newStatus);
+  };
+
+  // Get current status as string
+  const getCurrentStatus = () => {
+    if (viewingPart?.delivered) return 'delivered';
+    if (viewingPart?.shipped) return 'shipped';
+    if (viewingPart?.purchased) return 'purchased';
+    return 'pending';
   };
 
   // Auto-refresh tracking when modal opens if data is stale (>24 hours old)
@@ -553,6 +587,35 @@ const PartDetailModal = ({
                         </div>
                       );
                     })()}
+                    {/* Status dropdown - only show in Part Info when no tracking */}
+                    {!viewingPart.tracking && (
+                      <div>
+                        <p
+                          className={`text-sm font-medium mb-1 ${
+                            darkMode ? 'text-gray-400' : 'text-slate-600'
+                          }`}
+                        >
+                          Status
+                        </p>
+                        <div className={`relative inline-flex items-center rounded-full text-sm font-medium border w-fit ${getStatusColor(viewingPart)}`}>
+                          <div className="flex items-center gap-2 pl-3 py-1 pointer-events-none">
+                            {getStatusIcon(viewingPart)}
+                          </div>
+                          <select
+                            value={getCurrentStatus()}
+                            onChange={(e) => handleStatusChange(e.target.value)}
+                            className="appearance-none bg-transparent border-none text-inherit font-medium text-sm cursor-pointer focus:outline-none focus:ring-0 pr-6 py-1"
+                            style={{ ...selectDropdownStyle }}
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="purchased">Ordered</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                          </select>
+                          <ChevronDown className="w-3 h-3 absolute right-2 pointer-events-none opacity-60" />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -665,15 +728,24 @@ const PartDetailModal = ({
                 {/* Tracking status and timeline (only for Ship24-supported tracking) */}
                 {!shouldSkipShip24(viewingPart.tracking) ? (
                   <div className="space-y-4">
-                    {/* Order status badge */}
+                    {/* Order status dropdown */}
                     <div className="flex flex-col items-start gap-1">
-                      <div
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border w-fit ${getStatusColor(
-                          viewingPart
-                        )}`}
-                      >
-                        {getStatusIcon(viewingPart)}
-                        <span>{getStatusText(viewingPart)}</span>
+                      <div className={`relative inline-flex items-center rounded-full text-sm font-medium border w-fit ${getStatusColor(viewingPart)}`}>
+                        <div className="flex items-center gap-2 pl-4 py-2 pointer-events-none">
+                          {getStatusIcon(viewingPart)}
+                        </div>
+                        <select
+                          value={getCurrentStatus()}
+                          onChange={(e) => handleStatusChange(e.target.value)}
+                          className="appearance-none bg-transparent border-none text-inherit font-medium text-sm cursor-pointer focus:outline-none focus:ring-0 pr-7 py-2"
+                          style={{ ...selectDropdownStyle }}
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="purchased">Ordered</option>
+                          <option value="shipped">Shipped</option>
+                          <option value="delivered">Delivered</option>
+                        </select>
+                        <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 pointer-events-none opacity-60" />
                       </div>
                       {/* Updated at info */}
                       {viewingPart.tracking_updated_at && (
@@ -739,13 +811,22 @@ const PartDetailModal = ({
                 ) : (
                   /* Fallback for non-API tracking (URLs, Amazon, letter-only) */
                   <div className="flex items-center justify-between w-full">
-                    <div
-                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border w-fit ${getStatusColor(
-                        viewingPart
-                      )}`}
-                    >
-                      {getStatusIcon(viewingPart)}
-                      <span>{getStatusText(viewingPart)}</span>
+                    <div className={`relative inline-flex items-center rounded-full text-sm font-medium border w-fit ${getStatusColor(viewingPart)}`}>
+                      <div className="flex items-center gap-2 pl-4 py-2 pointer-events-none">
+                        {getStatusIcon(viewingPart)}
+                      </div>
+                      <select
+                        value={getCurrentStatus()}
+                        onChange={(e) => handleStatusChange(e.target.value)}
+                        className="appearance-none bg-transparent border-none text-inherit font-medium text-sm cursor-pointer focus:outline-none focus:ring-0 pr-7 py-2"
+                        style={{ ...selectDropdownStyle }}
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="purchased">Ordered</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                      </select>
+                      <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 pointer-events-none opacity-60" />
                     </div>
                     {/* Gray badge for letter-only tracking */}
                     {viewingPart.tracking && /^[a-zA-Z\s]+$/.test(viewingPart.tracking.trim()) && (
@@ -807,11 +888,11 @@ const PartDetailModal = ({
                   href={getTrackingUrl(viewingPart.tracking)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  Track
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Track</span>
+                  <ExternalLink className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                 </a>
               )}
             </div>
@@ -821,7 +902,7 @@ const PartDetailModal = ({
                 <button
                   onClick={handleRefreshTracking}
                   disabled={isRefreshingTracking}
-                  className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`inline-flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isRefreshingTracking
                       ? darkMode
                         ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
@@ -832,7 +913,7 @@ const PartDetailModal = ({
                   }`}
                 >
                   <RefreshCw className={`w-4 h-4 ${isRefreshingTracking ? 'animate-spin' : ''}`} />
-                  {isRefreshingTracking ? 'Updating...' : 'Refresh'}
+                  <span className="hidden sm:inline">{isRefreshingTracking ? 'Updating...' : 'Refresh'}</span>
                 </button>
               )}
               <PrimaryButton

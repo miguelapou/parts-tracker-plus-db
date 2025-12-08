@@ -465,6 +465,15 @@ const Shako = () => {
     setOpenDropdown
   );
 
+  // Status change handler for part detail modal (doesn't show tracking modal)
+  const handlePartDetailStatusChange = (partId, newStatus) => updatePartStatus(
+    partId,
+    newStatus,
+    null, // Skip tracking modal - user can add tracking via edit
+    null,
+    null
+  );
+
   // Check if there are unsaved changes in vehicle edit mode
   const hasUnsavedVehicleChanges = () => {
     if (!vehicleModalEditMode || vehicleModalEditMode !== 'vehicle' || !originalVehicleData || !viewingVehicle) {
@@ -1592,6 +1601,7 @@ const Shako = () => {
           getStatusIcon={getStatusIcon}
           getStatusText={getStatusText}
           onRefreshTracking={updatePartTrackingData}
+          onStatusChange={handlePartDetailStatusChange}
           filteredParts={filteredParts}
         />
 
