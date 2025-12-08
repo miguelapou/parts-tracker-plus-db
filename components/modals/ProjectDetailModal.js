@@ -91,7 +91,7 @@ const ProjectDetailModal = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, projectModalEditMode, hasPrev, hasNext, goToPrevProject, goToNextProject]);
 
-  // Touch handlers for swipe gestures
+  // Touch handlers for swipe gestures (same pattern as PartDetailModal)
   const handleTouchStart = (e) => {
     touchEndRef.current = null;
     touchStartRef.current = e.targetTouches[0].clientX;
@@ -99,16 +99,9 @@ const ProjectDetailModal = ({
 
   const handleTouchMove = (e) => {
     touchEndRef.current = e.targetTouches[0].clientX;
-    // Prevent default to stop parent elements from handling the swipe
-    if (touchStartRef.current && touchEndRef.current) {
-      const distance = Math.abs(touchStartRef.current - touchEndRef.current);
-      if (distance > 10) {
-        e.preventDefault();
-      }
-    }
   };
 
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = () => {
     if (!touchStartRef.current || !touchEndRef.current) return;
     if (projectModalEditMode) return; // Don't swipe in edit mode
 
@@ -116,14 +109,10 @@ const ProjectDetailModal = ({
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
 
-    if ((isLeftSwipe && hasNext) || (isRightSwipe && hasPrev)) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (isLeftSwipe && hasNext) {
-        goToNextProject();
-      } else if (isRightSwipe && hasPrev) {
-        goToPrevProject();
-      }
+    if (isLeftSwipe && hasNext) {
+      goToNextProject();
+    } else if (isRightSwipe && hasPrev) {
+      goToPrevProject();
     }
 
     touchStartRef.current = null;
@@ -168,8 +157,7 @@ const ProjectDetailModal = ({
         style={{
           gridTemplateRows: 'auto 1fr auto',
           maxHeight: projectModalEditMode ? '90vh' : '85vh',
-          transition: 'max-height 0.7s ease-in-out',
-          touchAction: 'pan-y'
+          transition: 'max-height 0.7s ease-in-out'
         }}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={handleTouchStart}
