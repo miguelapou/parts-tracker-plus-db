@@ -153,27 +153,21 @@ export const normalizeTrackingData = (trackingData) => {
   const events = tracker.events || [];
   const lastEvent = events[0]; // Ship24 returns events in reverse chronological order
 
-  // Debug: log the raw event structure to see location format
-  if (events.length > 0) {
-    console.log('[Ship24] Sample event structure:', JSON.stringify(events[0], null, 2));
-  }
-
   // Get the overall status milestone
   const statusMilestone = shipment.statusMilestone || lastEvent?.statusMilestone || 'pending';
 
+  // Ship24 returns location as a string (e.g., "SAINT PETERSBURG, FL 33710")
   return {
     ship24_id: tracker.tracker?.trackerId || trackingData.trackerId,
     tracking_status: normalizeStatusMilestone(statusMilestone),
     tracking_substatus: lastEvent?.statusCode || null,
-    tracking_location: lastEvent?.location?.city || lastEvent?.location?.country || null,
+    tracking_location: lastEvent?.location || null,
     tracking_eta: shipment.delivery?.estimatedDeliveryDate || null,
     tracking_updated_at: new Date().toISOString(),
     tracking_checkpoints: events.map(event => ({
       checkpoint_time: event.datetime,
       message: event.status,
-      city: event.location?.city || null,
-      state: event.location?.state || event.location?.stateCode || null,
-      country: event.location?.country || event.location?.countryCode || null,
+      location: event.location || null,
       status: event.statusMilestone,
       statusCode: event.statusCode
     }))
