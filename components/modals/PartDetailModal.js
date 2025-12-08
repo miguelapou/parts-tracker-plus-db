@@ -64,10 +64,10 @@ const PartDetailModal = ({
     return date.toLocaleDateString();
   };
 
-  // Format time as HH:MM
+  // Format time as HH:MM AM/PM
   const formatTime = (dateString) => {
     if (!dateString) return null;
-    return new Date(dateString).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+    return new Date(dateString).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
   };
 
   const handleRefreshTracking = async () => {
@@ -113,7 +113,7 @@ const PartDetailModal = ({
     }
   };
 
-  // Auto-refresh tracking when modal opens if data is stale (>8 hours old)
+  // Auto-refresh tracking when modal opens if data is stale (>24 hours old)
   useEffect(() => {
     // Reset error state when modal opens or part changes
     setTrackingError(null);
@@ -132,7 +132,7 @@ const PartDetailModal = ({
         handleRefreshTracking();
       }
     }
-  }, [isOpen, viewingPart?.id]);
+  }, [isOpen, viewingPart?.id, viewingPart?.tracking_updated_at]);
 
   if (!isOpen || !viewingPart) return null;
 
