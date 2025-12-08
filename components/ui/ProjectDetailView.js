@@ -42,11 +42,13 @@ const ProjectDetailView = ({
   const [isDescriptionClamped, setIsDescriptionClamped] = useState(false);
   const descriptionRef = useRef(null);
 
-  // Check if description is clamped (more than 3 lines)
+  // Check if description is clamped (content overflows the collapsed height)
   useEffect(() => {
     if (descriptionRef.current && project.description) {
-      const element = descriptionRef.current;
-      setIsDescriptionClamped(element.scrollHeight > element.clientHeight);
+      const content = descriptionRef.current;
+      // 4.5em at 16px base = 72px collapsed height
+      const collapsedHeight = 72;
+      setIsDescriptionClamped(content.scrollHeight > collapsedHeight);
     }
   }, [project.description]);
 
