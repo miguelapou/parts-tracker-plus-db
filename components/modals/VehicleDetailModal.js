@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   X,
   Wrench,
@@ -20,13 +20,15 @@ import {
   ExternalLink,
   MoreVertical,
   Calendar,
-  ListChecks
+  ListChecks,
+  FileDown
 } from 'lucide-react';
 import ProjectDetailView from '../ui/ProjectDetailView';
 import ProjectEditForm from '../ui/ProjectEditForm';
 import LinkedPartsSection from '../ui/LinkedPartsSection';
 import AddDocumentModal from './AddDocumentModal';
 import AddServiceEventModal from './AddServiceEventModal';
+import ExportReportModal from './ExportReportModal';
 import {
   calculateVehicleTotalSpent,
   calculateProjectTotal
@@ -38,6 +40,7 @@ import {
   getVendorColor
 } from '../../utils/colorUtils';
 import { inputClasses } from '../../utils/styleUtils';
+import { generateVehicleReportPDF, downloadBlob } from '../../utils/pdfUtils';
 import { useDocuments, useServiceEvents } from '../../contexts';
 
 const VehicleDetailModal = ({
@@ -88,8 +91,13 @@ const VehicleDetailModal = ({
   getStatusText,
   getStatusTextColor,
   getVendorColor,
-  calculateProjectTotal
+  calculateProjectTotal,
+  toast
 }) => {
+  // State for report generation
+  const [generatingReport, setGeneratingReport] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+
   // Get document state and actions from context
   const {
     documents,
@@ -143,6 +151,62 @@ const VehicleDetailModal = ({
       loadServiceEvents(viewingVehicle.id);
     }
   }, [isOpen, viewingVehicle?.id, loadDocuments, loadServiceEvents]);
+
+  // Handle generating vehicle report PDF
+  const handleGenerateReport = async (saveToDocuments) => {
+    if (!viewingVehicle || generatingReport) return;
+
+    try {
+      setGeneratingReport(true);
+
+      // Generate the PDF
+      const { blob, filename } = generateVehicleReportPDF(
+        viewingVehicle,
+        projects,
+        parts,
+        serviceEvents
+      );
+
+      // Download the PDF immediately
+      downloadBlob(blob, filename);
+
+      // Optionally save to documents section
+      if (saveToDocuments) {
+        // Create a File object from the blob for upload
+        const file = new File([blob], filename, { type: 'application/pdf' });
+
+        // Generate a title for the document
+        const make = viewingVehicle.make || '';
+        const model = viewingVehicle.name || '';
+        const year = viewingVehicle.year || '';
+        const today = new Date();
+        const dateStr = today.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+        const title = `Vehicle Report - ${year} ${make} ${model} (${dateStr})`.trim().replace(/\s+/g, ' ');
+
+        // Upload to documents section
+        await addDocument(viewingVehicle.id, title, file);
+
+        // Reload documents to show the new one
+        await loadDocuments(viewingVehicle.id);
+
+        toast?.success('Report generated and saved to documents');
+      } else {
+        toast?.success('Report generated');
+      }
+
+      // Close the export modal
+      setShowExportModal(false);
+    } catch (error) {
+      console.error('Error generating report:', error);
+      toast?.error('Failed to generate report');
+    } finally {
+      setGeneratingReport(false);
+    }
+  };
 
   if (!isOpen || !viewingVehicle) return null;
 
@@ -1771,7 +1835,19 @@ const VehicleDetailModal = ({
               </button>
             </div>
           ) : (
-            <div className="ml-auto">
+            <div className="flex items-center justify-between w-full gap-2">
+              <button
+                onClick={() => setShowExportModal(true)}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm border ${
+                  darkMode
+                    ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500'
+                    : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                <FileDown className="w-4 h-4" />
+                <span className="sm:hidden">Report</span>
+                <span className="hidden sm:inline">Generate Report</span>
+              </button>
               <button
                 onClick={() => {
                   setVehicleModalEditMode('vehicle');
@@ -1785,6 +1861,16 @@ const VehicleDetailModal = ({
           )}
         </div>
       </div>
+
+      {/* Export Report Modal */}
+      <ExportReportModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        onConfirm={handleGenerateReport}
+        darkMode={darkMode}
+        vehicleName={viewingVehicle?.nickname || `${viewingVehicle?.year || ''} ${viewingVehicle?.make || ''} ${viewingVehicle?.name || ''}`.trim()}
+        generating={generatingReport}
+      />
     </div>
   );
 };
