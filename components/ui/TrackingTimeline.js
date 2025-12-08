@@ -71,19 +71,31 @@ const CheckpointItem = ({ checkpoint, isFirst, isLast, darkMode }) => {
   const IconComponent = ICON_MAP[config.icon] || Package;
   const { date, time } = formatCheckpointTime(checkpoint.checkpoint_time || checkpoint.created_at);
 
+  // Color classes matching the progress bar colors
+  const colorClasses = {
+    gray: { border: 'border-gray-400', text: 'text-gray-400' },
+    blue: { border: 'border-blue-500', text: 'text-blue-500' },
+    indigo: { border: 'border-indigo-500', text: 'text-indigo-500' },
+    amber: { border: 'border-amber-500', text: 'text-amber-500' },
+    orange: { border: 'border-orange-500', text: 'text-orange-500' },
+    green: { border: 'border-green-500', text: 'text-green-500' },
+    cyan: { border: 'border-cyan-500', text: 'text-cyan-500' },
+    red: { border: 'border-red-500', text: 'text-red-500' }
+  };
+
+  const statusColor = colorClasses[config.color] || colorClasses.gray;
+
   return (
     <div className="flex gap-3">
       {/* Timeline line and dot */}
       <div className="flex flex-col items-center">
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border-2 ${
             isFirst
-              ? darkMode
-                ? config.bgDark + ' ' + config.textDark
-                : config.bgLight + ' ' + config.textLight
+              ? `${statusColor.border} ${statusColor.text}`
               : darkMode
-                ? 'bg-gray-700 text-gray-400'
-                : 'bg-gray-200 text-gray-500'
+                ? 'border-gray-600 text-gray-500'
+                : 'border-gray-300 text-gray-400'
           }`}
         >
           <IconComponent className="w-4 h-4" />
