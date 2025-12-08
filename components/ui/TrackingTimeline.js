@@ -9,7 +9,8 @@ import {
   MapPin,
   AlertTriangle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  XCircle
 } from 'lucide-react';
 import {
   getTrackingStatusConfig,
@@ -26,7 +27,8 @@ const ICON_MAP = {
   'alert-circle': AlertCircle,
   'check-circle': CheckCircle,
   'map-pin': MapPin,
-  'alert-triangle': AlertTriangle
+  'alert-triangle': AlertTriangle,
+  'x-circle': XCircle
 };
 
 /**
@@ -63,31 +65,39 @@ const TrackingProgressBar = ({ status, darkMode }) => {
  * Single checkpoint item in the timeline
  */
 const CheckpointItem = ({ checkpoint, isFirst, isLast, darkMode }) => {
-  const config = getTrackingStatusConfig(checkpoint.tag);
+  // Use checkpoint.status (from Ship24 statusMilestone) or fall back to tag
+  const statusTag = checkpoint.status || checkpoint.tag;
+  const config = getTrackingStatusConfig(statusTag);
   const IconComponent = ICON_MAP[config.icon] || Package;
   const { date, time } = formatCheckpointTime(checkpoint.checkpoint_time || checkpoint.created_at);
+
+  // Color classes matching the progress bar colors
+  const colorClasses = {
+    gray: { border: 'border-gray-400', text: 'text-gray-400' },
+    blue: { border: 'border-blue-500', text: 'text-blue-500' },
+    indigo: { border: 'border-indigo-500', text: 'text-indigo-500' },
+    amber: { border: 'border-amber-500', text: 'text-amber-500' },
+    orange: { border: 'border-orange-500', text: 'text-orange-500' },
+    green: { border: 'border-green-500', text: 'text-green-500' },
+    cyan: { border: 'border-cyan-500', text: 'text-cyan-500' },
+    red: { border: 'border-red-500', text: 'text-red-500' }
+  };
+
+  const statusColor = colorClasses[config.color] || colorClasses.gray;
 
   return (
     <div className="flex gap-3">
       {/* Timeline line and dot */}
       <div className="flex flex-col items-center">
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-            isFirst
-              ? darkMode
-                ? config.bgDark + ' ' + config.textDark
-                : config.bgLight + ' ' + config.textLight
-              : darkMode
-                ? 'bg-gray-700 text-gray-400'
-                : 'bg-gray-200 text-gray-500'
-          }`}
+          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border-2 ${statusColor.border} ${statusColor.text}`}
         >
           <IconComponent className="w-4 h-4" />
         </div>
         {!isLast && (
           <div
             className={`w-0.5 flex-1 min-h-[24px] ${
-              darkMode ? 'bg-gray-700' : 'bg-gray-200'
+              darkMode ? 'bg-gray-500' : 'bg-gray-300'
             }`}
           />
         )}
