@@ -494,16 +494,63 @@ const ProjectDetailModal = ({
               </PrimaryButton>
             </div>
           ) : (
-            <div className="ml-auto">
-              <PrimaryButton
-                onClick={() => {
-                  setProjectModalEditMode(true);
-                }}
-                icon={Edit2}
-              >
-                Edit
-              </PrimaryButton>
-            </div>
+            <>
+              {/* Navigation controls on the left */}
+              {navigableProjects.length > 1 && currentIndex !== -1 && (
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToPrevProject();
+                    }}
+                    disabled={!hasPrev}
+                    className={`p-1.5 rounded transition-colors ${
+                      hasPrev
+                        ? darkMode
+                          ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700'
+                          : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200'
+                        : darkMode
+                          ? 'text-gray-600 cursor-not-allowed'
+                          : 'text-gray-300 cursor-not-allowed'
+                    }`}
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <span className={`text-xs font-medium min-w-[3rem] text-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                    {currentIndex + 1} / {navigableProjects.length}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToNextProject();
+                    }}
+                    disabled={!hasNext}
+                    className={`p-1.5 rounded transition-colors ${
+                      hasNext
+                        ? darkMode
+                          ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700'
+                          : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200'
+                        : darkMode
+                          ? 'text-gray-600 cursor-not-allowed'
+                          : 'text-gray-300 cursor-not-allowed'
+                    }`}
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
+              {/* Edit button on the right */}
+              <div className="ml-auto">
+                <PrimaryButton
+                  onClick={() => {
+                    setProjectModalEditMode(true);
+                  }}
+                  icon={Edit2}
+                >
+                  Edit
+                </PrimaryButton>
+              </div>
+            </>
           )}
         </div>
       </div>
