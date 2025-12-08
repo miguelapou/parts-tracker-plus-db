@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Search, Package, Receipt, Truck, CheckCircle, Clock,
   ChevronDown, Plus, X, ExternalLink, ShoppingCart, Car,
-  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight
+  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,
+  PackageCheck, PackageSearch, PackageX
 } from 'lucide-react';
 import PriceDisplay from '../ui/PriceDisplay';
 import TrackingBadge from '../ui/TrackingBadge';
@@ -915,6 +916,9 @@ const PartsTab = ({
                   </th>
                   <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
                     darkMode ? 'text-gray-300' : 'text-slate-700'
+                  }`}>Tracking</th>
+                  <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
+                    darkMode ? 'text-gray-300' : 'text-slate-700'
                   }`}>Part</th>
                   <th className={`hidden px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
                     darkMode ? 'text-gray-300' : 'text-slate-700'
@@ -981,6 +985,87 @@ const PartsTab = ({
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <StatusDropdown part={part} />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {(() => {
+                        const tracking = part.tracking;
+                        const trackingUpdatedAt = part.tracking_updated_at;
+                        const isLetterOnly = tracking && /^[a-zA-Z\s]+$/.test(tracking.trim());
+                        const skipApi = shouldSkipShip24(tracking);
+                        const trackingUrl = tracking ? getTrackingUrl(tracking) : null;
+
+                        // Check if tracking data is fresh (less than 24 hours old)
+                        const isFresh = trackingUpdatedAt && (() => {
+                          const updatedDate = new Date(trackingUpdatedAt.endsWith('Z') ? trackingUpdatedAt : trackingUpdatedAt + 'Z');
+                          const hoursAgo = (Date.now() - updatedDate.getTime()) / (1000 * 60 * 60);
+                          return hoursAgo < 24;
+                        })();
+
+                        // Letter-only tracking (like "USPS", "FedEx", "Local") - grey badge
+                        if (isLetterOnly) {
+                          return (
+                            <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
+                              darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-200 text-gray-600'
+                            }`}>
+                              {tracking}
+                            </span>
+                          );
+                        }
+
+                        // URLs or Amazon tracking - show link button
+                        if (tracking && skipApi && trackingUrl) {
+                          return (
+                            <a
+                              href={trackingUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1 px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors"
+                            >
+                              {getCarrierName(tracking)}
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          );
+                        }
+
+                        // Has tracking with API data - show status icon
+                        if (tracking && !skipApi) {
+                          if (trackingUpdatedAt) {
+                            // Green if fresh, yellow if stale
+                            if (isFresh) {
+                              return (
+                                <div className="flex justify-center" title="Tracking synced (< 24hrs)">
+                                  <PackageCheck className="w-5 h-5 text-green-500" />
+                                </div>
+                              );
+                            } else {
+                              return (
+                                <div className="flex justify-center" title="Tracking data > 24hrs old">
+                                  <PackageSearch className="w-5 h-5 text-yellow-500" />
+                                </div>
+                              );
+                            }
+                          } else {
+                            // Has tracking number but no API data yet
+                            return (
+                              <div className="flex justify-center" title="No tracking data from API">
+                                <PackageX className="w-5 h-5 text-red-500" />
+                              </div>
+                            );
+                          }
+                        }
+
+                        // No tracking at all
+                        return (
+                          <span className={`inline-block px-2 py-1 rounded text-xs font-medium border ${
+                            darkMode
+                              ? 'bg-gray-700/50 text-gray-500 border-gray-600'
+                              : 'bg-gray-100 text-gray-500 border-gray-300'
+                          }`}>
+                            —
+                          </span>
+                        );
+                      })()}
                     </td>
                     <td className="px-6 py-4">
                       <div className={`text-sm font-medium ${
@@ -1074,7 +1159,7 @@ const PartsTab = ({
                 {/* Add empty rows on last page to maintain consistent height when there are multiple pages */}
                 {totalPages > 1 && paginatedParts.length < rowsPerPage && Array.from({ length: rowsPerPage - paginatedParts.length }).map((_, index) => (
                   <tr key={`empty-${index}`}>
-                    <td colSpan="7" className="px-6 py-4">
+                    <td colSpan="8" className="px-6 py-4">
                       <div className="h-[2rem]"></div>
                     </td>
                   </tr>
