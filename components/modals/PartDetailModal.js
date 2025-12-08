@@ -976,11 +976,11 @@ const PartDetailModal = ({
                   href={getTrackingUrl(viewingPart.tracking)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 sm:py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="hidden sm:inline">Track</span>
-                  <ExternalLink className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                  <ExternalLink className="w-5 h-5 sm:w-3.5 sm:h-3.5" />
                 </a>
               )}
             </div>
@@ -990,7 +990,7 @@ const PartDetailModal = ({
                 <button
                   onClick={handleRefreshTracking}
                   disabled={isRefreshingTracking}
-                  className={`inline-flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isRefreshingTracking
                       ? darkMode
                         ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
@@ -1000,7 +1000,7 @@ const PartDetailModal = ({
                         : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
                   }`}
                 >
-                  <RefreshCw className={`w-4 h-4 ${isRefreshingTracking ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-5 h-5 sm:w-4 sm:h-4 ${isRefreshingTracking ? 'animate-spin' : ''}`} />
                   <span className="hidden sm:inline">{isRefreshingTracking ? 'Updating...' : 'Refresh'}</span>
                 </button>
               )}
