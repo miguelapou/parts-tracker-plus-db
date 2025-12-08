@@ -48,16 +48,30 @@ const PartDetailModal = ({
   const [trackingError, setTrackingError] = useState(null);
   const checkedPartsRef = useRef(new Set()); // Track part IDs we've already checked this session
 
+  // Parse date string ensuring UTC interpretation
+  // Supabase may return timestamps without 'Z' suffix, which JavaScript
+  // would incorrectly parse as local time instead of UTC
+  const parseAsUTC = (dateString) => {
+    if (!dateString) return null;
+    // If no timezone indicator, append 'Z' to treat as UTC
+    if (!dateString.endsWith('Z') && !dateString.includes('+') && !dateString.match(/T.*-\d{2}:\d{2}$/)) {
+      return new Date(dateString + 'Z');
+    }
+    return new Date(dateString);
+  };
+
   // Format relative time (just now, X minutes ago, etc.)
   const formatRelativeTime = (dateString) => {
-    if (!dateString) return null;
-    const date = new Date(dateString);
+    const date = parseAsUTC(dateString);
+    if (!date) return null;
     const now = new Date();
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
+    // Handle future timestamps (shouldn't happen, but just in case)
+    if (diffMs < 0) return 'just now';
     if (diffMins < 1) return 'just now';
     if (diffMins < 60) return `${diffMins} minute${diffMins === 1 ? '' : 's'} ago`;
     if (diffHours < 24) return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
@@ -65,10 +79,11 @@ const PartDetailModal = ({
     return date.toLocaleDateString();
   };
 
-  // Format time as HH:MM am/pm
+  // Format time as HH:MM am/pm in user's local timezone
   const formatTime = (dateString) => {
-    if (!dateString) return null;
-    return new Date(dateString).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
+    const date = parseAsUTC(dateString);
+    if (!date) return null;
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
   };
 
   const handleRefreshTracking = async () => {
