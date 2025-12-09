@@ -209,30 +209,23 @@ const ManageVendorsModal = ({
                           </button>
                           {/* Color picker button - input overlays icon for iOS touch support */}
                           <div
-                            className={`relative p-2 sm:px-3 sm:py-2 rounded-lg transition-colors flex items-center ${
+                            className={`relative p-2 sm:px-3 sm:py-2 rounded-lg transition-colors flex items-center cursor-pointer ${
                               darkMode
                                 ? 'hover:bg-gray-600 text-gray-400 hover:text-gray-200'
                                 : 'hover:bg-gray-200 text-gray-500 hover:text-gray-700'
                             }`}
                             title="Choose vendor color"
+                            onClick={(e) => e.stopPropagation()}
                           >
-                            <Palette className="w-4 h-4 pointer-events-none" />
+                            <Palette className="w-4 h-4" />
                             <input
                               type="color"
                               value={vendorColors[vendor] || '#6B7280'}
                               onChange={(e) => {
                                 updateVendorColor(vendor, e.target.value);
                               }}
-                              onClick={(e) => e.stopPropagation()}
-                              className="absolute inset-0 cursor-pointer"
-                              style={{
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0,
-                                WebkitAppearance: 'none',
-                                minWidth: '44px',
-                                minHeight: '44px'
-                              }}
+                              className="absolute inset-0 opacity-0 cursor-pointer"
+                              style={{ width: '100%', height: '100%' }}
                               tabIndex={-1}
                             />
                           </div>
