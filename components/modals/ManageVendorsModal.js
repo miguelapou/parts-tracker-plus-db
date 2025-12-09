@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { X, Package, Edit2, Trash2, Check, Palette } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Package, Edit2, Trash2, Check } from 'lucide-react';
 import PrimaryButton from '../ui/PrimaryButton';
 import {
   getVendorColor,
@@ -22,10 +22,8 @@ const ManageVendorsModal = ({
   handleCloseModal,
   onClose
 }) => {
-  // State for tracking which vendor card has overlay visible
+  // State for tracking which vendor card has overlay visible (mobile only)
   const [selectedVendor, setSelectedVendor] = useState(null);
-  // Ref for color input to trigger programmatically
-  const colorInputRefs = useRef({});
 
   if (!isOpen) return null;
 
@@ -241,9 +239,9 @@ const ManageVendorsModal = ({
                         )}
                       </div>
 
-                      {/* Desktop inline buttons - hidden on mobile */}
+                      {/* Inline buttons - color and edit on all sizes, delete only on desktop */}
                       {!isEditing && (
-                        <div className="hidden sm:flex items-center gap-2">
+                        <div className="flex items-center gap-2">
                           <input
                             type="color"
                             value={vendorColors[vendor] || '#6B7280'}
@@ -251,7 +249,7 @@ const ManageVendorsModal = ({
                               updateVendorColor(vendor, e.target.value);
                             }}
                             onClick={(e) => e.stopPropagation()}
-                            className="w-10 h-10 rounded border cursor-pointer"
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded border cursor-pointer"
                             style={{
                               backgroundColor: 'transparent',
                               border: `2px solid ${
@@ -268,15 +266,16 @@ const ManageVendorsModal = ({
                                 newName: vendor
                               });
                             }}
-                            className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+                            className={`p-2 sm:px-3 sm:py-2 rounded-lg transition-colors flex items-center gap-2 ${
                               darkMode
                                 ? 'hover:bg-gray-600 text-gray-400 hover:text-gray-200'
                                 : 'hover:bg-gray-200 text-gray-500 hover:text-gray-700'
                             }`}
                           >
                             <Edit2 className="w-4 h-4" />
-                            <span>Edit</span>
+                            <span className="hidden sm:inline">Edit</span>
                           </button>
+                          {/* Delete button - desktop only */}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -290,7 +289,7 @@ const ManageVendorsModal = ({
                                 onConfirm: () => deleteVendor(vendor)
                               });
                             }}
-                            className={`px-3 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
+                            className={`hidden sm:flex px-3 py-2 rounded-lg font-medium transition-colors items-center gap-2 text-sm ${
                               darkMode
                                 ? 'hover:bg-red-900/50 text-red-400 border border-red-700'
                                 : 'hover:bg-red-100 text-red-600 border border-red-300'
@@ -303,58 +302,14 @@ const ManageVendorsModal = ({
                       )}
                     </div>
 
-                    {/* Hidden color input for mobile overlay */}
-                    <input
-                      type="color"
-                      ref={(el) => (colorInputRefs.current[vendor] = el)}
-                      value={vendorColors[vendor] || '#6B7280'}
-                      onChange={(e) => {
-                        updateVendorColor(vendor, e.target.value);
-                      }}
-                      className="absolute opacity-0 pointer-events-none sm:hidden"
-                      style={{ width: 0, height: 0 }}
-                    />
-
-                    {/* Mobile action overlay with fade animation */}
+                    {/* Mobile delete overlay with fade animation */}
                     {!isEditing && (
                       <div
-                        className={`sm:hidden absolute inset-0 rounded-lg flex items-center justify-center gap-3 transition-opacity duration-150 ${
+                        className={`sm:hidden absolute inset-0 rounded-lg flex items-center justify-center transition-opacity duration-150 ${
                           isSelected ? 'opacity-100' : 'opacity-0 pointer-events-none'
                         } ${darkMode ? 'bg-gray-800/95' : 'bg-gray-100/95'}`}
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            colorInputRefs.current[vendor]?.click();
-                          }}
-                          className={`p-3 rounded-lg transition-colors ${
-                            darkMode
-                              ? 'bg-gray-700 text-purple-400 border border-gray-600'
-                              : 'bg-white text-purple-600 border border-gray-300'
-                          }`}
-                          title="Change color"
-                        >
-                          <Palette className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingVendor({
-                              oldName: vendor,
-                              newName: vendor
-                            });
-                            setSelectedVendor(null);
-                          }}
-                          className={`p-3 rounded-lg transition-colors ${
-                            darkMode
-                              ? 'bg-gray-700 text-blue-400 border border-gray-600'
-                              : 'bg-white text-blue-600 border border-gray-300'
-                          }`}
-                          title="Rename vendor"
-                        >
-                          <Edit2 className="w-5 h-5" />
-                        </button>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
