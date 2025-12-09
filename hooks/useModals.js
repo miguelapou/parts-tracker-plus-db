@@ -100,45 +100,21 @@ const useModals = () => {
                           showPartDetailModal;
 
     if (isAnyModalOpen && !isScrollLocked.current) {
-      // Lock scroll
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      // Lock scroll using overflow: hidden - works with scrollbar-gutter: stable
       savedScrollPosition.current = window.scrollY;
-
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${savedScrollPosition.current}px`;
-      document.body.style.width = '100%';
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-
+      document.documentElement.style.overflow = 'hidden';
       isScrollLocked.current = true;
     } else if (!isAnyModalOpen && isScrollLocked.current) {
       // Unlock scroll
-      const scrollY = savedScrollPosition.current;
-
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.paddingRight = '';
-
-      // Use requestAnimationFrame to ensure DOM has updated before scrolling
-      requestAnimationFrame(() => {
-        window.scrollTo(0, scrollY);
-        isScrollLocked.current = false;
-      });
+      document.documentElement.style.overflow = '';
+      isScrollLocked.current = false;
     }
 
     // Cleanup on unmount
     return () => {
       if (isScrollLocked.current) {
-        const scrollY = savedScrollPosition.current;
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.body.style.paddingRight = '';
-        // Use requestAnimationFrame to ensure DOM has updated before scrolling
-        requestAnimationFrame(() => {
-          window.scrollTo(0, scrollY);
-          isScrollLocked.current = false;
-        });
+        document.documentElement.style.overflow = '';
+        isScrollLocked.current = false;
       }
     };
   }, [showAddPartOptionsModal, showAddModal, showCSVImportModal, showTrackingModal, showAddProjectModal,
