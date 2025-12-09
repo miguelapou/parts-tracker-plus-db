@@ -188,12 +188,14 @@ const VehicleDetailModal = ({
         const title = `Vehicle Report - ${year} ${make} ${model} (${dateStr})`.trim().replace(/\s+/g, ' ');
 
         // Upload to documents section
-        await addDocument(viewingVehicle.id, title, file);
+        const newDocument = await addDocument(viewingVehicle.id, title, file);
 
-        // Reload documents to show the new one
-        await loadDocuments(viewingVehicle.id);
-
-        toast?.success('Report generated and saved to documents');
+        // Only show success if document was created successfully
+        // Note: addDocument already adds the document to local state on success
+        if (newDocument) {
+          toast?.success('Report generated and saved to documents');
+        }
+        // If addDocument failed, it already showed an error toast
       } else {
         toast?.success('Report generated');
       }
