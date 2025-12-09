@@ -1066,8 +1066,8 @@ const VehicleDetailModal = ({
                         key={doc.id}
                         className={`group relative rounded-lg p-3 border cursor-pointer transition-colors ${
                           darkMode
-                            ? 'bg-gray-700 border-gray-600 md:hover:border-white'
-                            : 'bg-gray-50 border-gray-200 md:hover:border-gray-400'
+                            ? `bg-gray-700 border-gray-600 ${selectedDocId !== doc.id ? 'md:hover:border-white' : ''}`
+                            : `bg-gray-50 border-gray-200 ${selectedDocId !== doc.id ? 'md:hover:border-gray-400' : ''}`
                         }`}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -1076,7 +1076,9 @@ const VehicleDetailModal = ({
                       >
                         <div className="flex items-start gap-2">
                           <FileText className={`w-8 h-8 flex-shrink-0 transition-colors ${
-                            darkMode ? 'text-blue-400 md:group-hover:text-blue-300' : 'text-blue-600 md:group-hover:text-blue-700'
+                            darkMode
+                              ? `text-blue-400 ${selectedDocId !== doc.id ? 'md:group-hover:text-blue-300' : ''}`
+                              : `text-blue-600 ${selectedDocId !== doc.id ? 'md:group-hover:text-blue-700' : ''}`
                           }`} />
                           <div className="flex-1 min-w-0">
                             <p className={`text-sm font-medium line-clamp-2 md:truncate ${
@@ -1093,25 +1095,14 @@ const VehicleDetailModal = ({
                         </div>
                         {/* Action overlay with fade animation */}
                         <div
-                          className={`absolute inset-0 rounded-lg flex items-center justify-center gap-4 transition-opacity duration-150 ${
+                          className={`absolute inset-0 rounded-lg flex items-center justify-center gap-3 transition-opacity duration-150 ${
                             selectedDocId === doc.id ? 'opacity-100' : 'opacity-0 pointer-events-none'
                           } ${darkMode ? 'bg-gray-800/95' : 'bg-gray-100/95'}`}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedDocId(null);
+                          }}
                         >
-                          <button
-                            onClick={() => {
-                              openDocument(doc);
-                              setSelectedDocId(null);
-                            }}
-                            className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-colors ${
-                              darkMode
-                                ? 'bg-gray-700 text-blue-400'
-                                : 'bg-white text-blue-600 shadow-sm'
-                            }`}
-                          >
-                            <ExternalLink className="w-5 h-5 mb-0.5" />
-                            <span className="text-[10px] font-medium">Open</span>
-                          </button>
                           <button
                             onClick={() => {
                               setSelectedDocId(null);
@@ -1123,14 +1114,28 @@ const VehicleDetailModal = ({
                                 onConfirm: () => deleteDocument(doc.id, doc.file_url)
                               });
                             }}
-                            className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-colors ${
+                            className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                               darkMode
-                                ? 'bg-gray-700 text-red-400'
-                                : 'bg-white text-red-600 shadow-sm'
+                                ? 'bg-gray-700 text-red-400 hover:ring-2 hover:ring-red-400'
+                                : 'bg-white text-red-600 shadow-sm hover:ring-2 hover:ring-red-600'
                             }`}
                           >
                             <Trash2 className="w-5 h-5 mb-0.5" />
                             <span className="text-[10px] font-medium">Delete</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              openDocument(doc);
+                              setSelectedDocId(null);
+                            }}
+                            className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
+                              darkMode
+                                ? 'bg-gray-700 text-blue-400 hover:ring-2 hover:ring-blue-400'
+                                : 'bg-white text-blue-600 shadow-sm hover:ring-2 hover:ring-blue-600'
+                            }`}
+                          >
+                            <ExternalLink className="w-5 h-5 mb-0.5" />
+                            <span className="text-[10px] font-medium">Open</span>
                           </button>
                         </div>
                       </div>
