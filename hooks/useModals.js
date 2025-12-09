@@ -110,6 +110,12 @@ const useModals = () => {
       savedScrollPosition.current = window.scrollY;
       document.documentElement.style.overflow = 'hidden';
       isScrollLocked.current = true;
+      // Reset closing state when opening a new modal (not when closing)
+      // This avoids an extra render cycle after modal closes
+      if (isModalClosing) {
+        console.log('[Modal] Resetting isModalClosing to false (modal opening)');
+        setIsModalClosing(false);
+      }
     } else if (!isAnyModalOpen) {
       // Unlock scroll
       if (isScrollLocked.current) {
@@ -117,12 +123,8 @@ const useModals = () => {
         document.documentElement.style.overflow = '';
         isScrollLocked.current = false;
       }
-      // Reset closing animation state when all modals are closed
-      // This prevents race condition flickering in handleCloseModal
-      if (isModalClosing) {
-        console.log('[Modal] Resetting isModalClosing to false');
-        setIsModalClosing(false);
-      }
+      // Don't reset isModalClosing here - it causes an extra render that can flicker
+      // It will be reset when the next modal opens
     }
 
     // Cleanup on unmount
@@ -133,7 +135,7 @@ const useModals = () => {
       }
     };
   }, [showAddPartOptionsModal, showAddModal, showCSVImportModal, showTrackingModal, showAddProjectModal,
-      showProjectDetailModal, showAddVehicleModal, showVehicleDetailModal, showPartDetailModal, isModalClosing]);
+      showProjectDetailModal, showAddVehicleModal, showVehicleDetailModal, showPartDetailModal]);
 
   return {
     // Part modals
