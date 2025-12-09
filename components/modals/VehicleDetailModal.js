@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import {
   X,
   Wrench,
@@ -11,6 +11,8 @@ import {
   Trash2,
   Archive,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Upload,
   Pause,
   Play,
@@ -112,6 +114,97 @@ const VehicleDetailModal = ({
       setViewingNoteEvent(null);
       setIsNotesModalClosing(false);
     }, 150);
+  };
+
+  // Touch refs for swipe gestures
+  const touchStartRef = useRef(null);
+  const touchEndRef = useRef(null);
+  const minSwipeDistance = 50;
+
+  // Filter to non-archived vehicles for navigation
+  const navigableVehicles = useMemo(() =>
+    vehicles.filter(v => !v.archived),
+    [vehicles]
+  );
+
+  // Get current index and navigation state
+  const currentIndex = navigableVehicles.findIndex(v => v.id === viewingVehicle?.id);
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < navigableVehicles.length - 1 && currentIndex !== -1;
+
+  const goToPrevVehicle = useCallback(() => {
+    if (hasPrev) {
+      const prevVehicle = navigableVehicles[currentIndex - 1];
+      setViewingVehicle(prevVehicle);
+      setOriginalVehicleData({ ...prevVehicle });
+      // Reset sub-views when navigating
+      setVehicleModalProjectView(null);
+      setVehicleModalEditMode(null);
+      clearImageSelection();
+    }
+  }, [hasPrev, navigableVehicles, currentIndex, setViewingVehicle, setOriginalVehicleData, setVehicleModalProjectView, setVehicleModalEditMode, clearImageSelection]);
+
+  const goToNextVehicle = useCallback(() => {
+    if (hasNext) {
+      const nextVehicle = navigableVehicles[currentIndex + 1];
+      setViewingVehicle(nextVehicle);
+      setOriginalVehicleData({ ...nextVehicle });
+      // Reset sub-views when navigating
+      setVehicleModalProjectView(null);
+      setVehicleModalEditMode(null);
+      clearImageSelection();
+    }
+  }, [hasNext, navigableVehicles, currentIndex, setViewingVehicle, setOriginalVehicleData, setVehicleModalProjectView, setVehicleModalEditMode, clearImageSelection]);
+
+  // Keyboard navigation (left/right arrow keys)
+  useEffect(() => {
+    if (!isOpen || vehicleModalEditMode || vehicleModalProjectView) return;
+
+    const handleKeyDown = (e) => {
+      // Don't navigate if user is typing in an input
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+        return;
+      }
+
+      if (e.key === 'ArrowLeft' && hasPrev) {
+        e.preventDefault();
+        goToPrevVehicle();
+      } else if (e.key === 'ArrowRight' && hasNext) {
+        e.preventDefault();
+        goToNextVehicle();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, vehicleModalEditMode, vehicleModalProjectView, hasPrev, hasNext, goToPrevVehicle, goToNextVehicle]);
+
+  // Touch handlers for swipe gestures
+  const handleTouchStart = (e) => {
+    touchEndRef.current = null;
+    touchStartRef.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartRef.current || !touchEndRef.current) return;
+    if (vehicleModalEditMode || vehicleModalProjectView) return;
+
+    const distance = touchStartRef.current - touchEndRef.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && hasNext) {
+      goToNextVehicle();
+    } else if (isRightSwipe && hasPrev) {
+      goToPrevVehicle();
+    }
+
+    touchStartRef.current = null;
+    touchEndRef.current = null;
   };
 
   // Track if this modal was open (for close animation)
@@ -282,61 +375,96 @@ const VehicleDetailModal = ({
           setSelectedDocId(null);
           setSelectedEventId(null);
         }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Header */}
-        <div className={`sticky top-0 z-10 px-6 py-4 border-b flex items-center justify-between ${
+        <div className={`sticky top-0 z-10 px-6 py-4 border-b ${
           darkMode ? 'bg-gray-800 border-gray-700' : 'bg-slate-50 border-slate-200'
         }`}>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between gap-4">
             <h2 className={`text-2xl font-bold ${
               darkMode ? 'text-gray-100' : 'text-slate-800'
             }`} style={{ fontFamily: "'FoundationOne', 'Courier New', monospace" }}>
               {vehicleModalProjectView ? vehicleModalProjectView.name : (viewingVehicle.nickname || viewingVehicle.name || 'Vehicle Details')}
             </h2>
-            {!vehicleModalProjectView && viewingVehicle.archived && (
-              <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                darkMode
-                  ? 'bg-gray-700 text-gray-300 border border-gray-600'
-                  : 'bg-gray-200 text-gray-700 border border-gray-400'
-              }`}>
-                Archived
-              </span>
-            )}
-          </div>
-          <button
-            onClick={() => handleCloseModal(() => {
-              // Check for unsaved changes
-              if (hasUnsavedVehicleChanges()) {
-                setConfirmDialog({
-                  isOpen: true,
-                  title: 'Unsaved Changes',
-                  message: 'You have unsaved changes. Are you sure you want to close without saving?',
-                  confirmText: 'Discard',
-                  cancelText: 'Go Back',
-                  onConfirm: () => {
-                    setShowVehicleDetailModal(false);
-                    setViewingVehicle(null);
-                    setOriginalVehicleData(null);
-                    setVehicleModalProjectView(null);
-                    setVehicleModalEditMode(null);
-                    clearImageSelection();
+            <div className="flex items-center gap-3">
+              {/* Navigation buttons - hidden on mobile, hidden in edit/project view */}
+              {!vehicleModalProjectView && !vehicleModalEditMode && navigableVehicles.length > 1 && currentIndex !== -1 && (
+                <div className="hidden md:flex items-center gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToPrevVehicle();
+                    }}
+                    disabled={!hasPrev}
+                    className={`nav-btn ${darkMode ? 'dark' : 'light'}`}
+                    title="Previous vehicle (←)"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <span className={`text-xs font-medium min-w-[4rem] text-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                    {currentIndex + 1} of {navigableVehicles.length}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToNextVehicle();
+                    }}
+                    disabled={!hasNext}
+                    className={`nav-btn ${darkMode ? 'dark' : 'light'}`}
+                    title="Next vehicle (→)"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
+              {!vehicleModalProjectView && viewingVehicle.archived && (
+                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                  darkMode
+                    ? 'bg-gray-700 text-gray-300 border border-gray-600'
+                    : 'bg-gray-200 text-gray-700 border border-gray-400'
+                }`}>
+                  Archived
+                </span>
+              )}
+              <button
+                onClick={() => handleCloseModal(() => {
+                  // Check for unsaved changes
+                  if (hasUnsavedVehicleChanges()) {
+                    setConfirmDialog({
+                      isOpen: true,
+                      title: 'Unsaved Changes',
+                      message: 'You have unsaved changes. Are you sure you want to close without saving?',
+                      confirmText: 'Discard',
+                      cancelText: 'Go Back',
+                      onConfirm: () => {
+                        setShowVehicleDetailModal(false);
+                        setViewingVehicle(null);
+                        setOriginalVehicleData(null);
+                        setVehicleModalProjectView(null);
+                        setVehicleModalEditMode(null);
+                        clearImageSelection();
+                      }
+                    });
+                    return;
                   }
-                });
-                return;
-              }
-              setShowVehicleDetailModal(false);
-              setViewingVehicle(null);
-              setOriginalVehicleData(null);
-              setVehicleModalProjectView(null);
-              setVehicleModalEditMode(null);
-              clearImageSelection();
-            })}
-            className={`p-2 rounded-md transition-colors ${
-              darkMode ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
-            }`}
-          >
-            <X className="w-5 h-5" />
-          </button>
+                  setShowVehicleDetailModal(false);
+                  setViewingVehicle(null);
+                  setOriginalVehicleData(null);
+                  setVehicleModalProjectView(null);
+                  setVehicleModalEditMode(null);
+                  clearImageSelection();
+                })}
+                className={`p-2 rounded-md transition-colors flex-shrink-0 ${
+                  darkMode ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
+                }`}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Content - with slide animation */}
@@ -1927,29 +2055,60 @@ const VehicleDetailModal = ({
               </button>
             </div>
           ) : (
-            <div className="flex items-center justify-between w-full gap-2">
-              <button
-                onClick={() => setShowExportModal(true)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm border ${
-                  darkMode
-                    ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500'
-                    : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
-                }`}
-              >
-                <FileDown className="w-4 h-4" />
-                <span className="sm:hidden">Report</span>
-                <span className="hidden sm:inline">Generate Report</span>
-              </button>
-              <button
-                onClick={() => {
-                  setVehicleModalEditMode('vehicle');
-                }}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
-              >
-                <Edit2 className="w-3 h-3" />
-                Edit
-              </button>
-            </div>
+            <>
+              {/* Navigation controls on the left */}
+              {navigableVehicles.length > 1 && currentIndex !== -1 && (
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToPrevVehicle();
+                    }}
+                    disabled={!hasPrev}
+                    className={`nav-btn ${darkMode ? 'dark' : 'light'}`}
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <span className={`text-xs font-medium min-w-[3rem] text-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                    {currentIndex + 1} / {navigableVehicles.length}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToNextVehicle();
+                    }}
+                    disabled={!hasNext}
+                    className={`nav-btn ${darkMode ? 'dark' : 'light'}`}
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
+              {/* Report and Edit buttons on the right */}
+              <div className="ml-auto flex items-center gap-2">
+                <button
+                  onClick={() => setShowExportModal(true)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm border ${
+                    darkMode
+                      ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500'
+                      : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  <FileDown className="w-4 h-4" />
+                  <span className="sm:hidden">Report</span>
+                  <span className="hidden sm:inline">Generate Report</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setVehicleModalEditMode('vehicle');
+                  }}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
+                >
+                  <Edit2 className="w-3 h-3" />
+                  Edit
+                </button>
+              </div>
+            </>
           )}
         </div>
       </div>
