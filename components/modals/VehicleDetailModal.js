@@ -743,8 +743,8 @@ const VehicleDetailModal = ({
                               }`}>
                                 {/* Notes indicator */}
                                 {event.notes && (
-                                  <FileText className={`absolute top-2 right-2 w-3.5 h-3.5 ${
-                                    darkMode ? 'text-gray-500' : 'text-gray-400'
+                                  <FileText className={`absolute top-2 right-2 w-3.5 h-3.5 transition-colors ${
+                                    darkMode ? 'text-gray-500 md:group-hover:text-gray-300' : 'text-gray-400 md:group-hover:text-gray-600'
                                   }`} />
                                 )}
                                 <div className="flex-1 min-w-0">
