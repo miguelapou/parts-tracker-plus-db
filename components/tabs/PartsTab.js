@@ -138,6 +138,38 @@ const PartsTab = ({
     }
   };
 
+  // Keyboard navigation for pagination (desktop only)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Only apply on desktop (above 948px breakpoint)
+      if (typeof window === 'undefined' || window.innerWidth < 948) return;
+
+      // Don't navigate when user is typing in an input field
+      const activeElement = document.activeElement;
+      const isInputFocused = activeElement && (
+        activeElement.tagName === 'INPUT' ||
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.tagName === 'SELECT' ||
+        activeElement.isContentEditable
+      );
+      if (isInputFocused) return;
+
+      // Only handle arrow keys when there are multiple pages
+      if (totalPages <= 1) return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handlePageChange(currentPage - 1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        handlePageChange(currentPage + 1);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [currentPage, totalPages]);
+
   // Calculate pagination
   const totalPages = Math.ceil(filteredParts.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
