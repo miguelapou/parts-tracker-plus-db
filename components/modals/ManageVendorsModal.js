@@ -203,6 +203,30 @@ const ManageVendorsModal = ({
                           >
                             <Palette className="w-4 h-4" />
                           </button>
+                          {/* Delete button - desktop only */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setConfirmDialog({
+                                isOpen: true,
+                                title: 'Delete Vendor',
+                                message: `Are you sure you want to delete "${vendor}"? This will remove the vendor from ${partCount} ${
+                                  partCount === 1 ? 'part' : 'parts'
+                                }.`,
+                                confirmText: 'Delete',
+                                onConfirm: () => deleteVendor(vendor)
+                              });
+                            }}
+                            className={`hidden sm:flex p-2 sm:px-3 sm:py-2 rounded-lg transition-colors items-center ${
+                              darkMode
+                                ? 'hover:bg-red-900/50 text-red-400'
+                                : 'hover:bg-red-100 text-red-600'
+                            }`}
+                            title="Delete vendor"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                          {/* Edit button */}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -219,29 +243,6 @@ const ManageVendorsModal = ({
                           >
                             <Edit2 className="w-4 h-4" />
                             <span className="hidden sm:inline">Edit</span>
-                          </button>
-                          {/* Delete button - desktop only */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setConfirmDialog({
-                                isOpen: true,
-                                title: 'Delete Vendor',
-                                message: `Are you sure you want to delete "${vendor}"? This will remove the vendor from ${partCount} ${
-                                  partCount === 1 ? 'part' : 'parts'
-                                }.`,
-                                confirmText: 'Delete',
-                                onConfirm: () => deleteVendor(vendor)
-                              });
-                            }}
-                            className={`hidden sm:flex px-3 py-2 rounded-lg font-medium transition-colors items-center gap-2 text-sm ${
-                              darkMode
-                                ? 'hover:bg-red-900/50 text-red-400 border border-red-700'
-                                : 'hover:bg-red-100 text-red-600 border border-red-300'
-                            }`}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                            <span>Delete</span>
                           </button>
                         </div>
                       )}
