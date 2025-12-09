@@ -749,13 +749,13 @@ const VehicleDetailModal = ({
                               {/* Timeline dot */}
                               <div className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
                                 darkMode
-                                  ? `border-2 border-gray-600 ${selectedEventId !== event.id ? 'md:group-hover:border-orange-500' : ''}`
-                                  : `border-2 border-gray-300 ${selectedEventId !== event.id ? 'md:group-hover:border-orange-500' : ''}`
+                                  ? `border-2 border-gray-600 ${selectedEventId !== event.id ? 'can-hover:group-hover:border-orange-500' : ''}`
+                                  : `border-2 border-gray-300 ${selectedEventId !== event.id ? 'can-hover:group-hover:border-orange-500' : ''}`
                               }`}>
                                 <Wrench className={`w-4 h-4 transition-colors ${
                                   darkMode
-                                    ? `text-gray-400 ${selectedEventId !== event.id ? 'md:group-hover:text-orange-500' : ''}`
-                                    : `text-gray-500 ${selectedEventId !== event.id ? 'md:group-hover:text-orange-500' : ''}`
+                                    ? `text-gray-400 ${selectedEventId !== event.id ? 'can-hover:group-hover:text-orange-500' : ''}`
+                                    : `text-gray-500 ${selectedEventId !== event.id ? 'can-hover:group-hover:text-orange-500' : ''}`
                                 }`} />
                               </div>
                               {/* Line extending down - mb-[-16px] extends into the gap to reach next icon */}
@@ -772,15 +772,15 @@ const VehicleDetailModal = ({
                             <div className="flex-1 min-w-0 pb-0">
                               <div className={`relative rounded-lg p-3 border transition-colors ${
                                 darkMode
-                                  ? `bg-gray-700/50 border-gray-600 ${selectedEventId !== event.id ? 'md:group-hover:border-white' : ''}`
-                                  : `bg-gray-50 border-gray-200 ${selectedEventId !== event.id ? 'md:group-hover:border-gray-400' : ''}`
+                                  ? `bg-gray-700/50 border-gray-600 ${selectedEventId !== event.id ? 'can-hover:group-hover:border-white' : ''}`
+                                  : `bg-gray-50 border-gray-200 ${selectedEventId !== event.id ? 'can-hover:group-hover:border-gray-400' : ''}`
                               }`}>
                                 {/* Notes indicator */}
                                 {event.notes && (
                                   <FileText className={`absolute top-2 right-2 w-3.5 h-3.5 transition-colors ${
                                     darkMode
-                                      ? `text-gray-500 ${selectedEventId !== event.id ? 'md:group-hover:text-gray-300' : ''}`
-                                      : `text-gray-400 ${selectedEventId !== event.id ? 'md:group-hover:text-gray-600' : ''}`
+                                      ? `text-gray-500 ${selectedEventId !== event.id ? 'can-hover:group-hover:text-gray-300' : ''}`
+                                      : `text-gray-400 ${selectedEventId !== event.id ? 'can-hover:group-hover:text-gray-600' : ''}`
                                   }`} />
                                 )}
                                 <div className="flex-1 min-w-0">
@@ -836,8 +836,8 @@ const VehicleDetailModal = ({
                                     }}
                                     className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                                       darkMode
-                                        ? 'bg-gray-700 text-red-400 md:hover:ring-2 md:hover:ring-red-400'
-                                        : 'bg-white text-red-600 shadow-sm md:hover:ring-2 md:hover:ring-red-600'
+                                        ? 'bg-gray-700 text-red-400 can-hover:hover:ring-2 can-hover:hover:ring-red-400'
+                                        : 'bg-white text-red-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-red-600'
                                     }`}
                                   >
                                     <Trash2 className="w-5 h-5 mb-0.5" />
@@ -850,8 +850,8 @@ const VehicleDetailModal = ({
                                     }}
                                     className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                                       darkMode
-                                        ? 'bg-gray-700 text-blue-400 md:hover:ring-2 md:hover:ring-blue-400'
-                                        : 'bg-white text-blue-600 shadow-sm md:hover:ring-2 md:hover:ring-blue-600'
+                                        ? 'bg-gray-700 text-blue-400 can-hover:hover:ring-2 can-hover:hover:ring-blue-400'
+                                        : 'bg-white text-blue-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-blue-600'
                                     }`}
                                   >
                                     <Edit2 className="w-5 h-5 mb-0.5" />
@@ -865,8 +865,8 @@ const VehicleDetailModal = ({
                                       }}
                                       className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                                         darkMode
-                                          ? 'bg-gray-700 text-gray-300 md:hover:ring-2 md:hover:ring-gray-300'
-                                          : 'bg-white text-gray-600 shadow-sm md:hover:ring-2 md:hover:ring-gray-600'
+                                          ? 'bg-gray-700 text-gray-300 can-hover:hover:ring-2 can-hover:hover:ring-gray-300'
+                                          : 'bg-white text-gray-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-gray-600'
                                       }`}
                                     >
                                       <BookOpen className="w-5 h-5 mb-0.5" />
@@ -890,11 +890,11 @@ const VehicleDetailModal = ({
                           {/* Timeline dot for add card - with background to cover line */}
                           <div className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border-2 border-dashed ${
                             darkMode
-                              ? 'bg-gray-800 border-gray-600 md:group-hover:border-blue-500'
-                              : 'bg-slate-200 border-gray-300 md:group-hover:border-blue-500'
+                              ? 'bg-gray-800 border-gray-600 can-hover:group-hover:border-blue-500'
+                              : 'bg-slate-200 border-gray-300 can-hover:group-hover:border-blue-500'
                           } transition-colors`}>
                             <Plus className={`w-4 h-4 ${
-                              darkMode ? 'text-gray-500 md:group-hover:text-blue-400' : 'text-gray-400 md:group-hover:text-blue-600'
+                              darkMode ? 'text-gray-500 can-hover:group-hover:text-blue-400' : 'text-gray-400 can-hover:group-hover:text-blue-600'
                             } transition-colors`} />
                           </div>
                         </div>
@@ -902,11 +902,11 @@ const VehicleDetailModal = ({
                         {/* Add card content */}
                         <div className={`flex-1 rounded-lg p-3 border-2 border-dashed transition-all ${
                           darkMode
-                            ? 'border-gray-600 md:group-hover:border-blue-500 md:group-hover:bg-gray-700/30'
-                            : 'border-gray-300 md:group-hover:border-blue-500 md:group-hover:bg-blue-50/30'
+                            ? 'border-gray-600 can-hover:group-hover:border-blue-500 can-hover:group-hover:bg-gray-700/30'
+                            : 'border-gray-300 can-hover:group-hover:border-blue-500 can-hover:group-hover:bg-blue-50/30'
                         }`}>
                           <p className={`text-sm font-medium ${
-                            darkMode ? 'text-gray-400 md:group-hover:text-gray-200' : 'text-gray-500 md:group-hover:text-gray-700'
+                            darkMode ? 'text-gray-400 can-hover:group-hover:text-gray-200' : 'text-gray-500 can-hover:group-hover:text-gray-700'
                           } transition-colors`}>
                             Add service event
                           </p>
@@ -1091,8 +1091,8 @@ const VehicleDetailModal = ({
                         key={doc.id}
                         className={`group relative rounded-lg p-3 border cursor-pointer transition-colors ${
                           darkMode
-                            ? `bg-gray-700 border-gray-600 ${selectedDocId !== doc.id ? 'md:hover:border-white' : ''}`
-                            : `bg-gray-50 border-gray-200 ${selectedDocId !== doc.id ? 'md:hover:border-gray-400' : ''}`
+                            ? `bg-gray-700 border-gray-600 ${selectedDocId !== doc.id ? 'can-hover:hover:border-white' : ''}`
+                            : `bg-gray-50 border-gray-200 ${selectedDocId !== doc.id ? 'can-hover:hover:border-gray-400' : ''}`
                         }`}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -1102,8 +1102,8 @@ const VehicleDetailModal = ({
                         <div className="flex items-start gap-2">
                           <FileText className={`w-8 h-8 flex-shrink-0 transition-colors ${
                             darkMode
-                              ? `text-blue-400 ${selectedDocId !== doc.id ? 'md:group-hover:text-blue-300' : ''}`
-                              : `text-blue-600 ${selectedDocId !== doc.id ? 'md:group-hover:text-blue-700' : ''}`
+                              ? `text-blue-400 ${selectedDocId !== doc.id ? 'can-hover:group-hover:text-blue-300' : ''}`
+                              : `text-blue-600 ${selectedDocId !== doc.id ? 'can-hover:group-hover:text-blue-700' : ''}`
                           }`} />
                           <div className="flex-1 min-w-0">
                             <p className={`text-sm font-medium line-clamp-2 md:truncate ${
@@ -1141,8 +1141,8 @@ const VehicleDetailModal = ({
                             }}
                             className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                               darkMode
-                                ? 'bg-gray-700 text-red-400 md:hover:ring-2 md:hover:ring-red-400'
-                                : 'bg-white text-red-600 shadow-sm md:hover:ring-2 md:hover:ring-red-600'
+                                ? 'bg-gray-700 text-red-400 can-hover:hover:ring-2 can-hover:hover:ring-red-400'
+                                : 'bg-white text-red-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-red-600'
                             }`}
                           >
                             <Trash2 className="w-5 h-5 mb-0.5" />
@@ -1155,8 +1155,8 @@ const VehicleDetailModal = ({
                             }}
                             className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                               darkMode
-                                ? 'bg-gray-700 text-blue-400 md:hover:ring-2 md:hover:ring-blue-400'
-                                : 'bg-white text-blue-600 shadow-sm md:hover:ring-2 md:hover:ring-blue-600'
+                                ? 'bg-gray-700 text-blue-400 can-hover:hover:ring-2 can-hover:hover:ring-blue-400'
+                                : 'bg-white text-blue-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-blue-600'
                             }`}
                           >
                             <ExternalLink className="w-5 h-5 mb-0.5" />
@@ -1168,19 +1168,19 @@ const VehicleDetailModal = ({
                     {/* Add new document card */}
                     <div
                       onClick={() => setShowAddDocumentModal(true)}
-                      className={`group relative rounded-lg p-3 border-2 border-dashed transition-all cursor-pointer md:hover:shadow-md ${
+                      className={`group relative rounded-lg p-3 border-2 border-dashed transition-all cursor-pointer can-hover:hover:shadow-md ${
                         darkMode
-                          ? 'border-gray-600 md:hover:border-blue-500 md:hover:bg-gray-700/50'
-                          : 'border-gray-300 md:hover:border-blue-500 md:hover:bg-blue-50/50'
+                          ? 'border-gray-600 can-hover:hover:border-blue-500 can-hover:hover:bg-gray-700/50'
+                          : 'border-gray-300 can-hover:hover:border-blue-500 can-hover:hover:bg-blue-50/50'
                       }`}
                     >
                       <div className="flex items-start gap-2">
                         <Plus className={`w-8 h-8 flex-shrink-0 ${
-                          darkMode ? 'text-gray-500 md:group-hover:text-blue-400' : 'text-gray-400 md:group-hover:text-blue-600'
+                          darkMode ? 'text-gray-500 can-hover:group-hover:text-blue-400' : 'text-gray-400 can-hover:group-hover:text-blue-600'
                         } transition-colors`} />
                         <div className="flex-1 min-w-0">
                           <p className={`text-sm font-medium ${
-                            darkMode ? 'text-gray-400 md:group-hover:text-gray-200' : 'text-gray-500 md:group-hover:text-gray-700'
+                            darkMode ? 'text-gray-400 can-hover:group-hover:text-gray-200' : 'text-gray-500 can-hover:group-hover:text-gray-700'
                           } transition-colors`}>
                             Add document
                           </p>
@@ -1251,7 +1251,7 @@ const VehicleDetailModal = ({
                                 e.stopPropagation();
                                 setVehicleModalProjectView(project);
                               }}
-                              className={`flex flex-col rounded-lg p-4 border-l-4 text-left transition-all duration-200 cursor-pointer md:hover:shadow-2xl md:hover:scale-[1.03] ${
+                              className={`flex flex-col rounded-lg p-4 border-l-4 text-left transition-all duration-200 cursor-pointer can-hover:hover:shadow-2xl can-hover:hover:scale-[1.03] ${
                                 darkMode ? 'bg-gray-700' : 'bg-gray-50'
                               }`}
                               style={{ borderLeftColor: getPriorityBorderColor(project.priority) }}

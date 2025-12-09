@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -8,5 +10,11 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    // Custom variant for hover-capable devices (mouse, trackpad, stylus)
+    // Uses any-hover so USB mouse connected to touch device will enable hover
+    plugin(function({ addVariant }) {
+      addVariant('can-hover', '@media (any-hover: hover)');
+    }),
+  ],
 }
