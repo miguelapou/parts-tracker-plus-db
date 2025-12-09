@@ -423,7 +423,8 @@ const PartDetailModal = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, partDetailView, hasPrev, hasNext, goToPrevPart, goToNextPart]);
 
-  if (!isOpen || !viewingPart) return null;
+  // Keep modal mounted during closing animation
+  if ((!isOpen && !isModalClosing) || !viewingPart) return null;
 
   return (
     <div

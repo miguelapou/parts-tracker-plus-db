@@ -27,7 +27,8 @@ const ManageVendorsModal = ({
   // Ref for color inputs to trigger programmatically
   const colorInputRefs = useRef({});
 
-  if (!isOpen) return null;
+  // Keep modal mounted during closing animation
+  if (!isOpen && !isModalClosing) return null;
 
   return (
     <div

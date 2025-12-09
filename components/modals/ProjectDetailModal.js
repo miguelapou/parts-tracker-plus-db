@@ -119,7 +119,8 @@ const ProjectDetailModal = ({
     touchEndRef.current = null;
   };
 
-  if (!isOpen || !viewingProject) {
+  // Keep modal mounted during closing animation
+  if ((!isOpen && !isModalClosing) || !viewingProject) {
     return null;
   }
 
