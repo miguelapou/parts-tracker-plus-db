@@ -188,21 +188,6 @@ const ManageVendorsModal = ({
                             className="absolute opacity-0 pointer-events-none"
                             style={{ width: 0, height: 0 }}
                           />
-                          {/* Palette button */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              colorInputRefs.current[vendor]?.click();
-                            }}
-                            className={`p-2 sm:px-3 sm:py-2 rounded-lg transition-colors flex items-center ${
-                              darkMode
-                                ? 'hover:bg-gray-600 text-gray-400 hover:text-gray-200'
-                                : 'hover:bg-gray-200 text-gray-500 hover:text-gray-700'
-                            }`}
-                            title="Choose vendor color"
-                          >
-                            <Palette className="w-4 h-4" />
-                          </button>
                           {/* Delete button - desktop only */}
                           <button
                             onClick={(e) => {
@@ -225,6 +210,21 @@ const ManageVendorsModal = ({
                             title="Delete vendor"
                           >
                             <Trash2 className="w-4 h-4" />
+                          </button>
+                          {/* Palette button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              colorInputRefs.current[vendor]?.click();
+                            }}
+                            className={`p-2 sm:px-3 sm:py-2 rounded-lg transition-colors flex items-center ${
+                              darkMode
+                                ? 'hover:bg-gray-600 text-gray-400 hover:text-gray-200'
+                                : 'hover:bg-gray-200 text-gray-500 hover:text-gray-700'
+                            }`}
+                            title="Choose vendor color"
+                          >
+                            <Palette className="w-4 h-4" />
                           </button>
                           {/* Edit button */}
                           <button
