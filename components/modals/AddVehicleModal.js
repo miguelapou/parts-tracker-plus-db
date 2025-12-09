@@ -26,7 +26,8 @@ const AddVehicleModal = ({
 }) => {
   const { toast } = useUI();
 
-  if (!isOpen) {
+  // Keep modal mounted during closing animation
+  if (!isOpen && !isModalClosing) {
     return null;
   }
 

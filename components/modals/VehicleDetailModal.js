@@ -213,7 +213,8 @@ const VehicleDetailModal = ({
     }
   };
 
-  if (!isOpen || !viewingVehicle) return null;
+  // Keep modal mounted during closing animation
+  if ((!isOpen && !isModalClosing) || !viewingVehicle) return null;
 
   return (
     <div

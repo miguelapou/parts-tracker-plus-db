@@ -28,7 +28,8 @@ const AddProjectModal = ({
     }, 150);
   }, [setShowAddProjectVehicleDropdown]);
 
-  if (!isOpen) return null;
+  // Keep modal mounted during closing animation
+  if (!isOpen && !isModalClosing) return null;
 
   const handleVehicleDropdownToggle = (e) => {
     e.stopPropagation();
