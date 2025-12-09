@@ -799,10 +799,10 @@ const VehicleDetailModal = ({
                                         onConfirm: () => deleteServiceEvent(event.id)
                                       });
                                     }}
-                                    className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-colors ${
+                                    className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                                       darkMode
-                                        ? 'bg-gray-700 text-red-400 hover:text-red-300'
-                                        : 'bg-white text-red-600 shadow-sm hover:text-red-700'
+                                        ? 'bg-gray-700 text-red-400 hover:ring-2 hover:ring-red-400'
+                                        : 'bg-white text-red-600 shadow-sm hover:ring-2 hover:ring-red-600'
                                     }`}
                                   >
                                     <Trash2 className="w-5 h-5 mb-0.5" />
@@ -813,10 +813,10 @@ const VehicleDetailModal = ({
                                       setSelectedEventId(null);
                                       openEditServiceEventModal(event);
                                     }}
-                                    className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-colors ${
+                                    className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                                       darkMode
-                                        ? 'bg-gray-700 text-blue-400 hover:text-blue-300'
-                                        : 'bg-white text-blue-600 shadow-sm hover:text-blue-700'
+                                        ? 'bg-gray-700 text-blue-400 hover:ring-2 hover:ring-blue-400'
+                                        : 'bg-white text-blue-600 shadow-sm hover:ring-2 hover:ring-blue-600'
                                     }`}
                                   >
                                     <Edit2 className="w-5 h-5 mb-0.5" />
@@ -828,10 +828,10 @@ const VehicleDetailModal = ({
                                         setSelectedEventId(null);
                                         setViewingNoteEvent(event);
                                       }}
-                                      className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-colors ${
+                                      className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                                         darkMode
-                                          ? 'bg-gray-700 text-gray-300 hover:text-white'
-                                          : 'bg-white text-gray-600 shadow-sm hover:text-gray-800'
+                                          ? 'bg-gray-700 text-gray-300 hover:ring-2 hover:ring-gray-300'
+                                          : 'bg-white text-gray-600 shadow-sm hover:ring-2 hover:ring-gray-600'
                                       }`}
                                     >
                                       <BookOpen className="w-5 h-5 mb-0.5" />
