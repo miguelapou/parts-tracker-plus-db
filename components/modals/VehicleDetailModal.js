@@ -24,7 +24,7 @@ import {
   Calendar,
   ListChecks,
   FileDown,
-  Eye
+  BookOpen
 } from 'lucide-react';
 import ProjectDetailView from '../ui/ProjectDetailView';
 import ProjectEditForm from '../ui/ProjectEditForm';
@@ -477,7 +477,10 @@ const VehicleDetailModal = ({
                 : 'relative opacity-100'
             }`}
           >
-            <div className="p-6 pb-12 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto animate-fade-in">
+            <div
+              key={viewingVehicle.id}
+              className="p-6 pb-12 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto animate-fade-in"
+            >
               {/* Top Section: Image and Basic Info side by side */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Basic Info Card - Half width on desktop, two column layout - appears second on mobile */}
@@ -679,6 +682,28 @@ const VehicleDetailModal = ({
                     Service History ({serviceEvents?.length || 0})
                   </h3>
                 </div>
+                {loadingServiceEvents ? (
+                  <div className="flex flex-col gap-4">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="flex items-stretch gap-4 animate-pulse">
+                        <div className="flex flex-col items-center">
+                          <div className={`w-10 h-10 rounded-full border-2 ${
+                            darkMode ? 'border-gray-600' : 'border-gray-300'
+                          }`} />
+                          <div className={`flex-1 w-0.5 -mb-4 ${
+                            darkMode ? 'bg-gray-600' : 'bg-gray-300'
+                          }`} />
+                        </div>
+                        <div className={`flex-1 rounded-lg p-3 border ${
+                          darkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'
+                        }`}>
+                          <div className={`h-4 w-3/4 rounded mb-2 ${darkMode ? 'bg-gray-600' : 'bg-gray-300'}`} />
+                          <div className={`h-3 w-1/2 rounded ${darkMode ? 'bg-gray-600' : 'bg-gray-300'}`} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
                 <div className="relative" onClick={() => setSelectedEventId(null)}>
                     {/* Timeline items */}
                     <div className="flex flex-col gap-4">
@@ -718,10 +743,14 @@ const VehicleDetailModal = ({
                             <div className="relative flex flex-col items-center">
                               {/* Timeline dot */}
                               <div className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                                darkMode ? 'bg-gray-700 border-2 border-gray-600 md:group-hover:border-white' : 'bg-white border-2 border-gray-300 md:group-hover:border-gray-400'
+                                darkMode
+                                  ? `border-2 border-gray-600 ${selectedEventId !== event.id ? 'md:group-hover:border-orange-500' : ''}`
+                                  : `border-2 border-gray-300 ${selectedEventId !== event.id ? 'md:group-hover:border-orange-500' : ''}`
                               }`}>
-                                <Wrench className={`w-4 h-4 ${
-                                  darkMode ? 'text-gray-400' : 'text-gray-500'
+                                <Wrench className={`w-4 h-4 transition-colors ${
+                                  darkMode
+                                    ? `text-gray-400 ${selectedEventId !== event.id ? 'md:group-hover:text-orange-500' : ''}`
+                                    : `text-gray-500 ${selectedEventId !== event.id ? 'md:group-hover:text-orange-500' : ''}`
                                 }`} />
                               </div>
                               {/* Line extending down - mb-[-16px] extends into the gap to reach next icon */}
@@ -738,13 +767,15 @@ const VehicleDetailModal = ({
                             <div className="flex-1 min-w-0 pb-0">
                               <div className={`relative rounded-lg p-3 border transition-colors ${
                                 darkMode
-                                  ? 'bg-gray-700/50 border-gray-600 md:hover:border-white'
-                                  : 'bg-gray-50 border-gray-200 md:hover:border-gray-400'
+                                  ? `bg-gray-700/50 border-gray-600 ${selectedEventId !== event.id ? 'md:group-hover:border-white' : ''}`
+                                  : `bg-gray-50 border-gray-200 ${selectedEventId !== event.id ? 'md:group-hover:border-gray-400' : ''}`
                               }`}>
                                 {/* Notes indicator */}
                                 {event.notes && (
                                   <FileText className={`absolute top-2 right-2 w-3.5 h-3.5 transition-colors ${
-                                    darkMode ? 'text-gray-500 md:group-hover:text-gray-300' : 'text-gray-400 md:group-hover:text-gray-600'
+                                    darkMode
+                                      ? `text-gray-500 ${selectedEventId !== event.id ? 'md:group-hover:text-gray-300' : ''}`
+                                      : `text-gray-400 ${selectedEventId !== event.id ? 'md:group-hover:text-gray-600' : ''}`
                                   }`} />
                                 )}
                                 <div className="flex-1 min-w-0">
@@ -782,38 +813,11 @@ const VehicleDetailModal = ({
                                   className={`absolute inset-0 rounded-lg flex items-center justify-center gap-3 transition-opacity duration-150 ${
                                     selectedEventId === event.id ? 'opacity-100' : 'opacity-0 pointer-events-none'
                                   } ${darkMode ? 'bg-gray-800/95' : 'bg-gray-100/95'}`}
-                                  onClick={(e) => e.stopPropagation()}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedEventId(null);
+                                  }}
                                 >
-                                  {event.notes && (
-                                    <button
-                                      onClick={() => {
-                                        setSelectedEventId(null);
-                                        setViewingNoteEvent(event);
-                                      }}
-                                      className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-colors ${
-                                        darkMode
-                                          ? 'bg-gray-700 text-gray-300'
-                                          : 'bg-white text-gray-600 shadow-sm'
-                                      }`}
-                                    >
-                                      <Eye className="w-5 h-5 mb-0.5" />
-                                      <span className="text-[10px] font-medium">Notes</span>
-                                    </button>
-                                  )}
-                                  <button
-                                    onClick={() => {
-                                      setSelectedEventId(null);
-                                      openEditServiceEventModal(event);
-                                    }}
-                                    className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-colors ${
-                                      darkMode
-                                        ? 'bg-gray-700 text-blue-400'
-                                        : 'bg-white text-blue-600 shadow-sm'
-                                    }`}
-                                  >
-                                    <Edit2 className="w-5 h-5 mb-0.5" />
-                                    <span className="text-[10px] font-medium">Edit</span>
-                                  </button>
                                   <button
                                     onClick={() => {
                                       setSelectedEventId(null);
@@ -825,15 +829,45 @@ const VehicleDetailModal = ({
                                         onConfirm: () => deleteServiceEvent(event.id)
                                       });
                                     }}
-                                    className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-colors ${
+                                    className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                                       darkMode
-                                        ? 'bg-gray-700 text-red-400'
-                                        : 'bg-white text-red-600 shadow-sm'
+                                        ? 'bg-gray-700 text-red-400 hover:ring-2 hover:ring-red-400'
+                                        : 'bg-white text-red-600 shadow-sm hover:ring-2 hover:ring-red-600'
                                     }`}
                                   >
                                     <Trash2 className="w-5 h-5 mb-0.5" />
                                     <span className="text-[10px] font-medium">Delete</span>
                                   </button>
+                                  <button
+                                    onClick={() => {
+                                      setSelectedEventId(null);
+                                      openEditServiceEventModal(event);
+                                    }}
+                                    className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
+                                      darkMode
+                                        ? 'bg-gray-700 text-blue-400 hover:ring-2 hover:ring-blue-400'
+                                        : 'bg-white text-blue-600 shadow-sm hover:ring-2 hover:ring-blue-600'
+                                    }`}
+                                  >
+                                    <Edit2 className="w-5 h-5 mb-0.5" />
+                                    <span className="text-[10px] font-medium">Edit</span>
+                                  </button>
+                                  {event.notes && (
+                                    <button
+                                      onClick={() => {
+                                        setSelectedEventId(null);
+                                        setViewingNoteEvent(event);
+                                      }}
+                                      className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
+                                        darkMode
+                                          ? 'bg-gray-700 text-gray-300 hover:ring-2 hover:ring-gray-300'
+                                          : 'bg-white text-gray-600 shadow-sm hover:ring-2 hover:ring-gray-600'
+                                      }`}
+                                    >
+                                      <BookOpen className="w-5 h-5 mb-0.5" />
+                                      <span className="text-[10px] font-medium">Notes</span>
+                                    </button>
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -880,6 +914,7 @@ const VehicleDetailModal = ({
                       </div>
                     </div>
                   </div>
+                )}
 
                 {/* Add Service Event Modal */}
                 <AddServiceEventModal
@@ -1044,10 +1079,23 @@ const VehicleDetailModal = ({
                   </h3>
                 </div>
                 {loadingDocuments ? (
-                  <div className={`text-center py-8 ${
-                    darkMode ? 'text-gray-400' : 'text-gray-500'
-                  }`}>
-                    Loading documents...
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {[...Array(4)].map((_, i) => (
+                      <div
+                        key={i}
+                        className={`rounded-lg p-3 border animate-pulse ${
+                          darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                        }`}
+                      >
+                        <div className="flex items-start gap-2">
+                          <div className={`w-8 h-8 rounded ${darkMode ? 'bg-gray-600' : 'bg-gray-300'}`} />
+                          <div className="flex-1 min-w-0 space-y-2">
+                            <div className={`h-4 rounded ${darkMode ? 'bg-gray-600' : 'bg-gray-300'}`} />
+                            <div className={`h-3 w-2/3 rounded ${darkMode ? 'bg-gray-600' : 'bg-gray-300'}`} />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 ) : (
                   <div
@@ -1059,8 +1107,8 @@ const VehicleDetailModal = ({
                         key={doc.id}
                         className={`group relative rounded-lg p-3 border cursor-pointer transition-colors ${
                           darkMode
-                            ? 'bg-gray-700 border-gray-600 md:hover:border-white'
-                            : 'bg-gray-50 border-gray-200 md:hover:border-gray-400'
+                            ? `bg-gray-700 border-gray-600 ${selectedDocId !== doc.id ? 'md:hover:border-white' : ''}`
+                            : `bg-gray-50 border-gray-200 ${selectedDocId !== doc.id ? 'md:hover:border-gray-400' : ''}`
                         }`}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -1069,7 +1117,9 @@ const VehicleDetailModal = ({
                       >
                         <div className="flex items-start gap-2">
                           <FileText className={`w-8 h-8 flex-shrink-0 transition-colors ${
-                            darkMode ? 'text-blue-400 md:group-hover:text-blue-300' : 'text-blue-600 md:group-hover:text-blue-700'
+                            darkMode
+                              ? `text-blue-400 ${selectedDocId !== doc.id ? 'md:group-hover:text-blue-300' : ''}`
+                              : `text-blue-600 ${selectedDocId !== doc.id ? 'md:group-hover:text-blue-700' : ''}`
                           }`} />
                           <div className="flex-1 min-w-0">
                             <p className={`text-sm font-medium line-clamp-2 md:truncate ${
@@ -1086,25 +1136,14 @@ const VehicleDetailModal = ({
                         </div>
                         {/* Action overlay with fade animation */}
                         <div
-                          className={`absolute inset-0 rounded-lg flex items-center justify-center gap-4 transition-opacity duration-150 ${
+                          className={`absolute inset-0 rounded-lg flex items-center justify-center gap-3 transition-opacity duration-150 ${
                             selectedDocId === doc.id ? 'opacity-100' : 'opacity-0 pointer-events-none'
                           } ${darkMode ? 'bg-gray-800/95' : 'bg-gray-100/95'}`}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedDocId(null);
+                          }}
                         >
-                          <button
-                            onClick={() => {
-                              openDocument(doc);
-                              setSelectedDocId(null);
-                            }}
-                            className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-colors ${
-                              darkMode
-                                ? 'bg-gray-700 text-blue-400'
-                                : 'bg-white text-blue-600 shadow-sm'
-                            }`}
-                          >
-                            <ExternalLink className="w-5 h-5 mb-0.5" />
-                            <span className="text-[10px] font-medium">Open</span>
-                          </button>
                           <button
                             onClick={() => {
                               setSelectedDocId(null);
@@ -1116,14 +1155,28 @@ const VehicleDetailModal = ({
                                 onConfirm: () => deleteDocument(doc.id, doc.file_url)
                               });
                             }}
-                            className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-colors ${
+                            className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                               darkMode
-                                ? 'bg-gray-700 text-red-400'
-                                : 'bg-white text-red-600 shadow-sm'
+                                ? 'bg-gray-700 text-red-400 hover:ring-2 hover:ring-red-400'
+                                : 'bg-white text-red-600 shadow-sm hover:ring-2 hover:ring-red-600'
                             }`}
                           >
                             <Trash2 className="w-5 h-5 mb-0.5" />
                             <span className="text-[10px] font-medium">Delete</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              openDocument(doc);
+                              setSelectedDocId(null);
+                            }}
+                            className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
+                              darkMode
+                                ? 'bg-gray-700 text-blue-400 hover:ring-2 hover:ring-blue-400'
+                                : 'bg-white text-blue-600 shadow-sm hover:ring-2 hover:ring-blue-600'
+                            }`}
+                          >
+                            <ExternalLink className="w-5 h-5 mb-0.5" />
+                            <span className="text-[10px] font-medium">Open</span>
                           </button>
                         </div>
                       </div>
