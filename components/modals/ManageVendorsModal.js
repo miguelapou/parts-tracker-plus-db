@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Package, Edit2, Trash2, Check } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { X, Package, Edit2, Trash2, Check, Palette } from 'lucide-react';
 import PrimaryButton from '../ui/PrimaryButton';
 import {
   getVendorColor,
@@ -24,6 +24,8 @@ const ManageVendorsModal = ({
 }) => {
   // State for tracking which vendor card has overlay visible (mobile only)
   const [selectedVendor, setSelectedVendor] = useState(null);
+  // Ref for color inputs to trigger programmatically
+  const colorInputRefs = useRef({});
 
   if (!isOpen) return null;
 
@@ -137,127 +139,138 @@ const ManageVendorsModal = ({
                           <span className="w-4 text-right">{partCount}</span>
                           <Package className="w-3.5 h-3.5" />
                         </span>
-                        {isEditing ? (
-                          <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <input
-                              type="text"
-                              value={editingVendor.newName}
-                              onChange={(e) =>
-                                setEditingVendor({
-                                  ...editingVendor,
-                                  newName: e.target.value
-                                })
-                              }
-                              onBlur={() => setEditingVendor(null)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter' && editingVendor.newName.trim()) {
-                                  if (editingVendor.newName !== vendor) {
-                                    renameVendor(vendor, editingVendor.newName);
-                                  }
-                                  setEditingVendor(null);
-                                } else if (e.key === 'Escape') {
-                                  setEditingVendor(null);
+                        {/* Vendor badge - fades out when editing */}
+                        <div className={`transition-opacity duration-150 ${isEditing ? 'opacity-0 absolute' : 'opacity-100'}`}>
+                          {vendorColors[vendor] ? (
+                            (() => {
+                              const colors = getVendorDisplayColor(
+                                vendorColors[vendor],
+                                darkMode
+                              );
+                              return (
+                                <span
+                                  className="inline-block px-3 py-1 rounded-full text-sm font-medium border"
+                                  style={{
+                                    backgroundColor: colors.bg,
+                                    color: colors.text,
+                                    borderColor: colors.border
+                                  }}
+                                >
+                                  {vendor}
+                                </span>
+                              );
+                            })()
+                          ) : (
+                            <span
+                              className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getVendorColor(
+                                vendor,
+                                vendorColors
+                              )}`}
+                            >
+                              {vendor}
+                            </span>
+                          )}
+                        </div>
+                        {/* Edit input - fades in when editing */}
+                        <div className={`flex items-center gap-2 flex-1 min-w-0 transition-opacity duration-150 ${isEditing ? 'opacity-100' : 'opacity-0 absolute pointer-events-none'}`}>
+                          <input
+                            type="text"
+                            value={isEditing ? editingVendor.newName : ''}
+                            onChange={(e) =>
+                              setEditingVendor({
+                                ...editingVendor,
+                                newName: e.target.value
+                              })
+                            }
+                            onBlur={() => setEditingVendor(null)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && editingVendor?.newName?.trim()) {
+                                if (editingVendor.newName !== vendor) {
+                                  renameVendor(vendor, editingVendor.newName);
                                 }
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                              className={`flex-1 min-w-0 max-w-[120px] sm:max-w-[200px] px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                                darkMode
-                                  ? 'bg-gray-800 border-gray-600 text-gray-100'
-                                  : 'bg-slate-50 border-slate-300 text-slate-800'
-                              }`}
-                              autoFocus
-                            />
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                renameVendor(vendor, editingVendor.newName);
                                 setEditingVendor(null);
-                              }}
-                              disabled={
-                                !editingVendor.newName.trim() ||
-                                editingVendor.newName === vendor
+                              } else if (e.key === 'Escape') {
+                                setEditingVendor(null);
                               }
-                              className={`p-2 rounded-lg transition-colors ${
-                                !editingVendor.newName.trim() ||
-                                editingVendor.newName === vendor
-                                  ? darkMode
-                                    ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                  : darkMode
-                                    ? 'bg-green-900/30 hover:bg-green-900/50 text-green-400'
-                                    : 'bg-green-50 hover:bg-green-100 text-green-600'
-                              }`}
-                            >
-                              <Check className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setEditingVendor(null);
-                              }}
-                              className={`p-2 rounded-lg transition-colors ${
-                                darkMode
-                                  ? 'bg-gray-800 hover:bg-gray-700 text-gray-400'
-                                  : 'bg-gray-200 hover:bg-gray-300 text-gray-600'
-                              }`}
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </div>
-                        ) : (
-                          <>
-                            {vendorColors[vendor] ? (
-                              (() => {
-                                const colors = getVendorDisplayColor(
-                                  vendorColors[vendor],
-                                  darkMode
-                                );
-                                return (
-                                  <span
-                                    className="inline-block px-3 py-1 rounded-full text-sm font-medium border"
-                                    style={{
-                                      backgroundColor: colors.bg,
-                                      color: colors.text,
-                                      borderColor: colors.border
-                                    }}
-                                  >
-                                    {vendor}
-                                  </span>
-                                );
-                              })()
-                            ) : (
-                              <span
-                                className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getVendorColor(
-                                  vendor,
-                                  vendorColors
-                                )}`}
-                              >
-                                {vendor}
-                              </span>
-                            )}
-                          </>
-                        )}
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                            className={`flex-1 min-w-0 max-w-[120px] sm:max-w-[200px] px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                              darkMode
+                                ? 'bg-gray-800 border-gray-600 text-gray-100'
+                                : 'bg-slate-50 border-slate-300 text-slate-800'
+                            }`}
+                            autoFocus={isEditing}
+                          />
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (editingVendor?.newName?.trim()) {
+                                renameVendor(vendor, editingVendor.newName);
+                              }
+                              setEditingVendor(null);
+                            }}
+                            disabled={
+                              !editingVendor?.newName?.trim() ||
+                              editingVendor?.newName === vendor
+                            }
+                            className={`p-2 rounded-lg transition-colors ${
+                              !editingVendor?.newName?.trim() ||
+                              editingVendor?.newName === vendor
+                                ? darkMode
+                                  ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                : darkMode
+                                  ? 'bg-green-900/30 hover:bg-green-900/50 text-green-400'
+                                  : 'bg-green-50 hover:bg-green-100 text-green-600'
+                            }`}
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingVendor(null);
+                            }}
+                            className={`p-2 rounded-lg transition-colors ${
+                              darkMode
+                                ? 'bg-gray-800 hover:bg-gray-700 text-gray-400'
+                                : 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                            }`}
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
 
                       {/* Inline buttons - color and edit on all sizes, delete only on desktop */}
                       {!isEditing && (
                         <div className="flex items-center gap-2">
+                          {/* Hidden color input */}
                           <input
                             type="color"
+                            ref={(el) => (colorInputRefs.current[vendor] = el)}
                             value={vendorColors[vendor] || '#6B7280'}
                             onChange={(e) => {
                               updateVendorColor(vendor, e.target.value);
                             }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="w-8 h-8 sm:w-10 sm:h-10 rounded border cursor-pointer"
-                            style={{
-                              backgroundColor: 'transparent',
-                              border: `2px solid ${
-                                darkMode ? '#4B5563' : '#D1D5DB'
-                              }`
-                            }}
-                            title="Choose vendor color"
+                            className="absolute opacity-0 pointer-events-none"
+                            style={{ width: 0, height: 0 }}
                           />
+                          {/* Palette button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              colorInputRefs.current[vendor]?.click();
+                            }}
+                            className={`p-2 rounded-lg transition-colors ${
+                              darkMode
+                                ? 'hover:bg-gray-600 text-gray-400 hover:text-gray-200'
+                                : 'hover:bg-gray-200 text-gray-500 hover:text-gray-700'
+                            }`}
+                            title="Choose vendor color"
+                          >
+                            <Palette className="w-4 h-4" />
+                          </button>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
