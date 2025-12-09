@@ -57,7 +57,9 @@ export const DocumentProvider = ({ children, userId, toast }) => {
         setDocuments([]);
       }
     } catch (error) {
-      setDocuments([]);
+      // Don't clear documents on error - preserve existing state
+      // This prevents documents from disappearing due to temporary network issues
+      console.error('Failed to load documents:', error);
     } finally {
       setLoadingDocuments(false);
     }
