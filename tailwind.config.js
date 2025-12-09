@@ -12,9 +12,10 @@ module.exports = {
   },
   plugins: [
     // Custom variant for hover-capable devices (mouse, trackpad, stylus)
-    // Uses any-hover so USB mouse connected to touch device will enable hover
+    // Uses (hover: hover) to check if PRIMARY input supports hover
+    // iPadOS reports any-hover:hover even without mouse, so we check primary input instead
     plugin(function({ addVariant }) {
-      addVariant('can-hover', '@media (any-hover: hover)');
+      addVariant('can-hover', '@media (hover: hover)');
     }),
   ],
 }
