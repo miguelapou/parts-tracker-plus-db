@@ -1269,8 +1269,8 @@ const PartsTab = ({
                     </td>
                   </tr>
                 ))}
-                {/* Empty rows to maintain consistent height on last page */}
-                {totalPages > 1 && paginatedParts.length < rowsPerPage && Array.from({ length: rowsPerPage - paginatedParts.length }).map((_, index) => (
+                {/* Empty rows to maintain consistent height and keep divider lines visible */}
+                {totalPages > 1 && Array.from({ length: rowsPerPage - paginatedParts.length }).map((_, index) => (
                   <tr key={`empty-${index}`} className="h-[63px] empty-row">
                     <td className="px-6 py-4"></td>
                     <td className="px-3 py-4"></td>
