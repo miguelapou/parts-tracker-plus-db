@@ -175,7 +175,6 @@ input[type="number"] {
 @keyframes tableFadeOnly {
   0% {
     opacity: 0;
-    border-color: transparent;
   }
   100% {
     opacity: 1;
@@ -297,11 +296,6 @@ input[type="number"] {
 /* Status Filtering Animation */
 .table-status-filtering tbody tr:not(.empty-row) {
   animation: tableFadeOnly 0.6s ease-in;
-}
-
-/* Hide divider lines on empty placeholder rows */
-.empty-row {
-  border-color: transparent !important;
 }
 
 /* Mobile Card Status Filtering */
