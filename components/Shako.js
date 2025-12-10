@@ -941,6 +941,7 @@ const Shako = () => {
       <style>{`
         /* Reserve scrollbar space to prevent layout shift */
         html {
+          overflow-y: scroll;
           scrollbar-gutter: stable;
         }
 
