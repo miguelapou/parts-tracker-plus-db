@@ -463,6 +463,25 @@ const PartDetailModal = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, partDetailView, hasPrev, hasNext, goToPrevPart, goToNextPart]);
 
+  // Sync viewingPart with parts array when it changes (e.g., after tracking modal saves)
+  useEffect(() => {
+    if (!isOpen || !viewingPart?.id || !parts) return;
+
+    const updatedPart = parts.find(p => p.id === viewingPart.id);
+    if (updatedPart) {
+      // Check if shipped/delivered/purchased status changed
+      const statusChanged =
+        updatedPart.shipped !== viewingPart.shipped ||
+        updatedPart.delivered !== viewingPart.delivered ||
+        updatedPart.purchased !== viewingPart.purchased ||
+        updatedPart.tracking !== viewingPart.tracking;
+
+      if (statusChanged) {
+        setViewingPart(updatedPart);
+      }
+    }
+  }, [isOpen, parts, viewingPart?.id]);
+
   // Keep modal mounted during closing animation only if THIS modal was open
   // Reset wasOpen when modal finishes closing
   if (!isOpen && !isModalClosing) {
