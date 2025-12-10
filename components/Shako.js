@@ -1432,7 +1432,12 @@ const Shako = () => {
               {/* Vehicle Layout Toggle - only visible on vehicles tab */}
               {activeTab === 'vehicles' && (
                 <div
-                  className={`dropdown-fade-in relative flex items-center rounded-lg border ${
+                  onClick={() => {
+                    const newMode = vehicleLayoutMode === 'default' ? 'compact' : 'default';
+                    setVehicleLayoutMode(newMode);
+                    localStorage.setItem('vehicleLayoutMode', newMode);
+                  }}
+                  className={`slide-in-right relative flex items-center rounded-lg border cursor-pointer ${
                     darkMode ? 'bg-gray-800 border-gray-600' : 'bg-slate-100 border-slate-300'
                   }`}
                 >
@@ -1442,36 +1447,26 @@ const Shako = () => {
                       vehicleLayoutMode === 'compact' ? 'translate-x-full' : 'translate-x-0'
                     }`}
                   />
-                  {/* Default layout button */}
-                  <button
-                    onClick={() => {
-                      setVehicleLayoutMode('default');
-                      localStorage.setItem('vehicleLayoutMode', 'default');
-                    }}
+                  {/* Default layout icon */}
+                  <div
                     className={`relative z-10 p-2 sm:p-3 flex items-center justify-center rounded-md transition-colors duration-200 ${
                       vehicleLayoutMode === 'default'
                         ? 'text-white'
-                        : darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-slate-500 hover:text-slate-700'
+                        : darkMode ? 'text-gray-400' : 'text-slate-500'
                     }`}
-                    title="Default view"
                   >
                     <LayoutGrid className="w-5 h-5" />
-                  </button>
-                  {/* Compact layout button */}
-                  <button
-                    onClick={() => {
-                      setVehicleLayoutMode('compact');
-                      localStorage.setItem('vehicleLayoutMode', 'compact');
-                    }}
+                  </div>
+                  {/* Compact layout icon */}
+                  <div
                     className={`relative z-10 p-2 sm:p-3 flex items-center justify-center rounded-md transition-colors duration-200 ${
                       vehicleLayoutMode === 'compact'
                         ? 'text-white'
-                        : darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-slate-500 hover:text-slate-700'
+                        : darkMode ? 'text-gray-400' : 'text-slate-500'
                     }`}
-                    title="Compact view"
                   >
                     <LayoutList className="w-5 h-5" />
-                  </button>
+                  </div>
                 </div>
               )}
               <button
