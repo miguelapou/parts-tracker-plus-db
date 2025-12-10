@@ -299,6 +299,11 @@ input[type="number"] {
   animation: tableFadeOnly 0.6s ease-in;
 }
 
+/* Hide divider lines on empty placeholder rows */
+.empty-row {
+  border-color: transparent !important;
+}
+
 /* Mobile Card Status Filtering */
 .cards-status-filtering > div {
   animation: tableFadeOnly 0.6s ease-in;
