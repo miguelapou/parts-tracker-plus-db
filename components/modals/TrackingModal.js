@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
 
 const TrackingModal = ({
@@ -11,36 +11,52 @@ const TrackingModal = ({
   onClose
 }) => {
   const [isClosing, setIsClosing] = useState(false);
+  const isSubmittingRef = useRef(false);
+  const openTimeRef = useRef(0); // Track when modal opened to ignore immediate clicks
+
+  // Reset state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setIsClosing(false);
+      isSubmittingRef.current = false;
+      openTimeRef.current = Date.now();
+    }
+  }, [isOpen]);
 
   const handleClose = useCallback(() => {
+    // Ignore clicks within 200ms of opening (prevents click-through from dropdown)
+    if (Date.now() - openTimeRef.current < 200) return;
+    if (isClosing || isSubmittingRef.current) return;
     setIsClosing(true);
     setTimeout(() => {
       onClose();
       setIsClosing(false);
     }, 150);
-  }, [onClose]);
+  }, [onClose, isClosing]);
 
   const handleSkip = useCallback(() => {
+    if (isSubmittingRef.current || isClosing) return;
+    isSubmittingRef.current = true;
     setIsClosing(true);
     setTimeout(() => {
       skipTrackingInfo();
-      // Don't reset isClosing - modal will unmount
     }, 150);
-  }, [skipTrackingInfo]);
+  }, [skipTrackingInfo, isClosing]);
 
   const handleSave = useCallback(() => {
+    if (isSubmittingRef.current || isClosing) return;
+    isSubmittingRef.current = true;
     setIsClosing(true);
     setTimeout(() => {
       saveTrackingInfo();
-      // Don't reset isClosing - modal will unmount
     }, 150);
-  }, [saveTrackingInfo]);
+  }, [saveTrackingInfo, isClosing]);
 
   if (!isOpen) return null;
 
   return (
     <div
-      className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 modal-backdrop ${
+      className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4 modal-backdrop ${
         isClosing ? 'modal-backdrop-exit' : 'modal-backdrop-enter'
       }`}
       onClick={handleClose}
