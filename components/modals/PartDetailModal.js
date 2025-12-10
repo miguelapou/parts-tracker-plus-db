@@ -469,18 +469,18 @@ const PartDetailModal = ({
 
     const updatedPart = parts.find(p => p.id === viewingPart.id);
     if (updatedPart) {
-      // Check if shipped/delivered/purchased status changed
-      const statusChanged =
+      // Check if any relevant field changed
+      const hasChanges =
         updatedPart.shipped !== viewingPart.shipped ||
         updatedPart.delivered !== viewingPart.delivered ||
         updatedPart.purchased !== viewingPart.purchased ||
         updatedPart.tracking !== viewingPart.tracking;
 
-      if (statusChanged) {
+      if (hasChanges) {
         setViewingPart(updatedPart);
       }
     }
-  }, [isOpen, parts, viewingPart?.id]);
+  }, [isOpen, parts, viewingPart, setViewingPart]);
 
   // Keep modal mounted during closing animation only if THIS modal was open
   // Reset wasOpen when modal finishes closing
