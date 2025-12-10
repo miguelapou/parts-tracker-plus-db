@@ -99,13 +99,6 @@ const VehiclesTab = ({
     }
   }, []);
 
-  // Save layout preference to localStorage when changed
-  const handleLayoutToggle = () => {
-    const newLayout = layoutMode === 'default' ? 'compact' : 'default';
-    setLayoutMode(newLayout);
-    localStorage.setItem('vehicleLayoutMode', newLayout);
-  };
-
   return (
     <div
       ref={tabContentRef}
@@ -115,27 +108,48 @@ const VehiclesTab = ({
         {/* Layout Toggle Header */}
         {vehicles.filter(v => !v.archived).length > 0 && (
           <div className="flex justify-end mb-4">
-            <button
-              onClick={handleLayoutToggle}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                darkMode
-                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                  : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
+            <div
+              className={`relative flex items-center p-1 rounded-lg ${
+                darkMode ? 'bg-gray-700' : 'bg-slate-200'
               }`}
-              title={layoutMode === 'default' ? 'Switch to compact view' : 'Switch to default view'}
             >
-              {layoutMode === 'default' ? (
-                <>
-                  <LayoutGrid className="w-4 h-4" />
-                  <span className="hidden sm:inline">Compact</span>
-                </>
-              ) : (
-                <>
-                  <LayoutList className="w-4 h-4" />
-                  <span className="hidden sm:inline">Default</span>
-                </>
-              )}
-            </button>
+              {/* Sliding background indicator */}
+              <div
+                className={`absolute top-1 bottom-1 w-9 rounded-md transition-transform duration-200 ease-in-out ${
+                  darkMode ? 'bg-gray-600' : 'bg-white shadow-sm'
+                } ${layoutMode === 'compact' ? 'translate-x-9' : 'translate-x-0'}`}
+              />
+              {/* Default layout button */}
+              <button
+                onClick={() => {
+                  setLayoutMode('default');
+                  localStorage.setItem('vehicleLayoutMode', 'default');
+                }}
+                className={`relative z-10 p-2 rounded-md transition-colors ${
+                  layoutMode === 'default'
+                    ? darkMode ? 'text-gray-100' : 'text-slate-800'
+                    : darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-slate-500 hover:text-slate-600'
+                }`}
+                title="Default view"
+              >
+                <LayoutList className="w-4 h-4" />
+              </button>
+              {/* Compact layout button */}
+              <button
+                onClick={() => {
+                  setLayoutMode('compact');
+                  localStorage.setItem('vehicleLayoutMode', 'compact');
+                }}
+                className={`relative z-10 p-2 rounded-md transition-colors ${
+                  layoutMode === 'compact'
+                    ? darkMode ? 'text-gray-100' : 'text-slate-800'
+                    : darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-slate-500 hover:text-slate-600'
+                }`}
+                title="Compact view"
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         )}
 
@@ -208,22 +222,22 @@ const VehiclesTab = ({
               {layoutMode === 'compact' ? (
                 /* ========== COMPACT LAYOUT ========== */
                 <>
-                  {/* Top row: Thumbnail + Projects side by side */}
+                  {/* Top row: Thumbnail + Projects side by side (50/50 split) */}
                   <div className="flex gap-4 mt-2 md:mt-8">
-                    {/* Thumbnail Column */}
-                    <div className="w-32 flex-shrink-0">
+                    {/* Thumbnail Column - 50% */}
+                    <div className="w-1/2 flex-shrink-0">
                       {(vehicle.image_url_resolved || vehicle.image_url) ? (
                         <FadeInImage
                           src={vehicle.image_url_resolved || vehicle.image_url}
                           alt={vehicle.nickname || vehicle.name}
                           loading="lazy"
                           decoding="async"
-                          className={`w-32 h-24 object-cover rounded-lg border ${
+                          className={`w-full h-24 object-cover rounded-lg border ${
                             darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'
                           }`}
                         />
                       ) : (
-                        <div className={`w-32 h-24 rounded-lg flex flex-col items-center justify-center border ${
+                        <div className={`w-full h-24 rounded-lg flex flex-col items-center justify-center border ${
                           darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'
                         }`}>
                           <Camera className={`w-8 h-8 opacity-40 ${
@@ -233,8 +247,8 @@ const VehiclesTab = ({
                       )}
                     </div>
 
-                    {/* Projects Column */}
-                    <div className="flex-1 min-w-0">
+                    {/* Projects Column - 50% */}
+                    <div className="w-1/2 min-w-0">
                       {(() => {
                         const vehicleProjects = getVehicleProjects(vehicle.id);
                         return (
