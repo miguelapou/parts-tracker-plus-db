@@ -54,14 +54,66 @@ const PartsTab = ({
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [isPaginating, setIsPaginating] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(() => {
-    // Load from localStorage or default to 10
+  const [isAutoRows, setIsAutoRows] = useState(() => {
+    // Load auto mode preference from localStorage
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('partsTableRowsPerPage');
-      return saved ? parseInt(saved, 10) : 10;
+      return saved === 'auto' || saved === null; // Default to auto
     }
-    return 10;
+    return true;
   });
+  const [rowsPerPage, setRowsPerPage] = useState(10); // Will be calculated if auto
+  const [calculatedRows, setCalculatedRows] = useState(10);
+  const tableContainerRef = useRef(null);
+
+  // Calculate optimal rows based on available viewport height
+  const calculateOptimalRows = useCallback(() => {
+    if (!tableContainerRef.current) return 10;
+
+    const tableTop = tableContainerRef.current.getBoundingClientRect().top;
+    const viewportHeight = window.innerHeight;
+    const bottomPadding = 120; // Space for pagination footer + breathing room
+    const headerHeight = 57; // Approximate table header height
+    const rowHeight = 57; // Approximate row height (py-4 + content)
+
+    const availableHeight = viewportHeight - tableTop - bottomPadding - headerHeight;
+    const optimalRows = Math.max(5, Math.floor(availableHeight / rowHeight));
+
+    return optimalRows;
+  }, []);
+
+  // Update calculated rows on mount and window resize
+  useEffect(() => {
+    const updateRows = () => {
+      const optimal = calculateOptimalRows();
+      setCalculatedRows(optimal);
+      if (isAutoRows) {
+        setRowsPerPage(optimal);
+      }
+    };
+
+    // Initial calculation after a short delay to ensure DOM is ready
+    const initialTimeout = setTimeout(updateRows, 100);
+
+    window.addEventListener('resize', updateRows);
+    return () => {
+      clearTimeout(initialTimeout);
+      window.removeEventListener('resize', updateRows);
+    };
+  }, [calculateOptimalRows, isAutoRows]);
+
+  // Load manual rowsPerPage from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('partsTableRowsPerPage');
+      if (saved && saved !== 'auto') {
+        const parsed = parseInt(saved, 10);
+        if (!isNaN(parsed)) {
+          setRowsPerPage(parsed);
+        }
+      }
+    }
+  }, []);
 
   // Dropdown animation state
   const [closingDropdown, setClosingDropdown] = useState(null);
@@ -79,12 +131,12 @@ const PartsTab = ({
     }, 150);
   }, [setOpenDropdown]);
 
-  // Save rowsPerPage to localStorage whenever it changes
+  // Save rowsPerPage preference to localStorage whenever it changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('partsTableRowsPerPage', rowsPerPage.toString());
+      localStorage.setItem('partsTableRowsPerPage', isAutoRows ? 'auto' : rowsPerPage.toString());
     }
-  }, [rowsPerPage]);
+  }, [rowsPerPage, isAutoRows]);
 
   const [containerMinHeight, setContainerMinHeight] = useState('auto');
 
@@ -893,7 +945,9 @@ const PartsTab = ({
         {/* Parts Table */}
         {/* Desktop Table View - Hidden below 800px */}
         {filteredParts.length > 0 ? (
-        <div className={`hidden-below-800 rounded-lg shadow-md ${
+        <div
+          ref={tableContainerRef}
+          className={`hidden-below-800 rounded-lg shadow-md ${
           darkMode ? 'bg-gray-800' : 'bg-slate-100'
         }`}>
           <div className="overflow-x-auto overflow-y-visible rounded-lg">
@@ -1184,10 +1238,17 @@ const PartsTab = ({
                 </label>
                 <select
                   id="rowsPerPage"
-                  value={rowsPerPage}
+                  value={isAutoRows ? 'auto' : rowsPerPage}
                   onChange={(e) => {
                     setIsPaginating(true);
-                    setRowsPerPage(Number(e.target.value));
+                    const value = e.target.value;
+                    if (value === 'auto') {
+                      setIsAutoRows(true);
+                      setRowsPerPage(calculatedRows);
+                    } else {
+                      setIsAutoRows(false);
+                      setRowsPerPage(Number(value));
+                    }
                     setCurrentPage(1);
                     setTimeout(() => setIsPaginating(false), 600);
                   }}
@@ -1197,6 +1258,7 @@ const PartsTab = ({
                       : 'bg-white border-slate-300 text-slate-700'
                   } cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 >
+                  <option value="auto">Auto ({calculatedRows})</option>
                   <option value="10">10</option>
                   <option value="25">25</option>
                   <option value="50">50</option>
