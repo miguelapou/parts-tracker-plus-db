@@ -1439,7 +1439,7 @@ const Shako = () => {
                   {/* Sliding background indicator */}
                   <div
                     className={`absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-2px)] rounded-md transition-all duration-200 ease-in-out bg-blue-600 ${
-                      vehicleLayoutMode === 'compact' ? 'translate-x-[calc(100%+2px)]' : 'translate-x-0'
+                      vehicleLayoutMode === 'compact' ? 'translate-x-full' : 'translate-x-0'
                     }`}
                   />
                   {/* Default layout button */}
