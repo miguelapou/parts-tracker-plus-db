@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 
+// Constants for email migration
+const MIGRATION_TOKEN_KEY = 'shako-pending-email-migration';
+
 /**
  * Custom hook for managing authentication state with Supabase
  *
@@ -10,6 +13,7 @@ import { supabase } from '../lib/supabase';
  * - Listens for auth state changes
  * - Automatic token refresh handling
  * - Session expiration detection and recovery
+ * - Email migration (account transfer) support
  * - Provides loading and error states
  *
  * @returns {Object} Auth state and handlers
@@ -23,6 +27,8 @@ import { supabase } from '../lib/supabase';
  * @property {function} deleteAccount - Permanently delete user account and all data
  * @property {function} refreshSession - Manually refresh the session
  * @property {function} handleAuthError - Handle auth errors with retry
+ * @property {function} initiateEmailMigration - Start the email migration process
+ * @property {Object|null} migrationResult - Result of completed migration
  */
 const useAuth = () => {
   const [user, setUser] = useState(null);
@@ -30,9 +36,12 @@ const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [migrationResult, setMigrationResult] = useState(null);
 
   // Track if we're currently refreshing to avoid duplicate refresh attempts
   const refreshPromiseRef = useRef(null);
+  // Track if we've already attempted migration completion
+  const migrationAttemptedRef = useRef(false);
 
   // Manually refresh the session
   const refreshSession = useCallback(async () => {
@@ -152,11 +161,51 @@ const useAuth = () => {
             setSession(currentSession);
             setUser(currentSession?.user ?? null);
             setError(null);
+
+            // Check for pending email migration after sign-in
+            // This happens when user signs in with a new Google account during migration
+            if (currentSession?.user && !migrationAttemptedRef.current) {
+              const migrationToken = localStorage.getItem(MIGRATION_TOKEN_KEY);
+              if (migrationToken) {
+                // Attempt to complete the migration
+                migrationAttemptedRef.current = true;
+                try {
+                  const { data: result, error: completeError } = await supabase.rpc(
+                    'complete_email_migration',
+                    { p_migration_token: migrationToken }
+                  );
+
+                  // Clear the token
+                  localStorage.removeItem(MIGRATION_TOKEN_KEY);
+
+                  if (completeError) {
+                    console.error('Error completing migration:', completeError);
+                    setMigrationResult({ success: false, error: completeError.message });
+                  } else if (!result.success) {
+                    console.error('Migration failed:', result.error);
+                    setMigrationResult({ success: false, error: result.error });
+                  } else {
+                    // Migration successful
+                    setMigrationResult({
+                      success: true,
+                      recordsTransferred: result.records_transferred,
+                      oldEmail: result.old_email
+                    });
+                  }
+                } catch (err) {
+                  console.error('Error completing migration:', err);
+                  localStorage.removeItem(MIGRATION_TOKEN_KEY);
+                  setMigrationResult({ success: false, error: err.message });
+                }
+              }
+            }
             break;
 
           case 'SIGNED_OUT':
             setUser(null);
             setSession(null);
+            // Reset migration attempted flag on sign out
+            migrationAttemptedRef.current = false;
             break;
 
           case 'TOKEN_REFRESHED':
@@ -270,17 +319,138 @@ const useAuth = () => {
     }
   }, []);
 
+  // Initiate email migration - creates a migration token and redirects to Google OAuth
+  const initiateEmailMigration = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Call the database function to create a migration token
+      const { data: migrationToken, error: initError } = await supabase.rpc('initiate_email_migration');
+
+      if (initError) {
+        console.error('Error initiating migration:', initError);
+        setError(initError.message);
+        setLoading(false);
+        return { success: false, error: initError };
+      }
+
+      // Store the migration token in localStorage
+      localStorage.setItem(MIGRATION_TOKEN_KEY, migrationToken);
+
+      // Redirect to Google OAuth with the new account
+      const { error: signInError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: typeof window !== 'undefined'
+            ? `${window.location.origin}/`
+            : undefined,
+          queryParams: {
+            prompt: 'select_account', // Force account selection
+          },
+        },
+      });
+
+      if (signInError) {
+        console.error('Error redirecting to Google:', signInError);
+        // Clean up the migration token if OAuth fails
+        localStorage.removeItem(MIGRATION_TOKEN_KEY);
+        setError(signInError.message);
+        setLoading(false);
+        return { success: false, error: signInError };
+      }
+
+      // Page will redirect to Google, loading state will be reset on return
+      return { success: true };
+    } catch (err) {
+      console.error('Error initiating migration:', err);
+      localStorage.removeItem(MIGRATION_TOKEN_KEY);
+      setError(err.message);
+      setLoading(false);
+      return { success: false, error: err };
+    }
+  }, []);
+
+  // Complete a pending email migration (called automatically after OAuth redirect)
+  const completePendingMigration = useCallback(async () => {
+    // Only attempt once per session
+    if (migrationAttemptedRef.current) return null;
+    migrationAttemptedRef.current = true;
+
+    // Check for pending migration token
+    const migrationToken = localStorage.getItem(MIGRATION_TOKEN_KEY);
+    if (!migrationToken) return null;
+
+    try {
+      // Call the database function to complete the migration
+      const { data: result, error: completeError } = await supabase.rpc(
+        'complete_email_migration',
+        { p_migration_token: migrationToken }
+      );
+
+      // Always clear the token after attempting
+      localStorage.removeItem(MIGRATION_TOKEN_KEY);
+
+      if (completeError) {
+        console.error('Error completing migration:', completeError);
+        return { success: false, error: completeError.message };
+      }
+
+      if (!result.success) {
+        console.error('Migration failed:', result.error);
+        return { success: false, error: result.error };
+      }
+
+      // Migration successful
+      return {
+        success: true,
+        recordsTransferred: result.records_transferred,
+        oldEmail: result.old_email
+      };
+    } catch (err) {
+      console.error('Error completing migration:', err);
+      localStorage.removeItem(MIGRATION_TOKEN_KEY);
+      return { success: false, error: err.message };
+    }
+  }, []);
+
+  // Cancel any pending email migration
+  const cancelEmailMigration = useCallback(async () => {
+    try {
+      // Clear local storage
+      localStorage.removeItem(MIGRATION_TOKEN_KEY);
+
+      // Clear from database
+      await supabase.rpc('cancel_email_migration');
+
+      return { success: true };
+    } catch (err) {
+      console.error('Error canceling migration:', err);
+      return { success: false, error: err };
+    }
+  }, []);
+
+  // Clear migration result (for dismissing the success message)
+  const clearMigrationResult = useCallback(() => {
+    setMigrationResult(null);
+  }, []);
+
   return {
     user,
     session,
     loading,
     error,
     isRefreshing,
+    migrationResult,
     signInWithGoogle,
     signOut,
     deleteAccount,
     refreshSession,
     handleAuthError,
+    initiateEmailMigration,
+    completePendingMigration,
+    cancelEmailMigration,
+    clearMigrationResult,
   };
 };
 
