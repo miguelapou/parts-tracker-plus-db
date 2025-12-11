@@ -433,20 +433,25 @@ const useParts = (userId, toast) => {
         }
         return part;
       }));
+
+      // Capture values before clearing state
+      const partId = editingPart.id;
+      const newTrackingValue = editingPart.tracking;
+
+      // Clear editing state
       if (setEditingPart) setEditingPart(null);
       if (setPartModalView) setPartModalView(null);
 
       // Auto-refresh tracking from Ship24 if tracking was added or changed
-      const newTrackingValue = editingPart.tracking;
       if (newTrackingValue && (trackingChanged || !originalTracking) && !shouldSkipShip24(newTrackingValue)) {
         console.log('[saveEditedPart] Auto-refreshing tracking for new/changed tracking number:', newTrackingValue);
         try {
-          const response = await fetch(`/api/tracking/${editingPart.id}`);
+          const response = await fetch(`/api/tracking/${partId}`);
           const data = await response.json();
           console.log('[saveEditedPart] Tracking refresh response:', data);
           if (data.success && data.tracking) {
             setParts(prevParts => prevParts.map(part => {
-              if (part.id === editingPart.id) {
+              if (part.id === partId) {
                 return {
                   ...part,
                   ...data.tracking,
