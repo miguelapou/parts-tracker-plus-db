@@ -1326,13 +1326,14 @@ const PartDetailModal = ({
                   </label>
                   <input
                     type="text"
-                    value={editingPart.tracking}
-                    onChange={(e) =>
+                    value={editingPart.tracking || ''}
+                    onChange={(e) => {
+                      console.log('[PartDetailModal] Tracking input changed to:', e.target.value);
                       setEditingPart({
                         ...editingPart,
                         tracking: e.target.value
-                      })
-                    }
+                      });
+                    }}
                     className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                       darkMode
                         ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
