@@ -3,6 +3,7 @@ import * as partsService from '../services/partsService';
 import * as vendorsService from '../services/vendorsService';
 import { validatePartCosts } from '../utils/validationUtils';
 import { shouldSkipShip24, getTrackingPurgeFields } from '../utils/trackingUtils';
+import { fetchWithAuth } from '../utils/fetchWithAuth';
 
 /**
  * Custom hook for managing parts data and CRUD operations
@@ -262,7 +263,7 @@ const useParts = (userId, toast) => {
       // Auto-refresh tracking from Ship24 if supported
       if (trackingInput && !shouldSkipShip24(trackingInput)) {
         try {
-          const response = await fetch(`/api/tracking/${trackingModalPartId}`);
+          const response = await fetchWithAuth(`/api/tracking/${trackingModalPartId}`);
           const data = await response.json();
           if (data.success && data.tracking) {
             setParts(prevParts => prevParts.map(part => {
@@ -275,9 +276,12 @@ const useParts = (userId, toast) => {
               }
               return part;
             }));
+          } else if (data.error) {
+            toast?.error(`Tracking update failed: ${data.error}`);
           }
         } catch (trackingError) {
-          console.error('Failed to refresh tracking:', trackingError);
+          console.error('[useParts] Failed to refresh tracking:', trackingError);
+          toast?.error('Failed to fetch tracking information');
         }
       }
     } catch (error) {
@@ -402,8 +406,36 @@ const useParts = (userId, toast) => {
         }
         return part;
       }));
+
+      // Capture values before clearing state
+      const partId = editingPart.id;
+      const newTrackingValue = editingPart.tracking;
+
+      // Clear editing state
       if (setEditingPart) setEditingPart(null);
       if (setPartModalView) setPartModalView(null);
+
+      // Auto-refresh tracking from Ship24 if tracking was added or changed
+      if (newTrackingValue && (trackingChanged || !originalTracking) && !shouldSkipShip24(newTrackingValue)) {
+        try {
+          const response = await fetchWithAuth(`/api/tracking/${partId}`);
+          const data = await response.json();
+          if (data.success && data.tracking) {
+            setParts(prevParts => prevParts.map(part => {
+              if (part.id === partId) {
+                return {
+                  ...part,
+                  ...data.tracking,
+                  delivered: data.tracking.tracking_status === 'Delivered' ? true : part.delivered
+                };
+              }
+              return part;
+            }));
+          }
+        } catch (trackingError) {
+          // Silently fail - tracking will be refreshed on next view
+        }
+      }
     } catch (error) {
       toast?.error('Error saving part. Please try again.');
     }

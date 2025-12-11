@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import {
   syncPartTracking
 } from '../../../../services/trackingService';
-import { supabase } from '../../../../lib/supabase';
+import { createServerClient } from '../../../../lib/supabaseServer';
 import { shouldSkipShip24, getTrackingUrl } from '../../../../utils/trackingUtils';
 
 /**
@@ -20,6 +20,9 @@ export async function GET(request, { params }) {
         { status: 400 }
       );
     }
+
+    // Create authenticated Supabase client from request
+    const supabase = createServerClient(request);
 
     // Get the part from database
     const { data: part, error } = await supabase
@@ -53,8 +56,8 @@ export async function GET(request, { params }) {
       });
     }
 
-    // Sync with Ship24 and update database
-    const trackingData = await syncPartTracking(part);
+    // Sync with Ship24 and update database (pass authenticated client)
+    const trackingData = await syncPartTracking(part, supabase);
 
     // Check if package was delivered and auto-update part status
     let isDelivered = part.delivered;
@@ -81,8 +84,11 @@ export async function GET(request, { params }) {
       const { id } = await params;
       const partId = parseInt(id, 10);
 
+      // Create authenticated client for error handling
+      const supabaseClient = createServerClient(request);
+
       // Get cached tracking data from database
-      const { data: part } = await supabase
+      const { data: part } = await supabaseClient
         .from('parts')
         .select('tracking_status, tracking_location, tracking_checkpoints, tracking_updated_at, delivered')
         .eq('id', partId)
