@@ -807,7 +807,7 @@ const Shako = () => {
         const matchesDeliveredFilter =
           deliveredFilter === 'all' ? true :
           deliveredFilter === 'only' ? part.delivered :
-          deliveredFilter === 'hide' ? !part.delivered : true;
+          deliveredFilter === 'hide' ? !part.delivered && part.purchased : true;
 
         // Date filter logic
         let matchesDate = true;
