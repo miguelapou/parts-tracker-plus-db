@@ -12,11 +12,16 @@ const AuthContext = createContext({
   loading: true,
   error: null,
   isRefreshing: false,
+  migrationResult: null,
   signInWithGoogle: async () => {},
   signOut: async () => {},
   deleteAccount: async () => {},
   refreshSession: async () => {},
   handleAuthError: async () => {},
+  initiateEmailMigration: async () => {},
+  completePendingMigration: async () => {},
+  cancelEmailMigration: async () => {},
+  clearMigrationResult: () => {},
 });
 
 /**
