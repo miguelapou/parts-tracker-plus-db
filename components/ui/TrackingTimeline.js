@@ -166,12 +166,14 @@ const TrackingTimeline = ({
     });
   }, [checkpoints]);
 
-  const hasMore = sortedCheckpoints.length > maxVisible;
-
   // Calculate collapsed height based on visible checkpoints
   // Use a generous estimate to avoid cutting off content on mobile
   const checkpointHeight = 80;
   const collapsedHeight = maxVisible * checkpointHeight;
+
+  // Only show toggle if content is actually being clipped
+  // Check both: more checkpoints than maxVisible AND content height exceeds collapsed height
+  const hasMore = sortedCheckpoints.length > maxVisible && contentHeight > collapsedHeight;
 
   // Measure the full content height for smooth animation
   useEffect(() => {
