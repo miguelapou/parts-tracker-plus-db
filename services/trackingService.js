@@ -145,7 +145,9 @@ const normalizeStatusMilestone = (statusMilestone) => {
  * @returns {Object} Normalized tracking data for parts table
  */
 export const normalizeTrackingData = (trackingData) => {
-  if (!trackingData) return null;
+  if (!trackingData) {
+    return null;
+  }
 
   const tracker = trackingData.trackings?.[0] || trackingData;
   const shipment = tracker.shipment || {};
@@ -177,11 +179,13 @@ export const normalizeTrackingData = (trackingData) => {
  * Update part with tracking data from Ship24
  * @param {number} partId - Part ID to update
  * @param {Object} trackingData - Normalized tracking data
+ * @param {Object} supabaseClient - Optional Supabase client (for server-side auth)
  * @returns {Promise<void>}
  */
-export const updatePartTracking = async (partId, trackingData) => {
+export const updatePartTracking = async (partId, trackingData, supabaseClient = null) => {
   try {
-    const { error } = await supabase
+    const client = supabaseClient || supabase;
+    const { error } = await client
       .from('parts')
       .update(trackingData)
       .eq('id', partId);
@@ -220,9 +224,10 @@ export const getPartByTrackingNumber = async (trackingNumber, userId) => {
  * Sync tracking status for a part
  * Creates tracking in Ship24 if needed, then updates part with status
  * @param {Object} part - Part object with tracking number
+ * @param {Object} supabaseClient - Optional Supabase client (for server-side auth)
  * @returns {Promise<Object>} Updated tracking data
  */
-export const syncPartTracking = async (part) => {
+export const syncPartTracking = async (part, supabaseClient = null) => {
   if (shouldSkipShip24(part.tracking)) {
     return null; // Skip URLs, Amazon tracking, and empty tracking
   }
@@ -233,7 +238,7 @@ export const syncPartTracking = async (part) => {
   const trackingData = await getShip24TrackingByNumber(part.tracking);
 
   const normalizedData = normalizeTrackingData(trackingData);
-  await updatePartTracking(part.id, normalizedData);
+  await updatePartTracking(part.id, normalizedData, supabaseClient);
 
   return normalizedData;
 };
@@ -241,12 +246,14 @@ export const syncPartTracking = async (part) => {
 /**
  * Refresh tracking for all shipped but not delivered parts
  * @param {string} userId - User ID
+ * @param {Object} supabaseClient - Optional Supabase client (for server-side auth)
  * @returns {Promise<Array>} Array of updated parts
  */
-export const refreshAllActiveTrackings = async (userId) => {
+export const refreshAllActiveTrackings = async (userId, supabaseClient = null) => {
   try {
+    const client = supabaseClient || supabase;
     // Get all parts that are shipped but not delivered with tracking numbers
-    const { data: parts, error } = await supabase
+    const { data: parts, error } = await client
       .from('parts')
       .select('*')
       .eq('user_id', userId)
@@ -260,7 +267,7 @@ export const refreshAllActiveTrackings = async (userId) => {
     const results = [];
     for (const part of parts || []) {
       try {
-        const updated = await syncPartTracking(part);
+        const updated = await syncPartTracking(part, supabaseClient);
         if (updated) {
           results.push({ partId: part.id, ...updated });
         }

@@ -467,11 +467,13 @@ const Shako = () => {
     setTrackingInput
   );
 
-  const handleSaveEditedPart = () => saveEditedPart(
-    editingPart,
-    setEditingPart,
-    setPartModalView
-  );
+  const handleSaveEditedPart = () => {
+    return saveEditedPart(
+      editingPart,
+      setEditingPart,
+      setPartModalView
+    );
+  };
 
   const handleRenameVendor = (oldName, newName) => renameVendor(
     oldName,
