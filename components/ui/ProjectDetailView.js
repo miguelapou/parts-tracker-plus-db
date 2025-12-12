@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react';
-import { Package, CheckCircle, CheckSquare, ChevronDown, X, Car } from 'lucide-react';
+import { Package, CheckCircle, CheckSquare, ChevronDown, X } from 'lucide-react';
 import { getVendorDisplayColor } from '../../utils/colorUtils';
 import ConfirmDialog from './ConfirmDialog';
 
@@ -21,8 +21,7 @@ const ProjectDetailView = ({
   editingTodoText,
   setEditingTodoText,
   newTodoText,
-  setNewTodoText,
-  vehicle
+  setNewTodoText
 }) => {
   const linkedParts = parts.filter(part => part.projectId === project.id);
   const linkedPartsTotal = calculateProjectTotal(project.id, parts);
@@ -438,86 +437,68 @@ const ProjectDetailView = ({
 
   return (
     <>
-      {/* Status Badge (left) and Vehicle Badge (right) on same row */}
+      {/* Status Badge (left) and Priority (right) on same row */}
       <div className="flex items-center justify-between mb-6 gap-3">
         <span className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${
           statusColors[project.status]
         } ${!darkMode ? 'ring-1 ring-inset ring-current' : ''}`}>
           {project.status.replace('_', ' ').toUpperCase()}
         </span>
-        {vehicle && (
-          <span
-            className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border ${
-              darkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-700 border-gray-300'
-            }`}
-          >
-            <Car className="w-3 h-3 mr-1" />
-            <span style={{ color: vehicle.color || '#3B82F6' }}>
-              {vehicle.nickname || vehicle.name}
-            </span>
-          </span>
-        )}
+        {/* Desktop Priority */}
+        <div className="hidden lg:block text-right">
+          <p className={`text-xs mb-1 ${darkMode ? 'text-gray-400' : 'text-slate-600'}`}>
+            Priority</p>
+          <p className={`text-lg font-bold ${priorityColors[project.priority]}`}>
+            {project.priority === 'not_set' ? 'NONE' : (
+              project.priority === 'medium' ? 'MEDIUM' : project.priority?.replace(/_/g, ' ').toUpperCase()
+            )}
+          </p>
+        </div>
       </div>
 
       {/* Two Column Layout: Project Details (Left) and Todo List (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Left Column: Project Details */}
         <div className="flex flex-col gap-6">
-          {/* Description + Priority Row (Desktop) */}
-          <div className="lg:grid lg:grid-cols-3 lg:gap-4">
-            {/* Description - takes 2 columns on desktop */}
-            <div className="lg:col-span-2 lg:min-h-[6.5rem]">
-              <h3 className={`text-lg font-semibold mb-2 ${
-                darkMode ? 'text-gray-200' : 'text-gray-800'
-              }`}>Description</h3>
-              <div className="relative">
-                <div
-                  className="overflow-hidden transition-all duration-500 ease-in-out"
-                  style={{
-                    maxHeight: isDescriptionExpanded ? '1000px' : '4.5em'
-                  }}
+          {/* Description */}
+          <div className="lg:min-h-[6.5rem]">
+            <h3 className={`text-lg font-semibold mb-2 ${
+              darkMode ? 'text-gray-200' : 'text-gray-800'
+            }`}>Description</h3>
+            <div className="relative">
+              <div
+                className="overflow-hidden transition-all duration-500 ease-in-out"
+                style={{
+                  maxHeight: isDescriptionExpanded ? '1000px' : '4.5em'
+                }}
+              >
+                <p
+                  ref={descriptionRef}
+                  className={`text-base lg:min-h-[4.5em] ${
+                    project.description
+                      ? (darkMode ? 'text-gray-400' : 'text-slate-600')
+                      : (darkMode ? 'text-gray-500 italic' : 'text-gray-500 italic')
+                  }`}
                 >
-                  <p
-                    ref={descriptionRef}
-                    className={`text-base lg:min-h-[4.5em] ${
-                      project.description
-                        ? (darkMode ? 'text-gray-400' : 'text-slate-600')
-                        : (darkMode ? 'text-gray-500 italic' : 'text-gray-500 italic')
-                    }`}
-                  >
-                    {project.description || 'No description added'}
-                  </p>
-                </div>
-                {project.description && isDescriptionClamped ? (
-                  <button
-                    onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                    className={`mt-2 flex items-center gap-1 text-sm font-medium transition-colors ${
-                      darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
-                    }`}
-                  >
-                    {isDescriptionExpanded ? 'Show less' : 'Show more'}
-                    <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${
-                      isDescriptionExpanded ? 'rotate-180' : ''
-                    }`} />
-                  </button>
-                ) : (
-                  /* Reserve space for "Show more" button on desktop for consistent layout */
-                  <div className="hidden lg:block mt-2 h-5" />
-                )}
+                  {project.description || 'No description added'}
+                </p>
               </div>
-            </div>
-
-            {/* Priority - Desktop only, in third column */}
-            <div className="hidden lg:flex lg:items-center lg:justify-center">
-              <div>
-                <p className={`text-xs mb-1 ${darkMode ? 'text-gray-400' : 'text-slate-600'}`}>
-                  Priority</p>
-              <p className={`text-lg font-bold ${priorityColors[project.priority]}`}>
-                {project.priority === 'not_set' ? 'NONE' : (
-                  project.priority === 'medium' ? 'MEDIUM' : project.priority?.replace(/_/g, ' ').toUpperCase()
-                )}
-              </p>
-              </div>
+              {project.description && isDescriptionClamped ? (
+                <button
+                  onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                  className={`mt-2 flex items-center gap-1 text-sm font-medium transition-colors ${
+                    darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
+                  }`}
+                >
+                  {isDescriptionExpanded ? 'Show less' : 'Show more'}
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${
+                    isDescriptionExpanded ? 'rotate-180' : ''
+                  }`} />
+                </button>
+              ) : (
+                /* Reserve space for "Show more" button on desktop for consistent layout */
+                <div className="hidden lg:block mt-2 h-5" />
+              )}
             </div>
           </div>
 
