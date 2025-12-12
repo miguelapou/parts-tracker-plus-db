@@ -249,8 +249,8 @@ const ProjectsTab = ({
                     }`}>
                       Priority:
                     </span>
-                    <span className={`text-sm font-bold ${priorityColors[project.priority]}`}>
-                      {project.priority?.replace(/_/g, ' ').toUpperCase()}
+                    <span className={`text-sm font-bold ${priorityColors[project.priority] || (darkMode ? 'text-gray-500' : 'text-gray-400')}`}>
+                      {project.priority === 'not_set' || !project.priority ? 'NONE' : project.priority.replace(/_/g, ' ').toUpperCase()}
                     </span>
                   </div>
                 </div>
