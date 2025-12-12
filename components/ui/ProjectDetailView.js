@@ -699,7 +699,7 @@ const ProjectDetailView = ({
             </div>
 
             {/* Column 3: Legend */}
-            <div className="flex flex-col justify-end">
+            <div className="flex flex-col justify-end pb-2">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <div
