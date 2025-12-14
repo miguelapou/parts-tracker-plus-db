@@ -7,13 +7,19 @@ import {
   StatusBar,
   Platform,
   BackHandler,
-  RefreshControl,
-  ScrollView,
+  Linking,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useEffect } from 'react';
 
 const WEB_APP_URL = 'https://shako-garage.vercel.app';
+
+// URLs that should open in external browser (Google OAuth)
+const EXTERNAL_URLS = [
+  'accounts.google.com',
+  'googleapis.com',
+  'supabase.co/auth',
+];
 
 export default function WebViewScreen() {
   const webViewRef = useRef(null);
@@ -33,6 +39,23 @@ export default function WebViewScreen() {
 
     return () => backHandler.remove();
   }, [canGoBack]);
+
+  // Check if URL should open externally
+  const shouldOpenExternally = (url) => {
+    return EXTERNAL_URLS.some(domain => url.includes(domain));
+  };
+
+  // Handle URL requests - open OAuth in Safari
+  const handleShouldStartLoadWithRequest = (request) => {
+    const { url } = request;
+
+    if (shouldOpenExternally(url)) {
+      Linking.openURL(url);
+      return false; // Don't load in WebView
+    }
+
+    return true; // Load in WebView
+  };
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -81,6 +104,7 @@ export default function WebViewScreen() {
         style={styles.webview}
         onLoadEnd={handleLoadEnd}
         onNavigationStateChange={handleNavigationStateChange}
+        onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
         injectedJavaScript={injectedJavaScript}
         javaScriptEnabled={true}
         domStorageEnabled={true}
