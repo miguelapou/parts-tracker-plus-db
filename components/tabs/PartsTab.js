@@ -455,12 +455,11 @@ const PartsTab = ({
               setOpenDropdown(dropdownId);
             }
           }}
-          className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full border transition-all hover:shadow-md ${
+          className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full border transition-all hover:shadow-md max-w-full ${
             selectedProject
               ? getPriorityButtonColor(selectedProject.priority)
               : (darkMode ? 'bg-gray-700 text-gray-400 border-gray-600' : 'bg-gray-100 text-gray-600 border-gray-300')
           }`}
-          style={{ minWidth: '8.25rem', maxWidth: '10rem' }}
         >
           <span className="flex-1 text-left truncate">{selectedProject ? selectedProject.name : 'None'}</span>
           <ChevronDown className={`w-3 h-3 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
@@ -1258,7 +1257,7 @@ const PartsTab = ({
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-center">
+                    <td className="px-6 py-4 text-center overflow-hidden">
                       <ProjectDropdown part={part} />
                     </td>
                     <td className="hidden min-[1100px]:table-cell px-6 py-4 text-center">
