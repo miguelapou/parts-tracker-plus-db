@@ -732,7 +732,7 @@ const VehicleDetailModal = ({
                     if (servicePartsTotal === 0) return null;
                     return (
                       <span className={`px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 ${
-                        darkMode ? 'bg-blue-900/40 text-blue-300' : 'bg-blue-100 text-blue-700'
+                        darkMode ? 'bg-green-900/40 text-green-300' : 'bg-green-100 text-green-700'
                       }`}>
                         <Wrench className="w-3 h-3" />
                         ${servicePartsTotal.toFixed(2)}
