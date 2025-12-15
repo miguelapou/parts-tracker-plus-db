@@ -44,6 +44,11 @@ const ProjectDetailView = ({
   const [showTodoProgress, setShowTodoProgress] = useState(false);
   const descriptionRef = useRef(null);
 
+  // Refs and state for animated progress bar height
+  const progressGridRef = useRef(null);
+  const leftColumnRef = useRef(null);
+  const [progressGridHeight, setProgressGridHeight] = useState(165);
+
   // Check if description is clamped (content overflows the collapsed height)
   useEffect(() => {
     if (descriptionRef.current && project.description) {
@@ -53,6 +58,43 @@ const ProjectDetailView = ({
       setIsDescriptionClamped(content.scrollHeight > collapsedHeight);
     }
   }, [project.description]);
+
+  // Calculate and animate progress grid height based on available space
+  useEffect(() => {
+    const calculateHeight = () => {
+      if (!leftColumnRef.current || !progressGridRef.current) return;
+
+      // Get the left column's total height (matches right column via CSS Grid)
+      const leftColumn = leftColumnRef.current;
+      const leftColumnHeight = leftColumn.clientHeight;
+
+      // Get the description section height (first child)
+      const descriptionSection = leftColumn.querySelector('.lg\\:min-h-\\[6\\.5rem\\]');
+      const descriptionHeight = descriptionSection ? descriptionSection.offsetHeight : 0;
+
+      // Account for gap (24px = gap-6)
+      const gap = 24;
+
+      // Calculate available height for progress grid
+      const availableHeight = leftColumnHeight - descriptionHeight - gap;
+
+      // Clamp to min/max bounds
+      const clampedHeight = Math.min(Math.max(availableHeight, 165), 300);
+
+      setProgressGridHeight(clampedHeight);
+    };
+
+    // Calculate on mount and when todos change
+    calculateHeight();
+
+    // Use ResizeObserver to recalculate when left column resizes
+    const resizeObserver = new ResizeObserver(calculateHeight);
+    if (leftColumnRef.current) {
+      resizeObserver.observe(leftColumnRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [project.todos?.length, showCompletedTodos, isDescriptionExpanded]);
 
   // Confirmation dialog state
   const [confirmDialog, setConfirmDialog] = useState({
@@ -478,7 +520,7 @@ const ProjectDetailView = ({
       {/* Two Column Layout: Project Details (Left) and Todo List (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Left Column: Project Details */}
-        <div className="flex flex-col gap-6">
+        <div ref={leftColumnRef} className="flex flex-col gap-6">
           {/* Description */}
           <div className="lg:min-h-[6.5rem]">
             <h3 className={`text-lg font-semibold mb-2 ${
@@ -642,7 +684,11 @@ const ProjectDetailView = ({
           </div>
 
           {/* Desktop: Vertical Bar Graphs (3 equal columns) */}
-          <div className="hidden lg:grid lg:grid-cols-3 lg:gap-4 lg:flex-1 min-h-[165px] max-h-[300px] transition-all duration-300 ease-out">
+          <div
+            ref={progressGridRef}
+            className="hidden lg:grid lg:grid-cols-3 lg:gap-4 transition-all duration-300 ease-out"
+            style={{ height: progressGridHeight }}
+          >
             {/* Column 1: Budget Bar */}
             <div className="flex flex-col items-end pr-2 transition-all duration-300">
               <div className="flex flex-col items-center flex-1 transition-all duration-300">
