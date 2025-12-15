@@ -2005,7 +2005,7 @@ const VehicleDetailModal = ({
             }`}
           >
             {showAddServiceEventModal && isMobile && (
-              <div className="p-6 space-y-4 max-h-[calc(90vh-164px)] overflow-y-auto">
+              <div className="p-6 pb-24 space-y-4 max-h-[calc(90vh-164px)] overflow-y-auto">
                 {/* Date field */}
                 <div>
                   <label className={`block text-sm font-medium mb-2 ${
@@ -2017,11 +2017,12 @@ const VehicleDetailModal = ({
                     type="date"
                     value={newEventDate}
                     onChange={(e) => setNewEventDate(e.target.value)}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    className={`w-full max-w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                       darkMode
                         ? 'bg-gray-700 border-gray-600 text-gray-100'
                         : 'bg-white border-gray-300 text-gray-800'
                     }`}
+                    style={{ WebkitAppearance: 'none' }}
                   />
                 </div>
 
