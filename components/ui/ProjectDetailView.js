@@ -64,6 +64,13 @@ const ProjectDetailView = ({
     const calculateHeight = () => {
       if (!leftColumnRef.current || !progressGridRef.current) return;
 
+      // Temporarily set height to 0 so it doesn't constrain the layout measurement
+      const currentHeight = progressGridRef.current.style.height;
+      progressGridRef.current.style.height = '0px';
+
+      // Force a reflow to get accurate measurements
+      void leftColumnRef.current.offsetHeight;
+
       // Get the left column's total height (matches right column via CSS Grid)
       const leftColumn = leftColumnRef.current;
       const leftColumnHeight = leftColumn.clientHeight;
@@ -81,7 +88,13 @@ const ProjectDetailView = ({
       // Clamp to min/max bounds
       const clampedHeight = Math.min(Math.max(availableHeight, 165), 300);
 
-      setProgressGridHeight(clampedHeight);
+      // Restore height before setting new value (for smooth transition)
+      progressGridRef.current.style.height = currentHeight;
+
+      // Use requestAnimationFrame to allow transition to work
+      requestAnimationFrame(() => {
+        setProgressGridHeight(clampedHeight);
+      });
     };
 
     // Calculate on mount and when todos change
