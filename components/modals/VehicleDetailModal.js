@@ -371,6 +371,13 @@ const VehicleDetailModal = ({
     }
   }, [isOpen, viewingVehicle?.id, loadDocuments, loadServiceEvents]);
 
+  // Reset service event view when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      handleCloseServiceEventModal();
+    }
+  }, [isOpen, handleCloseServiceEventModal]);
+
   // Handle generating vehicle report PDF
   const handleGenerateReport = async (saveToDocuments) => {
     if (!viewingVehicle || generatingReport) return;
