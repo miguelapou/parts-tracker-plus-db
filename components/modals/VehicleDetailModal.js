@@ -310,8 +310,8 @@ const VehicleDetailModal = ({
   }, [serviceEvents]);
 
   const serviceEventsHiddenCount = Math.max(0, sortedServiceEvents.length - 3);
-  const serviceEventHeight = 85; // Approximate height per event including gap
-  const addCardHeight = 80; // Height of the "Add service event" card
+  const serviceEventHeight = 101; // Height per event (card ~69px + gap 16px + padding/borders ~16px)
+  const addCardHeight = 85; // Height of the "Add service event" card
   // Collapsed height shows last 3 events + add card
   const serviceEventsCollapsedHeight = Math.min(sortedServiceEvents.length, 3) * serviceEventHeight + addCardHeight;
   // Calculate offset to shift content up when collapsed (to show last 3 items)
@@ -1001,7 +1001,7 @@ const VehicleDetailModal = ({
                         {/* Add new service event card - inside inner container to stay connected */}
                         <div
                           onClick={openAddServiceEventModal}
-                          className="relative flex items-stretch gap-4 cursor-pointer group mt-4"
+                          className="relative flex items-stretch gap-4 cursor-pointer group"
                         >
                           {/* Timeline column with icon */}
                           <div className="relative flex flex-col items-center">
