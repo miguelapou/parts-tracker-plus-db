@@ -807,19 +807,19 @@ const VehicleDetailModal = ({
                       className="transition-all duration-500 ease-in-out"
                       style={{
                         maxHeight: serviceHistoryExpanded
-                          ? `${serviceHistoryHeight || sortedServiceEvents.length * serviceEventHeight}px`
+                          ? `${serviceHistoryHeight || sortedServiceEvents.length * serviceEventHeight + addCardHeight}px`
                           : `${serviceEventsCollapsedHeight}px`,
                         overflow: 'hidden'
                       }}
                     >
-                      {/* Inner container - shifts up when collapsed to show last 3 items */}
+                      {/* Inner container - uses negative margin to shift content up when collapsed */}
                       <div
                         ref={serviceHistoryRef}
-                        className="flex flex-col gap-4 transition-transform duration-500 ease-in-out"
+                        className="flex flex-col gap-4 transition-all duration-500 ease-in-out"
                         style={{
-                          transform: serviceHistoryExpanded
-                            ? 'translateY(0)'
-                            : `translateY(-${serviceEventsCollapseOffset}px)`
+                          marginTop: serviceHistoryExpanded
+                            ? 0
+                            : `-${serviceEventsCollapseOffset}px`
                         }}
                       >
                         {sortedServiceEvents.map((event, index) => {
