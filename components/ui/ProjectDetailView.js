@@ -644,10 +644,10 @@ const ProjectDetailView = ({
           {/* Desktop: Vertical Bar Graphs (3 equal columns) */}
           <div className="hidden lg:grid lg:grid-cols-3 lg:gap-4 lg:flex-1 min-h-[165px] max-h-[300px] transition-all duration-300 ease-out">
             {/* Column 1: Budget Bar */}
-            <div className="flex flex-col items-end pr-2">
-              <div className="flex flex-col items-center flex-1">
+            <div className="flex flex-col items-end pr-2 transition-all duration-300">
+              <div className="flex flex-col items-center flex-1 transition-all duration-300">
                 <div
-                  className={`w-14 rounded-lg relative overflow-hidden flex-1 ${
+                  className={`w-14 rounded-lg relative overflow-hidden flex-1 transition-all duration-300 ${
                     darkMode ? 'bg-gray-700' : 'bg-gray-300'
                   }`}
                   style={{
@@ -670,10 +670,10 @@ const ProjectDetailView = ({
             </div>
 
             {/* Column 2: To-Dos Bar */}
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col items-center flex-1">
+            <div className="flex flex-col items-center transition-all duration-300">
+              <div className="flex flex-col items-center flex-1 transition-all duration-300">
                 <div
-                  className={`w-14 rounded-lg relative overflow-hidden flex-1 ${
+                  className={`w-14 rounded-lg relative overflow-hidden flex-1 transition-all duration-300 ${
                     darkMode ? 'bg-gray-700' : 'bg-gray-300'
                   }`}
                   style={{
@@ -695,7 +695,7 @@ const ProjectDetailView = ({
             </div>
 
             {/* Column 3: Legend */}
-            <div className="flex flex-col justify-end">
+            <div className="flex flex-col justify-end transition-all duration-300">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <div
