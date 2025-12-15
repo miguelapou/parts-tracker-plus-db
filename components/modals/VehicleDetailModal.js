@@ -25,7 +25,7 @@ import {
   Calendar,
   ListChecks,
   FileDown,
-  BookOpen
+  Info
 } from 'lucide-react';
 import ProjectDetailView from '../ui/ProjectDetailView';
 import ProjectEditForm from '../ui/ProjectEditForm';
@@ -107,12 +107,9 @@ const VehicleDetailModal = ({
   // State for document/service event action overlays
   const [selectedDocId, setSelectedDocId] = useState(null);
   const [selectedEventId, setSelectedEventId] = useState(null);
-  // State for viewing service event notes
-  const [viewingNoteEvent, setViewingNoteEvent] = useState(null);
-  const [isNotesModalClosing, setIsNotesModalClosing] = useState(false);
-  // State for viewing service event linked parts
-  const [viewingPartsEvent, setViewingPartsEvent] = useState(null);
-  const [isPartsModalClosing, setIsPartsModalClosing] = useState(false);
+  // State for viewing service event info (notes + parts)
+  const [viewingInfoEvent, setViewingInfoEvent] = useState(null);
+  const [isInfoModalClosing, setIsInfoModalClosing] = useState(false);
   // State for service history expansion
   const [serviceHistoryExpanded, setServiceHistoryExpanded] = useState(false);
 
@@ -121,21 +118,12 @@ const VehicleDetailModal = ({
     setServiceHistoryExpanded(false);
   }, [viewingVehicle?.id]);
 
-  // Handle closing the notes modal with animation
-  const handleCloseNotesModal = () => {
-    setIsNotesModalClosing(true);
+  // Handle closing the info modal with animation
+  const handleCloseInfoModal = () => {
+    setIsInfoModalClosing(true);
     setTimeout(() => {
-      setViewingNoteEvent(null);
-      setIsNotesModalClosing(false);
-    }, 150);
-  };
-
-  // Handle closing the parts modal with animation
-  const handleClosePartsModal = () => {
-    setIsPartsModalClosing(true);
-    setTimeout(() => {
-      setViewingPartsEvent(null);
-      setIsPartsModalClosing(false);
+      setViewingInfoEvent(null);
+      setIsInfoModalClosing(false);
     }, 150);
   };
 
@@ -949,36 +937,20 @@ const VehicleDetailModal = ({
                                     <Edit2 className="w-5 h-5 mb-0.5" />
                                     <span className="text-[10px] font-medium">Edit</span>
                                   </button>
-                                  {event.notes && (
+                                  {(event.notes || (event.linked_part_ids && event.linked_part_ids.length > 0)) && (
                                     <button
                                       onClick={() => {
                                         setSelectedEventId(null);
-                                        setViewingNoteEvent(event);
+                                        setViewingInfoEvent(event);
                                       }}
                                       className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                                         darkMode
-                                          ? 'bg-gray-700 text-gray-300 can-hover:hover:ring-2 can-hover:hover:ring-gray-300'
-                                          : 'bg-white text-gray-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-gray-600'
+                                          ? 'bg-gray-700 text-cyan-400 can-hover:hover:ring-2 can-hover:hover:ring-cyan-400'
+                                          : 'bg-white text-cyan-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-cyan-600'
                                       }`}
                                     >
-                                      <BookOpen className="w-5 h-5 mb-0.5" />
-                                      <span className="text-[10px] font-medium">Notes</span>
-                                    </button>
-                                  )}
-                                  {event.linked_part_ids && event.linked_part_ids.length > 0 && (
-                                    <button
-                                      onClick={() => {
-                                        setSelectedEventId(null);
-                                        setViewingPartsEvent(event);
-                                      }}
-                                      className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
-                                        darkMode
-                                          ? 'bg-gray-700 text-orange-400 can-hover:hover:ring-2 can-hover:hover:ring-orange-400'
-                                          : 'bg-white text-orange-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-orange-600'
-                                      }`}
-                                    >
-                                      <Package className="w-5 h-5 mb-0.5" />
-                                      <span className="text-[10px] font-medium">Parts</span>
+                                      <Info className="w-5 h-5 mb-0.5" />
+                                      <span className="text-[10px] font-medium">Info</span>
                                     </button>
                                   )}
                                 </div>
@@ -2306,76 +2278,20 @@ const VehicleDetailModal = ({
         generating={generatingReport}
       />
 
-      {/* Notes Viewing Modal */}
-      {(viewingNoteEvent || isNotesModalClosing) && (
+      {/* Service Event Info Modal (Notes + Parts) */}
+      {(viewingInfoEvent || isInfoModalClosing) && (
         <div
           className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70] modal-backdrop ${
-            isNotesModalClosing ? 'modal-backdrop-exit' : 'modal-backdrop-enter'
+            isInfoModalClosing ? 'modal-backdrop-exit' : 'modal-backdrop-enter'
           }`}
           onClick={(e) => {
             e.stopPropagation();
-            handleCloseNotesModal();
-          }}
-        >
-          <div
-            className={`rounded-lg shadow-xl max-w-md w-full mx-4 modal-content ${
-              isNotesModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
-            } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className={`px-5 py-4 border-b flex items-center justify-between ${
-              darkMode ? 'border-gray-700' : 'border-gray-200'
-            }`}>
-              <div>
-                <h3 className={`text-base font-semibold ${
-                  darkMode ? 'text-gray-100' : 'text-gray-800'
-                }`}>
-                  {viewingNoteEvent?.description}
-                </h3>
-                <p className={`text-xs mt-0.5 ${
-                  darkMode ? 'text-gray-400' : 'text-gray-500'
-                }`}>
-                  {viewingNoteEvent && new Date(viewingNoteEvent.event_date + 'T00:00:00').toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
-                </p>
-              </div>
-              <button
-                onClick={handleCloseNotesModal}
-                className={`p-1 rounded transition-colors ${
-                  darkMode ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
-                }`}
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-5">
-              <p className={`text-sm whitespace-pre-wrap ${
-                darkMode ? 'text-gray-300' : 'text-gray-700'
-              }`}>
-                {viewingNoteEvent?.notes}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Linked Parts Viewing Modal */}
-      {(viewingPartsEvent || isPartsModalClosing) && (
-        <div
-          className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70] modal-backdrop ${
-            isPartsModalClosing ? 'modal-backdrop-exit' : 'modal-backdrop-enter'
-          }`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleClosePartsModal();
+            handleCloseInfoModal();
           }}
         >
           <div
             className={`rounded-lg shadow-xl max-w-lg w-full mx-4 modal-content ${
-              isPartsModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
+              isInfoModalClosing ? 'modal-popup-exit' : 'modal-popup-enter'
             } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
             onClick={(e) => e.stopPropagation()}
           >
@@ -2386,12 +2302,12 @@ const VehicleDetailModal = ({
                 <h3 className={`text-base font-semibold ${
                   darkMode ? 'text-gray-100' : 'text-gray-800'
                 }`} style={{ fontFamily: "'FoundationOne', 'Courier New', monospace" }}>
-                  Linked Parts
+                  Info
                 </h3>
                 <p className={`text-xs mt-0.5 ${
                   darkMode ? 'text-gray-400' : 'text-gray-500'
                 }`}>
-                  {viewingPartsEvent?.description} • {viewingPartsEvent && new Date(viewingPartsEvent.event_date + 'T00:00:00').toLocaleDateString('en-US', {
+                  {viewingInfoEvent?.description} • {viewingInfoEvent && new Date(viewingInfoEvent.event_date + 'T00:00:00').toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'
@@ -2399,7 +2315,7 @@ const VehicleDetailModal = ({
                 </p>
               </div>
               <button
-                onClick={handleClosePartsModal}
+                onClick={handleCloseInfoModal}
                 className={`p-1 rounded transition-colors ${
                   darkMode ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
                 }`}
@@ -2407,127 +2323,142 @@ const VehicleDetailModal = ({
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-5 max-h-[60vh] overflow-y-auto">
+            <div className="p-5 max-h-[60vh] overflow-y-auto space-y-5">
+              {/* Notes Section */}
+              {viewingInfoEvent?.notes && (
+                <div>
+                  <h4 className={`text-sm font-semibold mb-2 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    Notes
+                  </h4>
+                  <p className={`text-sm whitespace-pre-wrap ${
+                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    {viewingInfoEvent.notes}
+                  </p>
+                </div>
+              )}
+
+              {/* Linked Parts Section */}
               {(() => {
-                const linkedParts = viewingPartsEvent?.linked_part_ids
-                  ? parts.filter(p => viewingPartsEvent.linked_part_ids.includes(p.id))
+                const linkedParts = viewingInfoEvent?.linked_part_ids
+                  ? parts.filter(p => viewingInfoEvent.linked_part_ids.includes(p.id))
                   : [];
 
-                if (linkedParts.length === 0) {
-                  return (
-                    <div className={`text-center py-8 rounded-lg border ${
-                      darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
-                    }`}>
-                      <Package className="w-12 h-12 mx-auto mb-2 opacity-40" />
-                      <p className="text-sm">No parts linked</p>
-                    </div>
-                  );
-                }
+                if (linkedParts.length === 0) return null;
 
                 return (
-                  <div className="flex flex-col gap-4">
-                    {linkedParts.map((part) => {
-                      const vendorColor = part.vendor && vendorColors[part.vendor];
-                      const colors = vendorColor ? getVendorDisplayColor(vendorColor, darkMode) : null;
-                      return (
-                        <div
-                          key={part.id}
-                          className={`p-4 rounded-lg border flex flex-col ${
-                            darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
-                          }`}
-                        >
-                          <div className="flex justify-between items-start mb-3">
-                            <div className="flex-1">
-                              <h4 className={`font-medium ${
-                                darkMode ? 'text-gray-100' : 'text-slate-800'
-                              }`}>
-                                {part.part}
-                              </h4>
-                              {part.vendor && (
-                                colors ? (
-                                  <span
-                                    className="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium border"
-                                    style={{
-                                      backgroundColor: colors.bg,
-                                      color: colors.text,
-                                      borderColor: colors.border
-                                    }}
-                                  >
-                                    {part.vendor}
-                                  </span>
-                                ) : (
-                                  <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                                    darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-700'
-                                  }`}>
-                                    {part.vendor}
-                                  </span>
-                                )
-                              )}
-                            </div>
-                            <div className={`text-xs font-medium ${getStatusTextColor(part)}`}>
-                              {getStatusText(part)}
-                            </div>
-                          </div>
-                          {part.partNumber && part.partNumber !== '-' && (
-                            <p className={`text-xs font-mono mb-3 ${
-                              darkMode ? 'text-gray-400' : 'text-slate-600'
-                            }`}>
-                              Part #: {part.partNumber}
-                            </p>
-                          )}
-                          <div className={`border-t flex-1 flex flex-col justify-end ${
-                            darkMode ? 'border-gray-600' : 'border-gray-200'
-                          }`}>
-                            <div className="pt-3 space-y-2">
-                              <div className="flex justify-between text-sm">
-                                <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
-                                  Part Price:
-                                </span>
-                                <span className={`font-medium ${
-                                  darkMode ? 'text-gray-200' : 'text-gray-800'
+                  <div>
+                    <h4 className={`text-sm font-semibold mb-3 ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      Linked Parts ({linkedParts.length})
+                    </h4>
+                    <div className="flex flex-col gap-4">
+                      {linkedParts.map((part) => {
+                        const vendorColor = part.vendor && vendorColors[part.vendor];
+                        const colors = vendorColor ? getVendorDisplayColor(vendorColor, darkMode) : null;
+                        return (
+                          <div
+                            key={part.id}
+                            className={`p-4 rounded-lg border flex flex-col ${
+                              darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                            }`}
+                          >
+                            <div className="flex justify-between items-start mb-3">
+                              <div className="flex-1">
+                                <h4 className={`font-medium ${
+                                  darkMode ? 'text-gray-100' : 'text-slate-800'
                                 }`}>
-                                  ${(part.price || 0).toFixed(2)}
-                                </span>
+                                  {part.part}
+                                </h4>
+                                {part.vendor && (
+                                  colors ? (
+                                    <span
+                                      className="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium border"
+                                      style={{
+                                        backgroundColor: colors.bg,
+                                        color: colors.text,
+                                        borderColor: colors.border
+                                      }}
+                                    >
+                                      {part.vendor}
+                                    </span>
+                                  ) : (
+                                    <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+                                      darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-700'
+                                    }`}>
+                                      {part.vendor}
+                                    </span>
+                                  )
+                                )}
                               </div>
-                              {part.shipping > 0 && (
-                                <div className="flex justify-between text-sm">
-                                  <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
-                                    Shipping:
-                                  </span>
-                                  <span className={`font-medium ${
-                                    darkMode ? 'text-gray-200' : 'text-gray-800'
-                                  }`}>
-                                    ${part.shipping.toFixed(2)}
-                                  </span>
-                                </div>
-                              )}
-                              {part.duties > 0 && (
-                                <div className="flex justify-between text-sm">
-                                  <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
-                                    Duties:
-                                  </span>
-                                  <span className={`font-medium ${
-                                    darkMode ? 'text-gray-200' : 'text-gray-800'
-                                  }`}>
-                                    ${part.duties.toFixed(2)}
-                                  </span>
-                                </div>
-                              )}
-                              <div className={`flex justify-between text-base font-bold pt-2 border-t ${
-                                darkMode ? 'border-gray-600' : 'border-gray-200'
+                              <div className={`text-xs font-medium ${getStatusTextColor(part)}`}>
+                                {getStatusText(part)}
+                              </div>
+                            </div>
+                            {part.partNumber && part.partNumber !== '-' && (
+                              <p className={`text-xs font-mono mb-3 ${
+                                darkMode ? 'text-gray-400' : 'text-slate-600'
                               }`}>
-                                <span className={darkMode ? 'text-gray-100' : 'text-slate-800'}>
-                                  Total:
-                                </span>
-                                <span className={darkMode ? 'text-gray-100' : 'text-slate-800'}>
-                                  ${(part.total || 0).toFixed(2)}
-                                </span>
+                                Part #: {part.partNumber}
+                              </p>
+                            )}
+                            <div className={`border-t flex-1 flex flex-col justify-end ${
+                              darkMode ? 'border-gray-600' : 'border-gray-200'
+                            }`}>
+                              <div className="pt-3 space-y-2">
+                                <div className="flex justify-between text-sm">
+                                  <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
+                                    Part Price:
+                                  </span>
+                                  <span className={`font-medium ${
+                                    darkMode ? 'text-gray-200' : 'text-gray-800'
+                                  }`}>
+                                    ${(part.price || 0).toFixed(2)}
+                                  </span>
+                                </div>
+                                {part.shipping > 0 && (
+                                  <div className="flex justify-between text-sm">
+                                    <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
+                                      Shipping:
+                                    </span>
+                                    <span className={`font-medium ${
+                                      darkMode ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>
+                                      ${part.shipping.toFixed(2)}
+                                    </span>
+                                  </div>
+                                )}
+                                {part.duties > 0 && (
+                                  <div className="flex justify-between text-sm">
+                                    <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
+                                      Duties:
+                                    </span>
+                                    <span className={`font-medium ${
+                                      darkMode ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>
+                                      ${part.duties.toFixed(2)}
+                                    </span>
+                                  </div>
+                                )}
+                                <div className={`flex justify-between text-base font-bold pt-2 border-t ${
+                                  darkMode ? 'border-gray-600' : 'border-gray-200'
+                                }`}>
+                                  <span className={darkMode ? 'text-gray-100' : 'text-slate-800'}>
+                                    Total:
+                                  </span>
+                                  <span className={darkMode ? 'text-gray-100' : 'text-slate-800'}>
+                                    ${(part.total || 0).toFixed(2)}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 );
               })()}
