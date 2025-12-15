@@ -378,6 +378,15 @@ const VehicleDetailModal = ({
     }
   }, [isOpen, handleCloseServiceEventModal]);
 
+  // Reset document view when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setShowAddDocumentModal(false);
+      setNewDocumentFile(null);
+      setNewDocumentTitle('');
+    }
+  }, [isOpen, setShowAddDocumentModal, setNewDocumentFile, setNewDocumentTitle]);
+
   // Handle generating vehicle report PDF
   const handleGenerateReport = async (saveToDocuments) => {
     if (!viewingVehicle || generatingReport) return;
@@ -502,7 +511,9 @@ const VehicleDetailModal = ({
                 ? vehicleModalProjectView.name
                 : showAddServiceEventModal && isMobile
                   ? (editingServiceEvent ? 'Edit Service Event' : 'Add Service Event')
-                  : (viewingVehicle.nickname || viewingVehicle.name || 'Vehicle Details')}
+                  : showAddDocumentModal && isMobile
+                    ? 'Add Document'
+                    : (viewingVehicle.nickname || viewingVehicle.name || 'Vehicle Details')}
             </h2>
             <div className="flex items-center gap-3">
               {/* Navigation buttons - hidden on mobile, hidden in edit/project view */}
@@ -587,7 +598,7 @@ const VehicleDetailModal = ({
           {/* Vehicle Details View */}
           <div
             className={`w-full transition-all duration-500 ease-in-out ${
-              vehicleModalProjectView || vehicleModalEditMode || (showAddServiceEventModal && isMobile)
+              vehicleModalProjectView || vehicleModalEditMode || ((showAddServiceEventModal || showAddDocumentModal) && isMobile)
                 ? 'absolute opacity-0 pointer-events-none'
                 : 'relative opacity-100'
             }`}
@@ -1338,9 +1349,9 @@ const VehicleDetailModal = ({
                     </div>
                   </div>
 
-                {/* Add Document Modal */}
+                {/* Add Document Modal - Desktop only (mobile uses inline form) */}
                 <AddDocumentModal
-                  isOpen={showAddDocumentModal}
+                  isOpen={showAddDocumentModal && !isMobile}
                   onClose={() => setShowAddDocumentModal(false)}
                   darkMode={darkMode}
                   newDocumentTitle={newDocumentTitle}
@@ -2273,6 +2284,113 @@ const VehicleDetailModal = ({
               </div>
             )}
           </div>
+
+          {/* Inline Add Document Form View - Mobile only */}
+          <div
+            className={`w-full transition-all duration-500 ease-in-out md:hidden ${
+              showAddDocumentModal && isMobile && !vehicleModalProjectView && !vehicleModalEditMode && !showAddServiceEventModal
+                ? 'relative opacity-100'
+                : 'absolute opacity-0 pointer-events-none'
+            }`}
+          >
+            {showAddDocumentModal && isMobile && (
+              <div className="p-6 pb-24 space-y-4 max-h-[calc(90vh-164px)] overflow-y-auto">
+                {/* Document Title field */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    Document Title *
+                  </label>
+                  <input
+                    type="text"
+                    value={newDocumentTitle}
+                    onChange={(e) => setNewDocumentTitle(e.target.value)}
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      darkMode
+                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                        : 'bg-white border-gray-300 text-gray-800 placeholder-gray-400'
+                    }`}
+                    placeholder="e.g., Insurance Certificate"
+                  />
+                </div>
+
+                {/* File field */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    File *
+                  </label>
+                  {newDocumentFile ? (
+                    <div className={`flex items-center gap-3 p-3 rounded-lg border ${
+                      darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                    }`}>
+                      <FileText className={`w-8 h-8 ${
+                        darkMode ? 'text-blue-400' : 'text-blue-600'
+                      }`} />
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-sm font-medium truncate ${
+                          darkMode ? 'text-gray-200' : 'text-gray-800'
+                        }`}>
+                          {newDocumentFile.name}
+                        </p>
+                        <p className={`text-xs ${
+                          darkMode ? 'text-gray-500' : 'text-gray-500'
+                        }`}>
+                          {(newDocumentFile.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setNewDocumentFile(null)}
+                        className={`p-1 rounded ${
+                          darkMode ? 'hover:bg-gray-600 text-gray-400' : 'hover:bg-gray-200 text-gray-600'
+                        }`}
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <label
+                      onDragEnter={handleDocumentDragEnter}
+                      onDragLeave={handleDocumentDragLeave}
+                      onDragOver={handleDocumentDragOver}
+                      onDrop={handleDocumentDrop}
+                      className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-all ${
+                        isDraggingDocument
+                          ? darkMode
+                            ? 'border-blue-400 bg-blue-900/20'
+                            : 'border-blue-500 bg-blue-50'
+                          : darkMode
+                            ? 'border-gray-600 hover:border-gray-500 hover:bg-gray-700/50'
+                            : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                      }`}
+                    >
+                      <Upload className={`w-8 h-8 mb-2 ${
+                        darkMode ? 'text-gray-500' : 'text-gray-400'
+                      }`} />
+                      <p className={`text-sm ${
+                        darkMode ? 'text-gray-400' : 'text-gray-500'
+                      }`}>
+                        Click to upload or drag and drop
+                      </p>
+                      <p className={`text-xs mt-1 ${
+                        darkMode ? 'text-gray-500' : 'text-gray-400'
+                      }`}>
+                        PDF, DOC, Images (max 10MB)
+                      </p>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp"
+                        onChange={handleDocumentFileChange}
+                      />
+                    </label>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Footer with Edit Button */}
@@ -2586,6 +2704,54 @@ const VehicleDetailModal = ({
                   {savingServiceEvent ? 'Saving...' : (editingServiceEvent ? 'Update' : 'Add')}
                 </button>
               </div>
+            </div>
+          ) : showAddDocumentModal && isMobile ? (
+            <div className="flex items-center justify-between w-full gap-2">
+              <button
+                onClick={() => {
+                  setShowAddDocumentModal(false);
+                  setNewDocumentFile(null);
+                  setNewDocumentTitle('');
+                }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors border ${
+                  darkMode
+                    ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500'
+                    : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
+                }`}
+                title="Back to vehicle"
+              >
+                <ChevronDown className="w-5 h-5 rotate-90" />
+              </button>
+              <button
+                onClick={async () => {
+                  if (!newDocumentTitle.trim()) {
+                    toast?.warning('Please enter a document title');
+                    return;
+                  }
+                  if (!newDocumentFile) {
+                    toast?.warning('Please select a file to upload');
+                    return;
+                  }
+                  const result = await addDocument(
+                    viewingVehicle.id,
+                    newDocumentTitle.trim(),
+                    newDocumentFile
+                  );
+                  if (result) {
+                    setShowAddDocumentModal(false);
+                    setNewDocumentFile(null);
+                    setNewDocumentTitle('');
+                  }
+                }}
+                disabled={uploadingDocument || !newDocumentTitle.trim() || !newDocumentFile}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
+                  uploadingDocument || !newDocumentTitle.trim() || !newDocumentFile
+                    ? 'bg-gray-600 cursor-not-allowed text-gray-300'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                }`}
+              >
+                {uploadingDocument ? 'Uploading...' : 'Upload'}
+              </button>
             </div>
           ) : (
             <>
