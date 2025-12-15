@@ -522,9 +522,15 @@ const VehicleDetailModal = ({
                   : showAddDocumentModal && isMobile
                     ? 'Add Document'
                     : viewingInfoEvent && isMobile
-                      ? 'Service Event Details'
+                      ? viewingInfoEvent.description
                       : (viewingVehicle.nickname || viewingVehicle.name || 'Vehicle Details')}
             </h2>
+            {viewingInfoEvent && isMobile && (
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                {viewingInfoEvent.event_date && new Date(viewingInfoEvent.event_date).toLocaleDateString()}
+                {viewingInfoEvent.odometer && ` • ${viewingInfoEvent.odometer.toLocaleString()} mi`}
+              </p>
+            )}
             <div className="flex items-center gap-3">
               {/* Navigation buttons - hidden on mobile, hidden in edit/project view */}
               {!vehicleModalProjectView && !vehicleModalEditMode && navigableVehicles.length > 1 && currentIndex !== -1 && (
