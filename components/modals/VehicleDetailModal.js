@@ -387,6 +387,14 @@ const VehicleDetailModal = ({
     }
   }, [isOpen, setShowAddDocumentModal, setNewDocumentFile, setNewDocumentTitle]);
 
+  // Reset info view when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setViewingInfoEvent(null);
+      setIsInfoModalClosing(false);
+    }
+  }, [isOpen]);
+
   // Handle generating vehicle report PDF
   const handleGenerateReport = async (saveToDocuments) => {
     if (!viewingVehicle || generatingReport) return;
@@ -513,7 +521,9 @@ const VehicleDetailModal = ({
                   ? (editingServiceEvent ? 'Edit Service Event' : 'Add Service Event')
                   : showAddDocumentModal && isMobile
                     ? 'Add Document'
-                    : (viewingVehicle.nickname || viewingVehicle.name || 'Vehicle Details')}
+                    : viewingInfoEvent && isMobile
+                      ? 'Service Event Details'
+                      : (viewingVehicle.nickname || viewingVehicle.name || 'Vehicle Details')}
             </h2>
             <div className="flex items-center gap-3">
               {/* Navigation buttons - hidden on mobile, hidden in edit/project view */}
@@ -598,7 +608,7 @@ const VehicleDetailModal = ({
           {/* Vehicle Details View */}
           <div
             className={`w-full transition-all duration-500 ease-in-out ${
-              vehicleModalProjectView || vehicleModalEditMode || ((showAddServiceEventModal || showAddDocumentModal) && isMobile)
+              vehicleModalProjectView || vehicleModalEditMode || ((showAddServiceEventModal || showAddDocumentModal || viewingInfoEvent) && isMobile)
                 ? 'absolute opacity-0 pointer-events-none'
                 : 'relative opacity-100'
             }`}
@@ -2391,6 +2401,177 @@ const VehicleDetailModal = ({
               </div>
             )}
           </div>
+
+          {/* Inline Service Event Info View - Mobile only */}
+          <div
+            className={`w-full transition-all duration-500 ease-in-out md:hidden ${
+              viewingInfoEvent && isMobile && !vehicleModalProjectView && !vehicleModalEditMode && !showAddServiceEventModal && !showAddDocumentModal
+                ? 'relative opacity-100'
+                : 'absolute opacity-0 pointer-events-none'
+            }`}
+          >
+            {viewingInfoEvent && isMobile && (
+              <div className="p-6 pb-24 space-y-5 max-h-[calc(90vh-164px)] overflow-y-auto">
+                {/* Event Header */}
+                <div>
+                  <h3 className={`text-lg font-semibold ${
+                    darkMode ? 'text-gray-100' : 'text-gray-800'
+                  }`}>
+                    {viewingInfoEvent.description}
+                  </h3>
+                  <p className={`text-sm mt-1 ${
+                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                  }`}>
+                    {new Date(viewingInfoEvent.event_date + 'T00:00:00').toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                    {viewingInfoEvent.odometer && ` • ${parseInt(viewingInfoEvent.odometer).toLocaleString()}${viewingVehicle.odometer_unit ? ` ${viewingVehicle.odometer_unit}` : ''}`}
+                  </p>
+                </div>
+
+                {/* Notes Section */}
+                {viewingInfoEvent.notes && (
+                  <div>
+                    <h4 className={`text-sm font-semibold mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      Notes
+                    </h4>
+                    <p className={`text-sm whitespace-pre-wrap ${
+                      darkMode ? 'text-gray-400' : 'text-gray-600'
+                    }`}>
+                      {viewingInfoEvent.notes}
+                    </p>
+                  </div>
+                )}
+
+                {/* Linked Parts Section */}
+                {(() => {
+                  const linkedParts = viewingInfoEvent.linked_part_ids
+                    ? parts.filter(p => viewingInfoEvent.linked_part_ids.includes(p.id))
+                    : [];
+
+                  if (linkedParts.length === 0) return null;
+
+                  return (
+                    <div>
+                      <h4 className={`text-sm font-semibold mb-3 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        Linked Parts ({linkedParts.length})
+                      </h4>
+                      <div className="flex flex-col gap-4">
+                        {linkedParts.map((part) => {
+                          const vendorColor = part.vendor && vendorColors[part.vendor];
+                          const colors = vendorColor ? getVendorDisplayColor(vendorColor, darkMode) : null;
+                          return (
+                            <div
+                              key={part.id}
+                              className={`p-4 rounded-lg border flex flex-col ${
+                                darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                              }`}
+                            >
+                              <div className="flex justify-between items-start mb-3">
+                                <div className="flex-1">
+                                  <h4 className={`font-medium ${
+                                    darkMode ? 'text-gray-100' : 'text-slate-800'
+                                  }`}>
+                                    {part.part}
+                                  </h4>
+                                  {part.vendor && (
+                                    colors ? (
+                                      <span
+                                        className="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium border"
+                                        style={{
+                                          backgroundColor: colors.bg,
+                                          color: colors.text,
+                                          borderColor: colors.border
+                                        }}
+                                      >
+                                        {part.vendor}
+                                      </span>
+                                    ) : (
+                                      <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+                                        darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-700'
+                                      }`}>
+                                        {part.vendor}
+                                      </span>
+                                    )
+                                  )}
+                                </div>
+                                <div className={`text-xs font-medium ${getStatusTextColor(part)}`}>
+                                  {getStatusText(part)}
+                                </div>
+                              </div>
+                              {part.partNumber && part.partNumber !== '-' && (
+                                <p className={`text-xs font-mono mb-3 ${
+                                  darkMode ? 'text-gray-400' : 'text-slate-600'
+                                }`}>
+                                  Part #: {part.partNumber}
+                                </p>
+                              )}
+                              <div className={`border-t flex-1 flex flex-col justify-end ${
+                                darkMode ? 'border-gray-600' : 'border-gray-200'
+                              }`}>
+                                <div className="pt-3 space-y-2">
+                                  <div className="flex justify-between text-sm">
+                                    <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
+                                      Part Price:
+                                    </span>
+                                    <span className={`font-medium ${
+                                      darkMode ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>
+                                      ${(part.price || 0).toFixed(2)}
+                                    </span>
+                                  </div>
+                                  {part.shipping > 0 && (
+                                    <div className="flex justify-between text-sm">
+                                      <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
+                                        Shipping:
+                                      </span>
+                                      <span className={`font-medium ${
+                                        darkMode ? 'text-gray-200' : 'text-gray-800'
+                                      }`}>
+                                        ${part.shipping.toFixed(2)}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {part.duties > 0 && (
+                                    <div className="flex justify-between text-sm">
+                                      <span className={darkMode ? 'text-gray-400' : 'text-slate-600'}>
+                                        Duties:
+                                      </span>
+                                      <span className={`font-medium ${
+                                        darkMode ? 'text-gray-200' : 'text-gray-800'
+                                      }`}>
+                                        ${part.duties.toFixed(2)}
+                                      </span>
+                                    </div>
+                                  )}
+                                  <div className={`flex justify-between text-base font-bold pt-2 border-t ${
+                                    darkMode ? 'border-gray-600' : 'border-gray-200'
+                                  }`}>
+                                    <span className={darkMode ? 'text-gray-100' : 'text-slate-800'}>
+                                      Total:
+                                    </span>
+                                    <span className={darkMode ? 'text-gray-100' : 'text-slate-800'}>
+                                      ${(part.total || 0).toFixed(2)}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Footer with Edit Button */}
@@ -2753,6 +2934,32 @@ const VehicleDetailModal = ({
                 {uploadingDocument ? 'Uploading...' : 'Upload'}
               </button>
             </div>
+          ) : viewingInfoEvent && isMobile ? (
+            <div className="flex items-center justify-between w-full gap-2">
+              <button
+                onClick={() => {
+                  setViewingInfoEvent(null);
+                }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors border ${
+                  darkMode
+                    ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-gray-600 hover:border-gray-500'
+                    : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border-gray-300 hover:border-gray-400'
+                }`}
+                title="Back to vehicle"
+              >
+                <ChevronDown className="w-5 h-5 rotate-90" />
+              </button>
+              <button
+                onClick={() => {
+                  openEditServiceEventModal(viewingInfoEvent);
+                  setViewingInfoEvent(null);
+                }}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
+              >
+                <Edit2 className="w-3 h-3" />
+                Edit
+              </button>
+            </div>
           ) : (
             <>
               {/* Navigation controls on the left - mobile only */}
@@ -2822,8 +3029,8 @@ const VehicleDetailModal = ({
         generating={generatingReport}
       />
 
-      {/* Service Event Info Modal (Notes + Parts) */}
-      {(viewingInfoEvent || isInfoModalClosing) && (
+      {/* Service Event Info Modal (Notes + Parts) - Desktop only */}
+      {(viewingInfoEvent || isInfoModalClosing) && !isMobile && (
         <div
           className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70] modal-backdrop ${
             isInfoModalClosing ? 'modal-backdrop-exit' : 'modal-backdrop-enter'
