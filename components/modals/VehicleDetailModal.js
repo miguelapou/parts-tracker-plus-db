@@ -311,7 +311,9 @@ const VehicleDetailModal = ({
 
   const serviceEventsHiddenCount = Math.max(0, sortedServiceEvents.length - 3);
   const serviceEventHeight = 85; // Approximate height per event including gap
-  const serviceEventsCollapsedHeight = Math.min(sortedServiceEvents.length, 3) * serviceEventHeight;
+  const addCardHeight = 80; // Height of the "Add service event" card
+  // Collapsed height shows last 3 events + add card
+  const serviceEventsCollapsedHeight = Math.min(sortedServiceEvents.length, 3) * serviceEventHeight + addCardHeight;
   // Calculate offset to shift content up when collapsed (to show last 3 items)
   const serviceEventsCollapseOffset = serviceEventsHiddenCount * serviceEventHeight;
 
@@ -995,44 +997,44 @@ const VehicleDetailModal = ({
                           </div>
                         );
                         })}
-                      </div>
-                    </div>
 
-                    {/* Add new service event card */}
-                    <div
-                      onClick={openAddServiceEventModal}
-                      className="relative flex items-stretch gap-4 cursor-pointer group mt-4"
-                    >
-                      {/* Timeline column with icon */}
-                      <div className="relative flex flex-col items-center">
-                        {/* Timeline dot for add card - with background to cover line */}
-                        <div className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border-2 border-dashed ${
-                          darkMode
-                            ? 'bg-gray-800 border-gray-600 can-hover:group-hover:border-blue-500'
-                            : 'bg-slate-200 border-gray-300 can-hover:group-hover:border-blue-500'
-                        } transition-colors`}>
-                          <Plus className={`w-4 h-4 ${
-                            darkMode ? 'text-gray-500 can-hover:group-hover:text-blue-400' : 'text-gray-400 can-hover:group-hover:text-blue-600'
-                          } transition-colors`} />
+                        {/* Add new service event card - inside inner container to stay connected */}
+                        <div
+                          onClick={openAddServiceEventModal}
+                          className="relative flex items-stretch gap-4 cursor-pointer group mt-4"
+                        >
+                          {/* Timeline column with icon */}
+                          <div className="relative flex flex-col items-center">
+                            {/* Timeline dot for add card - with background to cover line */}
+                            <div className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border-2 border-dashed ${
+                              darkMode
+                                ? 'bg-gray-800 border-gray-600 can-hover:group-hover:border-blue-500'
+                                : 'bg-slate-200 border-gray-300 can-hover:group-hover:border-blue-500'
+                            } transition-colors`}>
+                              <Plus className={`w-4 h-4 ${
+                                darkMode ? 'text-gray-500 can-hover:group-hover:text-blue-400' : 'text-gray-400 can-hover:group-hover:text-blue-600'
+                              } transition-colors`} />
+                            </div>
+                          </div>
+
+                          {/* Add card content */}
+                          <div className={`flex-1 rounded-lg p-3 border-2 border-dashed transition-all ${
+                            darkMode
+                              ? 'border-gray-600 can-hover:group-hover:border-blue-500 can-hover:group-hover:bg-gray-700/30'
+                              : 'border-gray-300 can-hover:group-hover:border-blue-500 can-hover:group-hover:bg-blue-50/30'
+                          }`}>
+                            <p className={`text-sm font-medium ${
+                              darkMode ? 'text-gray-400 can-hover:group-hover:text-gray-200' : 'text-gray-500 can-hover:group-hover:text-gray-700'
+                            } transition-colors`}>
+                              Add service event
+                            </p>
+                            <p className={`text-xs mt-0.5 ${
+                              darkMode ? 'text-gray-600' : 'text-gray-400'
+                            }`}>
+                              Track maintenance and repairs
+                            </p>
+                          </div>
                         </div>
-                      </div>
-
-                      {/* Add card content */}
-                      <div className={`flex-1 rounded-lg p-3 border-2 border-dashed transition-all ${
-                        darkMode
-                          ? 'border-gray-600 can-hover:group-hover:border-blue-500 can-hover:group-hover:bg-gray-700/30'
-                          : 'border-gray-300 can-hover:group-hover:border-blue-500 can-hover:group-hover:bg-blue-50/30'
-                      }`}>
-                        <p className={`text-sm font-medium ${
-                          darkMode ? 'text-gray-400 can-hover:group-hover:text-gray-200' : 'text-gray-500 can-hover:group-hover:text-gray-700'
-                        } transition-colors`}>
-                          Add service event
-                        </p>
-                        <p className={`text-xs mt-0.5 ${
-                          darkMode ? 'text-gray-600' : 'text-gray-400'
-                        }`}>
-                          Track maintenance and repairs
-                        </p>
                       </div>
                     </div>
                   </div>
