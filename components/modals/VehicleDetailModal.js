@@ -727,6 +727,18 @@ const VehicleDetailModal = ({
                   }`}>
                     Service History
                   </h3>
+                  {(() => {
+                    const servicePartsTotal = calculateServicePartsTotal(viewingVehicle.id, parts, serviceEvents);
+                    if (servicePartsTotal === 0) return null;
+                    return (
+                      <span className={`px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 ${
+                        darkMode ? 'bg-blue-900/40 text-blue-300' : 'bg-blue-100 text-blue-700'
+                      }`}>
+                        <Wrench className="w-3 h-3" />
+                        ${servicePartsTotal.toFixed(2)}
+                      </span>
+                    );
+                  })()}
                 </div>
                 <div className={`relative ${!loadingServiceEvents ? 'animate-fade-in' : ''}`} onClick={() => setSelectedEventId(null)}>
                     {/* Timeline items */}
@@ -1157,33 +1169,6 @@ const VehicleDetailModal = ({
                     </p>
                   </div>
                 )}
-
-                {/* Service Parts Total */}
-                {(() => {
-                  const servicePartsTotal = calculateServicePartsTotal(viewingVehicle.id, parts, serviceEvents);
-                  if (servicePartsTotal === 0) return null;
-                  return (
-                    <div className={`mt-3 px-3 py-2 rounded-md border border-dashed flex items-center justify-between ${
-                      darkMode ? 'bg-blue-900/20 border-blue-500/50' : 'bg-blue-50 border-blue-300'
-                    }`}>
-                      <div className="flex items-center gap-1.5">
-                        <Wrench className={`w-4 h-4 ${
-                          darkMode ? 'text-blue-400' : 'text-blue-600'
-                        }`} />
-                        <span className={`text-xs font-medium ${
-                          darkMode ? 'text-blue-300' : 'text-blue-700'
-                        }`}>
-                          Service Parts
-                        </span>
-                      </div>
-                      <span className={`text-sm font-bold ${
-                        darkMode ? 'text-blue-200' : 'text-blue-800'
-                      }`}>
-                        ${servicePartsTotal.toFixed(2)}
-                      </span>
-                    </div>
-                  );
-                })()}
                 </div>
               </div>
 
