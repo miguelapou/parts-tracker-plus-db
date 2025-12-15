@@ -512,26 +512,35 @@ const VehicleDetailModal = ({
           darkMode ? 'bg-gray-800 border-gray-700' : 'bg-slate-50 border-slate-200'
         }`}>
           <div className="flex items-center justify-between gap-4">
-            <h2 className={`text-2xl font-bold ${
-              darkMode ? 'text-gray-100' : 'text-slate-800'
-            }`} style={{ fontFamily: "'FoundationOne', 'Courier New', monospace" }}>
-              {vehicleModalProjectView
-                ? vehicleModalProjectView.name
-                : showAddServiceEventModal && isMobile
-                  ? (editingServiceEvent ? 'Edit Service Event' : 'Add Service Event')
-                  : showAddDocumentModal && isMobile
-                    ? 'Add Document'
-                    : viewingInfoEvent && isMobile
-                      ? viewingInfoEvent.description
-                      : (viewingVehicle.nickname || viewingVehicle.name || 'Vehicle Details')}
-            </h2>
-            {viewingInfoEvent && isMobile && (
-              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                {viewingInfoEvent.event_date && new Date(viewingInfoEvent.event_date).toLocaleDateString()}
-                {viewingInfoEvent.odometer && ` • ${viewingInfoEvent.odometer.toLocaleString()} mi`}
-              </p>
-            )}
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col min-w-0 flex-1">
+              <h2 className={`font-bold whitespace-nowrap overflow-hidden text-ellipsis ${
+                viewingInfoEvent && isMobile ? 'text-lg' : 'text-2xl'
+              } ${
+                darkMode ? 'text-gray-100' : 'text-slate-800'
+              }`} style={{
+                fontFamily: "'FoundationOne', 'Courier New', monospace",
+                ...(viewingInfoEvent && isMobile && viewingInfoEvent.description?.length > 25
+                  ? { fontSize: 'clamp(0.875rem, 4vw, 1.125rem)' }
+                  : {})
+              }}>
+                {vehicleModalProjectView
+                  ? vehicleModalProjectView.name
+                  : showAddServiceEventModal && isMobile
+                    ? (editingServiceEvent ? 'Edit Service Event' : 'Add Service Event')
+                    : showAddDocumentModal && isMobile
+                      ? 'Add Document'
+                      : viewingInfoEvent && isMobile
+                        ? viewingInfoEvent.description
+                        : (viewingVehicle.nickname || viewingVehicle.name || 'Vehicle Details')}
+              </h2>
+              {viewingInfoEvent && isMobile && (
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  {viewingInfoEvent.event_date && new Date(viewingInfoEvent.event_date).toLocaleDateString()}
+                  {viewingInfoEvent.odometer && ` • ${viewingInfoEvent.odometer.toLocaleString()} mi`}
+                </p>
+              )}
+            </div>
+            <div className="flex items-center gap-3 flex-shrink-0">
               {/* Navigation buttons - hidden on mobile, hidden in edit/project view */}
               {!vehicleModalProjectView && !vehicleModalEditMode && navigableVehicles.length > 1 && currentIndex !== -1 && (
                 <div className="hidden md:flex items-center">
