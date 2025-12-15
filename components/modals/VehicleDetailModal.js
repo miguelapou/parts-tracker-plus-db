@@ -945,8 +945,8 @@ const VehicleDetailModal = ({
                                       }}
                                       className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
                                         darkMode
-                                          ? 'bg-gray-700 text-cyan-400 can-hover:hover:ring-2 can-hover:hover:ring-cyan-400'
-                                          : 'bg-white text-cyan-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-cyan-600'
+                                          ? 'bg-gray-700 text-yellow-400 can-hover:hover:ring-2 can-hover:hover:ring-yellow-400'
+                                          : 'bg-white text-yellow-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-yellow-600'
                                       }`}
                                     >
                                       <Info className="w-5 h-5 mb-0.5" />
@@ -2302,16 +2302,17 @@ const VehicleDetailModal = ({
                 <h3 className={`text-base font-semibold ${
                   darkMode ? 'text-gray-100' : 'text-gray-800'
                 }`} style={{ fontFamily: "'FoundationOne', 'Courier New', monospace" }}>
-                  Info
+                  {viewingInfoEvent?.description}
                 </h3>
                 <p className={`text-xs mt-0.5 ${
                   darkMode ? 'text-gray-400' : 'text-gray-500'
                 }`}>
-                  {viewingInfoEvent?.description} • {viewingInfoEvent && new Date(viewingInfoEvent.event_date + 'T00:00:00').toLocaleDateString('en-US', {
+                  {viewingInfoEvent && new Date(viewingInfoEvent.event_date + 'T00:00:00').toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'
                   })}
+                  {viewingInfoEvent?.odometer && ` • ${parseInt(viewingInfoEvent.odometer).toLocaleString()} mi`}
                 </p>
               </div>
               <button
