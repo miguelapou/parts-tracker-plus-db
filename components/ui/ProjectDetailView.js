@@ -642,10 +642,10 @@ const ProjectDetailView = ({
           </div>
 
           {/* Desktop: Vertical Bar Graphs (3 equal columns) */}
-          <div className="hidden lg:grid lg:grid-cols-3 lg:gap-4 lg:flex-1">
+          <div className="hidden lg:grid lg:grid-cols-3 lg:gap-4 lg:flex-1 lg:items-end">
             {/* Column 1: Budget Bar */}
-            <div className="flex flex-col items-end pr-2 h-full">
-              <div className="flex flex-col items-center flex-1">
+            <div className="flex flex-col items-end pr-2 h-full self-stretch">
+              <div className="flex flex-col items-center flex-1 justify-end">
                 <div
                   className={`w-14 rounded-lg relative overflow-hidden flex-1 min-h-[165px] max-h-[300px] ${
                     darkMode ? 'bg-gray-700' : 'bg-gray-300'
@@ -670,8 +670,8 @@ const ProjectDetailView = ({
             </div>
 
             {/* Column 2: To-Dos Bar */}
-            <div className="flex flex-col items-center h-full">
-              <div className="flex flex-col items-center flex-1">
+            <div className="flex flex-col items-center h-full self-stretch">
+              <div className="flex flex-col items-center flex-1 justify-end">
                 <div
                   className={`w-14 rounded-lg relative overflow-hidden flex-1 min-h-[165px] max-h-[300px] ${
                     darkMode ? 'bg-gray-700' : 'bg-gray-300'
@@ -695,7 +695,7 @@ const ProjectDetailView = ({
             </div>
 
             {/* Column 3: Legend */}
-            <div className="flex flex-col justify-end h-full">
+            <div className="flex flex-col justify-end">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <div
