@@ -114,6 +114,11 @@ const VehicleDetailModal = ({
   const [serviceHistoryExpanded, setServiceHistoryExpanded] = useState(false);
   // State for mobile detection (to show inline service event form instead of modal)
   const [isMobile, setIsMobile] = useState(false);
+  // State for inline service event parts dropdown
+  const [showInlinePartsDropdown, setShowInlinePartsDropdown] = useState(false);
+  const [isInlineDropdownClosing, setIsInlineDropdownClosing] = useState(false);
+  const [inlinePartsSearchTerm, setInlinePartsSearchTerm] = useState('');
+  const inlinePartsDropdownRef = useRef(null);
 
   // Track screen size for responsive behavior
   useEffect(() => {
@@ -122,6 +127,45 @@ const VehicleDetailModal = ({
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Close inline parts dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (inlinePartsDropdownRef.current && !inlinePartsDropdownRef.current.contains(event.target)) {
+        if (showInlinePartsDropdown && !isInlineDropdownClosing) {
+          setIsInlineDropdownClosing(true);
+          setTimeout(() => {
+            setShowInlinePartsDropdown(false);
+            setIsInlineDropdownClosing(false);
+          }, 150);
+        }
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showInlinePartsDropdown, isInlineDropdownClosing]);
+
+  // Reset inline dropdown state when service event modal closes
+  useEffect(() => {
+    if (!showAddServiceEventModal) {
+      setShowInlinePartsDropdown(false);
+      setIsInlineDropdownClosing(false);
+      setInlinePartsSearchTerm('');
+    }
+  }, [showAddServiceEventModal]);
+
+  // Toggle inline parts dropdown
+  const toggleInlinePartsDropdown = () => {
+    if (showInlinePartsDropdown) {
+      setIsInlineDropdownClosing(true);
+      setTimeout(() => {
+        setShowInlinePartsDropdown(false);
+        setIsInlineDropdownClosing(false);
+      }, 150);
+    } else {
+      setShowInlinePartsDropdown(true);
+    }
+  };
 
   // Reset service history expansion when viewing a different vehicle
   useEffect(() => {
@@ -2044,7 +2088,7 @@ const VehicleDetailModal = ({
                 </div>
 
                 {/* Linked Parts field */}
-                <div>
+                <div ref={inlinePartsDropdownRef} className="relative">
                   <label className={`block text-sm font-medium mb-2 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
@@ -2091,68 +2135,130 @@ const VehicleDetailModal = ({
                     </div>
                   )}
 
-                  {/* Parts list - scrollable */}
-                  <div className={`max-h-40 overflow-y-auto rounded-lg border ${
-                    darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
-                  }`}>
-                    {parts.length === 0 ? (
-                      <div className={`p-3 text-sm text-center ${
-                        darkMode ? 'text-gray-400' : 'text-gray-500'
-                      }`}>
-                        No parts available
-                      </div>
-                    ) : (
-                      parts.map(part => {
-                        const vendorColor = part.vendor && vendorColors[part.vendor];
-                        const colors = vendorColor ? getVendorDisplayColor(vendorColor, darkMode) : null;
-                        const isSelected = newEventLinkedParts && newEventLinkedParts.includes(part.id);
-                        return (
-                          <button
-                            key={part.id}
-                            type="button"
-                            onClick={() => {
-                              if (isSelected) {
-                                setNewEventLinkedParts(newEventLinkedParts.filter(id => id !== part.id));
-                              } else {
-                                setNewEventLinkedParts([...(newEventLinkedParts || []), part.id]);
-                              }
-                            }}
-                            className={`w-full px-3 py-2 flex items-center gap-2 text-left transition-colors ${
-                              isSelected
-                                ? darkMode ? 'bg-blue-900/30' : 'bg-blue-50'
-                                : darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-50'
-                            }`}
-                          >
-                            <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
-                              isSelected
-                                ? 'bg-blue-500 border-blue-500'
-                                : darkMode ? 'border-gray-500' : 'border-gray-300'
-                            }`}>
-                              {isSelected && <CheckCircle className="w-3 h-3 text-white" />}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <span className={`text-sm font-medium truncate block ${
-                                darkMode ? 'text-gray-200' : 'text-gray-800'
-                              }`}>
-                                {part.part}
-                              </span>
-                              {part.vendor && (
-                                <span
-                                  className="text-xs"
-                                  style={colors ? { color: colors.text } : { color: darkMode ? '#9CA3AF' : '#6B7280' }}
-                                >
-                                  {part.vendor}
-                                </span>
-                              )}
-                            </div>
-                            <span className={`text-xs font-medium ${
+                  {/* Dropdown trigger */}
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={toggleInlinePartsDropdown}
+                      className={`w-full px-4 py-2 border rounded-lg flex items-center justify-between transition-colors ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-300 hover:border-gray-500'
+                          : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400'
+                      }`}
+                    >
+                      <span>{!newEventLinkedParts || newEventLinkedParts.length === 0 ? 'Select parts...' : `${newEventLinkedParts.length} part${newEventLinkedParts.length !== 1 ? 's' : ''} selected`}</span>
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showInlinePartsDropdown ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {/* Dropdown menu - opens upward since this field is at the bottom */}
+                    {showInlinePartsDropdown && (
+                      <div
+                        className={`absolute z-50 bottom-full mb-1 w-full max-h-64 overflow-y-auto rounded-lg border shadow-lg transition-all duration-150 ${
+                          isInlineDropdownClosing
+                            ? 'opacity-0 translate-y-2'
+                            : 'opacity-100 translate-y-0'
+                        } ${
+                          darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                        }`}
+                        style={{ animation: isInlineDropdownClosing ? 'none' : 'slideUp 150ms ease-out' }}
+                      >
+                        {/* Search input */}
+                        <div className={`sticky top-0 p-2 border-b ${
+                          darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'
+                        }`}>
+                          <div className="relative">
+                            <input
+                              type="text"
+                              value={inlinePartsSearchTerm}
+                              onChange={(e) => setInlinePartsSearchTerm(e.target.value)}
+                              placeholder="Search parts..."
+                              className={`w-full px-3 py-1.5 pr-8 text-sm border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                darkMode
+                                  ? 'bg-gray-600 border-gray-500 text-gray-100 placeholder-gray-400'
+                                  : 'bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-400'
+                              }`}
+                            />
+                            {inlinePartsSearchTerm && (
+                              <button
+                                type="button"
+                                onClick={() => setInlinePartsSearchTerm('')}
+                                className={`absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full transition-colors ${
+                                  darkMode ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-500' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-200'
+                                }`}
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Parts list */}
+                        {(() => {
+                          const filteredParts = parts.filter(part =>
+                            part.part.toLowerCase().includes(inlinePartsSearchTerm.toLowerCase()) ||
+                            (part.vendor && part.vendor.toLowerCase().includes(inlinePartsSearchTerm.toLowerCase()))
+                          );
+                          return filteredParts.length === 0 ? (
+                            <div className={`p-3 text-sm text-center ${
                               darkMode ? 'text-gray-400' : 'text-gray-500'
                             }`}>
-                              ${part.total?.toFixed(2) || '0.00'}
-                            </span>
-                          </button>
-                        );
-                      })
+                              No parts found
+                            </div>
+                          ) : (
+                            filteredParts.map(part => {
+                              const vendorColor = part.vendor && vendorColors[part.vendor];
+                              const colors = vendorColor ? getVendorDisplayColor(vendorColor, darkMode) : null;
+                              const isSelected = newEventLinkedParts && newEventLinkedParts.includes(part.id);
+                              return (
+                                <button
+                                  key={part.id}
+                                  type="button"
+                                  onClick={() => {
+                                    if (isSelected) {
+                                      setNewEventLinkedParts(newEventLinkedParts.filter(id => id !== part.id));
+                                    } else {
+                                      setNewEventLinkedParts([...(newEventLinkedParts || []), part.id]);
+                                    }
+                                  }}
+                                  className={`w-full px-3 py-2 flex items-center gap-2 text-left transition-colors ${
+                                    isSelected
+                                      ? darkMode ? 'bg-blue-900/30' : 'bg-blue-50'
+                                      : darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-50'
+                                  }`}
+                                >
+                                  <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+                                    isSelected
+                                      ? 'bg-blue-500 border-blue-500'
+                                      : darkMode ? 'border-gray-500' : 'border-gray-300'
+                                  }`}>
+                                    {isSelected && <CheckCircle className="w-3 h-3 text-white" />}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <span className={`text-sm font-medium truncate block ${
+                                      darkMode ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>
+                                      {part.part}
+                                    </span>
+                                    {part.vendor && (
+                                      <span
+                                        className="text-xs"
+                                        style={colors ? { color: colors.text } : { color: darkMode ? '#9CA3AF' : '#6B7280' }}
+                                      >
+                                        {part.vendor}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className={`text-xs font-medium ${
+                                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                                  }`}>
+                                    ${part.total?.toFixed(2) || '0.00'}
+                                  </span>
+                                </button>
+                              );
+                            })
+                          );
+                        })()}
+                      </div>
                     )}
                   </div>
                 </div>
