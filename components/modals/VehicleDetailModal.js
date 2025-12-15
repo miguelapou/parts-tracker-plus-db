@@ -748,8 +748,8 @@ const VehicleDetailModal = ({
                           new Date(a.event_date + 'T00:00:00') - new Date(b.event_date + 'T00:00:00')
                         ) : [];
                         const totalEvents = sortedEvents.length;
-                        const hiddenCount = Math.max(0, totalEvents - 4);
-                        const visibleEvents = serviceHistoryExpanded ? sortedEvents : sortedEvents.slice(-4);
+                        const hiddenCount = Math.max(0, totalEvents - 3);
+                        const visibleEvents = serviceHistoryExpanded ? sortedEvents : sortedEvents.slice(-3);
 
                         return (
                           <>
