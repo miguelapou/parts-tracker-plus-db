@@ -802,25 +802,21 @@ const VehicleDetailModal = ({
                       </button>
                     )}
 
-                    {/* Outer wrapper - clips content and controls visible height */}
+                    {/* Outer wrapper - uses flex to align content to bottom when collapsed */}
                     <div
-                      className="transition-all duration-500 ease-in-out"
+                      className="transition-all duration-500 ease-in-out flex flex-col"
                       style={{
                         maxHeight: serviceHistoryExpanded
                           ? `${serviceHistoryHeight || sortedServiceEvents.length * serviceEventHeight + addCardHeight}px`
                           : `${serviceEventsCollapsedHeight}px`,
-                        overflow: 'hidden'
+                        overflow: 'hidden',
+                        justifyContent: serviceHistoryExpanded ? 'flex-start' : 'flex-end'
                       }}
                     >
-                      {/* Inner container - uses negative margin to shift content up when collapsed */}
+                      {/* Inner container */}
                       <div
                         ref={serviceHistoryRef}
-                        className="flex flex-col gap-4 transition-all duration-500 ease-in-out"
-                        style={{
-                          marginTop: serviceHistoryExpanded
-                            ? 0
-                            : `-${serviceEventsCollapseOffset}px`
-                        }}
+                        className="flex flex-col gap-4"
                       >
                         {sortedServiceEvents.map((event, index) => {
                         const eventDate = new Date(event.event_date + 'T00:00:00');
