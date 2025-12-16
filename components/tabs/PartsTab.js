@@ -811,7 +811,7 @@ const PartsTab = ({
                 }`} />
                 <input
                   type="text"
-                  placeholder="Search parts..."
+                  placeholder={stats.total === 0 ? "Add parts to use search" : "Search parts..."}
                   className={`w-full pl-10 pr-10 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                     darkMode
                       ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
@@ -823,6 +823,7 @@ const PartsTab = ({
                     setSearchTerm(e.target.value);
                     setTimeout(() => setIsSearching(false), 600);
                   }}
+                  disabled={stats.total === 0}
                 />
                 {searchTerm && (
                   <button
@@ -1006,7 +1007,7 @@ const PartsTab = ({
               }`} />
               <input
                 type="text"
-                placeholder="Search parts..."
+                placeholder={stats.total === 0 ? "Add parts to use search" : "Search parts..."}
                 className={`w-full pl-10 pr-10 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                   darkMode
                     ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
@@ -1018,6 +1019,7 @@ const PartsTab = ({
                   setSearchTerm(e.target.value);
                   setTimeout(() => setIsSearching(false), 600);
                 }}
+                disabled={stats.total === 0}
               />
               {searchTerm && (
                 <button

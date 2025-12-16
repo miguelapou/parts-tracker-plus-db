@@ -1556,7 +1556,7 @@ const Shako = () => {
                 className={`p-2 sm:p-3 rounded-lg shadow-md transition-colors bg-blue-600 hover:bg-blue-700 text-white ${
                   darkMode ? '' : ''
                 }`}
-                title="Add New"
+                title={activeTab === 'vehicles' ? 'Add new vehicle' : activeTab === 'projects' ? 'Add new project' : 'Add new part'}
               >
                 <Plus className="w-5 h-5" />
               </button>
