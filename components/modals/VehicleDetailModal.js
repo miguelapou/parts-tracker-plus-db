@@ -847,7 +847,30 @@ const VehicleDetailModal = ({
                   }
 
                   return (
-                    <div className="order-first rounded-lg overflow-hidden relative group">
+                    <div
+                      className="order-first rounded-lg overflow-hidden relative group touch-pan-y"
+                      onTouchStart={(e) => {
+                        if (!hasMultipleImages) return;
+                        const touch = e.touches[0];
+                        e.currentTarget.dataset.touchStartX = touch.clientX;
+                      }}
+                      onTouchEnd={(e) => {
+                        if (!hasMultipleImages) return;
+                        const touchStartX = parseFloat(e.currentTarget.dataset.touchStartX);
+                        const touchEndX = e.changedTouches[0].clientX;
+                        const diff = touchStartX - touchEndX;
+                        // Swipe threshold of 50px
+                        if (Math.abs(diff) > 50) {
+                          if (diff > 0) {
+                            // Swipe left - next image
+                            setCurrentImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1);
+                          } else {
+                            // Swipe right - previous image
+                            setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1);
+                          }
+                        }
+                      }}
+                    >
                       <FadeInImage
                         src={currentImage.url}
                         alt={viewingVehicle.nickname || viewingVehicle.name}
@@ -855,33 +878,33 @@ const VehicleDetailModal = ({
                         decoding="async"
                         className="w-full h-full object-cover min-h-[300px]"
                       />
-                      {/* Navigation arrows - only show if multiple images */}
+                      {/* Navigation arrows - visible on mobile, hover on desktop */}
                       {hasMultipleImages && (
                         <>
                           <button
                             onClick={() => setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1)}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
+                            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:bg-black/70"
                             title="Previous image"
                           >
                             <ChevronLeft className="w-5 h-5" />
                           </button>
                           <button
                             onClick={() => setCurrentImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1)}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:bg-black/70"
                             title="Next image"
                           >
                             <ChevronRight className="w-5 h-5" />
                           </button>
-                          {/* Image indicators */}
-                          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                          {/* Image indicators - larger touch targets on mobile */}
+                          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 md:gap-1.5">
                             {images.map((img, idx) => (
                               <button
                                 key={idx}
                                 onClick={() => setCurrentImageIndex(idx)}
-                                className={`w-2 h-2 rounded-full transition-all ${
+                                className={`rounded-full transition-all ${
                                   idx === safeIndex
-                                    ? 'bg-white w-4'
-                                    : 'bg-white/50 hover:bg-white/75'
+                                    ? 'bg-white w-6 h-3 md:w-4 md:h-2'
+                                    : 'bg-white/50 hover:bg-white/75 w-3 h-3 md:w-2 md:h-2'
                                 }`}
                                 title={img.isPrimary ? 'Primary image' : `Image ${idx + 1}`}
                               />
@@ -1903,26 +1926,30 @@ const VehicleDetailModal = ({
                       {viewingVehicle.images_resolved && viewingVehicle.images_resolved.length > 0 && (
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
                           {viewingVehicle.images_resolved.map((img, index) => (
-                            <div key={`existing-${index}`} className="relative group aspect-square">
-                              <FadeInImage
-                                src={img.url}
-                                alt={`Vehicle image ${index + 1}`}
-                                className={`w-full h-full object-cover rounded-lg ${
-                                  darkMode ? 'bg-gray-700' : 'bg-gray-200'
-                                }`}
-                              />
+                            <div key={`existing-${index}`} className="relative group">
+                              <div className="aspect-square">
+                                <FadeInImage
+                                  src={img.url}
+                                  alt={`Vehicle image ${index + 1}`}
+                                  className={`w-full h-full object-cover rounded-t-lg md:rounded-lg ${
+                                    darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                                  }`}
+                                />
+                              </div>
                               {/* Primary badge */}
                               {img.isPrimary && (
                                 <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-blue-600 text-white text-xs font-medium">
                                   Primary
                                 </div>
                               )}
-                              {/* Action buttons on hover */}
-                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                              {/* Action buttons - always visible on mobile, hover on desktop */}
+                              {/* Mobile: bottom bar */}
+                              <div className={`md:hidden flex rounded-b-lg overflow-hidden ${
+                                darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                              }`}>
                                 {!img.isPrimary && (
                                   <button
                                     onClick={() => {
-                                      // Set this image as primary
                                       const updatedImages = viewingVehicle.images_resolved.map((i, idx) => ({
                                         ...i,
                                         isPrimary: idx === index
@@ -1936,19 +1963,18 @@ const VehicleDetailModal = ({
                                         }))
                                       });
                                     }}
-                                    className="p-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
-                                    title="Set as primary"
+                                    className={`flex-1 py-2 text-xs font-medium ${
+                                      darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
+                                    }`}
                                   >
-                                    <CheckCircle className="w-4 h-4" />
+                                    Set Primary
                                   </button>
                                 )}
                                 <button
                                   onClick={() => {
-                                    // Remove this image
                                     const wasPrimary = img.isPrimary;
                                     const updatedImages = viewingVehicle.images_resolved.filter((_, idx) => idx !== index);
                                     const updatedDbImages = viewingVehicle.images?.filter((_, idx) => idx !== index);
-                                    // If we removed the primary, make the first one primary
                                     if (wasPrimary && updatedImages.length > 0) {
                                       updatedImages[0].isPrimary = true;
                                       if (updatedDbImages && updatedDbImages.length > 0) {
@@ -1959,15 +1985,64 @@ const VehicleDetailModal = ({
                                       ...viewingVehicle,
                                       images_resolved: updatedImages,
                                       images: updatedDbImages,
-                                      // Also clear legacy image_url if images array becomes empty
                                       image_url: updatedImages.length > 0 ? viewingVehicle.image_url : '',
                                       image_url_resolved: updatedImages.length > 0 ? viewingVehicle.image_url_resolved : ''
                                     });
                                   }}
-                                  className="p-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white transition-colors"
+                                  className={`flex-1 py-2 text-xs font-medium ${
+                                    darkMode ? 'bg-red-600 text-white' : 'bg-red-500 text-white'
+                                  }`}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                              {/* Desktop: hover overlay */}
+                              <div className="hidden md:flex absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg items-center justify-center gap-2">
+                                {!img.isPrimary && (
+                                  <button
+                                    onClick={() => {
+                                      const updatedImages = viewingVehicle.images_resolved.map((i, idx) => ({
+                                        ...i,
+                                        isPrimary: idx === index
+                                      }));
+                                      setViewingVehicle({
+                                        ...viewingVehicle,
+                                        images_resolved: updatedImages,
+                                        images: viewingVehicle.images?.map((i, idx) => ({
+                                          ...i,
+                                          isPrimary: idx === index
+                                        }))
+                                      });
+                                    }}
+                                    className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                                    title="Set as primary"
+                                  >
+                                    <CheckCircle className="w-5 h-5" />
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => {
+                                    const wasPrimary = img.isPrimary;
+                                    const updatedImages = viewingVehicle.images_resolved.filter((_, idx) => idx !== index);
+                                    const updatedDbImages = viewingVehicle.images?.filter((_, idx) => idx !== index);
+                                    if (wasPrimary && updatedImages.length > 0) {
+                                      updatedImages[0].isPrimary = true;
+                                      if (updatedDbImages && updatedDbImages.length > 0) {
+                                        updatedDbImages[0].isPrimary = true;
+                                      }
+                                    }
+                                    setViewingVehicle({
+                                      ...viewingVehicle,
+                                      images_resolved: updatedImages,
+                                      images: updatedDbImages,
+                                      image_url: updatedImages.length > 0 ? viewingVehicle.image_url : '',
+                                      image_url_resolved: updatedImages.length > 0 ? viewingVehicle.image_url_resolved : ''
+                                    });
+                                  }}
+                                  className="p-2 rounded-full bg-red-600 hover:bg-red-700 text-white transition-colors"
                                   title="Remove image"
                                 >
-                                  <X className="w-4 h-4" />
+                                  <X className="w-5 h-5" />
                                 </button>
                               </div>
                             </div>
@@ -1979,41 +2054,66 @@ const VehicleDetailModal = ({
                       {vehicleImageFiles.length > 0 && (
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
                           {vehicleImageFiles.map((imgFile, index) => (
-                            <div key={`new-${index}`} className="relative group aspect-square">
-                              <FadeInImage
-                                src={imgFile.preview}
-                                alt={`New image ${index + 1}`}
-                                className={`w-full h-full object-cover rounded-lg ${
-                                  darkMode ? 'bg-gray-700' : 'bg-gray-200'
-                                }`}
-                              />
+                            <div key={`new-${index}`} className="relative group">
+                              <div className="aspect-square">
+                                <FadeInImage
+                                  src={imgFile.preview}
+                                  alt={`New image ${index + 1}`}
+                                  className={`w-full h-full object-cover rounded-t-lg md:rounded-lg ${
+                                    darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                                  }`}
+                                />
+                              </div>
                               {/* New badge */}
                               <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-green-600 text-white text-xs font-medium">
                                 New
                               </div>
                               {/* Primary badge for new images */}
                               {imgFile.isPrimary && (
-                                <div className="absolute top-1 right-8 px-1.5 py-0.5 rounded bg-blue-600 text-white text-xs font-medium">
+                                <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-blue-600 text-white text-xs font-medium">
                                   Primary
                                 </div>
                               )}
-                              {/* Action buttons on hover */}
-                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                              {/* Mobile: bottom bar */}
+                              <div className={`md:hidden flex rounded-b-lg overflow-hidden ${
+                                darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                              }`}>
                                 {!imgFile.isPrimary && (viewingVehicle.images_resolved?.length || 0) === 0 && (
                                   <button
                                     onClick={() => setPrimaryImageFile(index)}
-                                    className="p-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
-                                    title="Set as primary"
+                                    className={`flex-1 py-2 text-xs font-medium ${
+                                      darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
+                                    }`}
                                   >
-                                    <CheckCircle className="w-4 h-4" />
+                                    Set Primary
                                   </button>
                                 )}
                                 <button
                                   onClick={() => removeImageFile(index)}
-                                  className="p-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white transition-colors"
+                                  className={`flex-1 py-2 text-xs font-medium ${
+                                    darkMode ? 'bg-red-600 text-white' : 'bg-red-500 text-white'
+                                  }`}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                              {/* Desktop: hover overlay */}
+                              <div className="hidden md:flex absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg items-center justify-center gap-2">
+                                {!imgFile.isPrimary && (viewingVehicle.images_resolved?.length || 0) === 0 && (
+                                  <button
+                                    onClick={() => setPrimaryImageFile(index)}
+                                    className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                                    title="Set as primary"
+                                  >
+                                    <CheckCircle className="w-5 h-5" />
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => removeImageFile(index)}
+                                  className="p-2 rounded-full bg-red-600 hover:bg-red-700 text-white transition-colors"
                                   title="Remove image"
                                 >
-                                  <X className="w-4 h-4" />
+                                  <X className="w-5 h-5" />
                                 </button>
                               </div>
                             </div>
