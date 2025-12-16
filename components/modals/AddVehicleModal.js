@@ -427,7 +427,7 @@ const AddVehicleModal = ({
                   <label className={`block text-sm font-medium mb-2 ${
                     darkMode ? 'text-gray-300' : 'text-slate-700'
                   }`}>
-                    Battery Type
+                    Battery
                   </label>
                   <input
                     type="text"
