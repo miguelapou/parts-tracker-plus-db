@@ -329,37 +329,62 @@ const AddVehicleModal = ({
                 {vehicleImageFiles && vehicleImageFiles.length > 0 && (
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
                     {vehicleImageFiles.map((imgFile, index) => (
-                      <div key={`new-${index}`} className="relative group aspect-square">
-                        <FadeInImage
-                          src={imgFile.preview}
-                          alt={`Image ${index + 1}`}
-                          className={`w-full h-full object-cover rounded-lg ${
-                            darkMode ? 'bg-gray-700' : 'bg-gray-200'
-                          }`}
-                        />
+                      <div key={`new-${index}`} className="relative group">
+                        <div className="aspect-square">
+                          <FadeInImage
+                            src={imgFile.preview}
+                            alt={`Image ${index + 1}`}
+                            className={`w-full h-full object-cover rounded-t-lg md:rounded-lg ${
+                              darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                            }`}
+                          />
+                        </div>
                         {/* Primary badge */}
                         {imgFile.isPrimary && (
                           <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-blue-600 text-white text-xs font-medium">
                             Primary
                           </div>
                         )}
-                        {/* Action buttons on hover */}
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                        {/* Mobile: bottom bar */}
+                        <div className={`md:hidden flex rounded-b-lg overflow-hidden ${
+                          darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                        }`}>
                           {!imgFile.isPrimary && (
                             <button
                               onClick={() => setPrimaryImageFile(index)}
-                              className="p-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
-                              title="Set as primary"
+                              className={`flex-1 py-2 text-xs font-medium ${
+                                darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
+                              }`}
                             >
-                              <CheckCircle className="w-4 h-4" />
+                              Set Primary
                             </button>
                           )}
                           <button
                             onClick={() => removeImageFile(index)}
-                            className="p-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white transition-colors"
+                            className={`flex-1 py-2 text-xs font-medium ${
+                              darkMode ? 'bg-red-600 text-white' : 'bg-red-500 text-white'
+                            }`}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        {/* Desktop: hover overlay */}
+                        <div className="hidden md:flex absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg items-center justify-center gap-2">
+                          {!imgFile.isPrimary && (
+                            <button
+                              onClick={() => setPrimaryImageFile(index)}
+                              className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                              title="Set as primary"
+                            >
+                              <CheckCircle className="w-5 h-5" />
+                            </button>
+                          )}
+                          <button
+                            onClick={() => removeImageFile(index)}
+                            className="p-2 rounded-full bg-red-600 hover:bg-red-700 text-white transition-colors"
                             title="Remove image"
                           >
-                            <X className="w-4 h-4" />
+                            <X className="w-5 h-5" />
                           </button>
                         </div>
                       </div>
