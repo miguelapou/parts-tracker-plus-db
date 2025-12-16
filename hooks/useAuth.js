@@ -340,10 +340,16 @@ const useAuth = () => {
                   try {
                     const userId = currentSession.user.id;
 
-                    // Check if user has already confirmed their account
+                    // Check if user has already confirmed their account (in user metadata)
+                    if (currentSession.user.user_metadata?.account_confirmed) {
+                      console.log('[NewUser] User has already confirmed account (metadata), skipping modal');
+                      return;
+                    }
+
+                    // Also check localStorage as fallback cache
                     const accountConfirmedKey = ACCOUNT_CONFIRMED_PREFIX + userId;
                     if (localStorage.getItem(accountConfirmedKey)) {
-                      console.log('[NewUser] User has already confirmed account, skipping modal');
+                      console.log('[NewUser] User has already confirmed account (localStorage), skipping modal');
                       return;
                     }
 
@@ -657,14 +663,30 @@ const useAuth = () => {
   }, []);
 
   // Confirm new user - clear the pending state and let them proceed
-  const confirmNewUser = useCallback(() => {
+  const confirmNewUser = useCallback(async () => {
     console.log('[NewUser] User confirmed account creation');
-    // Persist confirmation to localStorage so we don't show the modal again
+
+    // Persist confirmation to user metadata so it works across browsers/devices
+    try {
+      const { error } = await supabase.auth.updateUser({
+        data: { account_confirmed: true }
+      });
+
+      if (error) {
+        console.error('[NewUser] Error saving to user metadata:', error);
+      } else {
+        console.log('[NewUser] Account confirmation persisted to user metadata');
+      }
+    } catch (err) {
+      console.error('[NewUser] Exception saving to user metadata:', err);
+    }
+
+    // Also save to localStorage as fallback cache
     if (pendingNewUser?.id) {
       const accountConfirmedKey = ACCOUNT_CONFIRMED_PREFIX + pendingNewUser.id;
       localStorage.setItem(accountConfirmedKey, 'true');
-      console.log('[NewUser] Account confirmation persisted to localStorage');
     }
+
     setPendingNewUser(null);
   }, [pendingNewUser]);
 
