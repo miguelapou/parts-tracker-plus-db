@@ -1992,6 +1992,8 @@ const VehicleDetailModal = ({
                                           isPrimary: idx === index
                                         }))
                                       });
+                                      // Clear primary from new images
+                                      setVehicleImageFiles(prev => prev.map(img => ({ ...img, isPrimary: false })));
                                     }}
                                     className={`flex-1 py-2 text-xs font-medium ${
                                       darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
@@ -2043,6 +2045,8 @@ const VehicleDetailModal = ({
                                           isPrimary: idx === index
                                         }))
                                       });
+                                      // Clear primary from new images
+                                      setVehicleImageFiles(prev => prev.map(img => ({ ...img, isPrimary: false })));
                                     }}
                                     className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
                                     title="Set as primary"
@@ -2103,9 +2107,19 @@ const VehicleDetailModal = ({
                               <div className={`md:hidden flex rounded-b-lg overflow-hidden ${
                                 darkMode ? 'bg-gray-700' : 'bg-gray-200'
                               }`}>
-                                {!imgFile.isPrimary && (viewingVehicle.images_resolved?.length || 0) === 0 && (
+                                {!imgFile.isPrimary && (
                                   <button
-                                    onClick={() => setPrimaryImageFile(index)}
+                                    onClick={() => {
+                                      // Unset primary from existing images
+                                      if (viewingVehicle.images_resolved?.length > 0) {
+                                        setViewingVehicle({
+                                          ...viewingVehicle,
+                                          images_resolved: viewingVehicle.images_resolved.map(img => ({ ...img, isPrimary: false })),
+                                          images: viewingVehicle.images?.map(img => ({ ...img, isPrimary: false }))
+                                        });
+                                      }
+                                      setPrimaryImageFile(index);
+                                    }}
                                     className={`flex-1 py-2 text-xs font-medium ${
                                       darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
                                     }`}
@@ -2124,9 +2138,19 @@ const VehicleDetailModal = ({
                               </div>
                               {/* Desktop: hover overlay */}
                               <div className="hidden md:flex absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg items-center justify-center gap-2">
-                                {!imgFile.isPrimary && (viewingVehicle.images_resolved?.length || 0) === 0 && (
+                                {!imgFile.isPrimary && (
                                   <button
-                                    onClick={() => setPrimaryImageFile(index)}
+                                    onClick={() => {
+                                      // Unset primary from existing images
+                                      if (viewingVehicle.images_resolved?.length > 0) {
+                                        setViewingVehicle({
+                                          ...viewingVehicle,
+                                          images_resolved: viewingVehicle.images_resolved.map(img => ({ ...img, isPrimary: false })),
+                                          images: viewingVehicle.images?.map(img => ({ ...img, isPrimary: false }))
+                                        });
+                                      }
+                                      setPrimaryImageFile(index);
+                                    }}
                                     className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
                                     title="Set as primary"
                                   >
