@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import * as vehiclesService from '../services/vehiclesService';
+import { compressImage } from '../utils/imageUtils';
 
 // Maximum number of images per vehicle
 const MAX_VEHICLE_IMAGES = 5;
@@ -309,9 +310,10 @@ const useVehicles = (userId, toast) => {
   };
 
   /**
-   * Handle image file selection
+   * Handle image file selection (legacy single-image)
+   * Automatically compresses images to reduce file size
    */
-  const handleImageFileChange = (e) => {
+  const handleImageFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       // Validate file type
@@ -325,13 +327,16 @@ const useVehicles = (userId, toast) => {
         return;
       }
 
-      setVehicleImageFile(file);
-      // Create preview
+      // Compress image before storing
+      const compressedFile = await compressImage(file);
+      setVehicleImageFile(compressedFile);
+
+      // Create preview from compressed file
       const reader = new FileReader();
       reader.onloadend = () => {
         setVehicleImagePreview(reader.result);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedFile);
     }
   };
 
@@ -350,10 +355,11 @@ const useVehicles = (userId, toast) => {
 
   /**
    * Add an image file to the multi-image selection
+   * Automatically compresses images to reduce file size
    * @param {File} file - Image file to add
    * @param {Array} existingImages - Currently existing images on the vehicle (for count check)
    */
-  const addImageFile = (file, existingImages = []) => {
+  const addImageFile = async (file, existingImages = []) => {
     // Validate file type
     if (!file.type.startsWith('image/')) {
       toast?.warning('Please select an image file');
@@ -372,16 +378,19 @@ const useVehicles = (userId, toast) => {
       return;
     }
 
-    // Create preview
+    // Compress image before adding (resizes to max 1200px, 85% quality)
+    const compressedFile = await compressImage(file);
+
+    // Create preview from compressed file
     const reader = new FileReader();
     reader.onloadend = () => {
       setVehicleImageFiles(prev => {
         // If this is the first image and no existing images, make it primary
         const isPrimary = prev.length === 0 && existingImages.length === 0;
-        return [...prev, { file, preview: reader.result, isPrimary }];
+        return [...prev, { file: compressedFile, preview: reader.result, isPrimary }];
       });
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(compressedFile);
   };
 
   /**
@@ -469,7 +478,7 @@ const useVehicles = (userId, toast) => {
     e.stopPropagation();
   };
 
-  const handleImageDrop = (e) => {
+  const handleImageDrop = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDraggingImage(false);
@@ -487,13 +496,16 @@ const useVehicles = (userId, toast) => {
         return;
       }
 
-      setVehicleImageFile(file);
-      // Create preview
+      // Compress image before storing
+      const compressedFile = await compressImage(file);
+      setVehicleImageFile(compressedFile);
+
+      // Create preview from compressed file
       const reader = new FileReader();
       reader.onloadend = () => {
         setVehicleImagePreview(reader.result);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedFile);
     }
   };
 
