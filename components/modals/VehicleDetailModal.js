@@ -857,7 +857,7 @@ const VehicleDetailModal = ({
 
                   return (
                     <div
-                      className="order-first rounded-lg overflow-hidden relative group touch-pan-y"
+                      className="order-first rounded-lg overflow-hidden relative group touch-pan-y aspect-[4/3]"
                       onTouchStart={(e) => {
                         if (!hasMultipleImages) return;
                         const touch = e.touches[0];
@@ -888,7 +888,7 @@ const VehicleDetailModal = ({
                         alt={viewingVehicle.nickname || viewingVehicle.name}
                         loading="lazy"
                         decoding="async"
-                        className={`w-full h-full object-cover min-h-[300px] ${
+                        className={`w-full h-full object-cover ${
                           slideDirection === 'left' ? 'slide-in-right' :
                           slideDirection === 'right' ? 'slide-in-left' : ''
                         }`}
