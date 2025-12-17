@@ -1953,7 +1953,7 @@ const VehicleDetailModal = ({
 
                       {/* Existing Images Grid */}
                       {viewingVehicle.images_resolved && viewingVehicle.images_resolved.length > 0 && (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
+                        <div className="grid grid-cols-3 gap-3 mb-3">
                           {viewingVehicle.images_resolved.map((img, index) => (
                             <div key={`existing-${index}`} className="relative group">
                               <div className="aspect-square">
@@ -2081,7 +2081,7 @@ const VehicleDetailModal = ({
 
                       {/* New Images to Upload Grid */}
                       {vehicleImageFiles.length > 0 && (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
+                        <div className="grid grid-cols-3 gap-3 mb-3">
                           {vehicleImageFiles.map((imgFile, index) => (
                             <div key={`new-${index}`} className="relative group">
                               <div className="aspect-square">
