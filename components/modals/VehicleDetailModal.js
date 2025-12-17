@@ -1956,8 +1956,8 @@ const VehicleDetailModal = ({
                   </div>
 
                   {/* Multi-Image Upload - Left on desktop */}
-                  <div className="order-first space-y-4">
-                    <div>
+                  <div className="order-first space-y-4 flex flex-col">
+                    <div className="flex flex-col flex-1">
                       <label className={`block text-sm font-medium mb-2 ${
                         darkMode ? 'text-gray-300' : 'text-slate-700'
                       }`}>
@@ -2202,7 +2202,7 @@ const VehicleDetailModal = ({
                               addImageFile(file, viewingVehicle.images_resolved || []);
                             }
                           }}
-                          className={`flex flex-col items-center justify-center w-full border-2 border-dashed rounded-lg cursor-pointer transition-all ${
+                          className={`flex flex-col items-center justify-center w-full flex-1 border-2 border-dashed rounded-lg cursor-pointer transition-all ${
                             isDraggingImage
                               ? darkMode
                                 ? 'border-blue-500 bg-blue-900/20 scale-105'
