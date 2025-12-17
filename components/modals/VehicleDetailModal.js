@@ -1767,7 +1767,7 @@ const VehicleDetailModal = ({
                       <label className={`block text-sm font-medium mb-2 ${
                         darkMode ? 'text-gray-300' : 'text-slate-700'
                       }`}>
-                        Nickname *
+                        Nickname <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -2436,7 +2436,7 @@ const VehicleDetailModal = ({
                   <label className={`block text-sm font-medium mb-2 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
-                    Date *
+                    Date <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="date"
@@ -2456,7 +2456,7 @@ const VehicleDetailModal = ({
                   <label className={`block text-sm font-medium mb-2 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
-                    Description *
+                    Description <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -2707,7 +2707,7 @@ const VehicleDetailModal = ({
                   <label className={`block text-sm font-medium mb-2 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
-                    Document Title *
+                    Document Title <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -2727,7 +2727,7 @@ const VehicleDetailModal = ({
                   <label className={`block text-sm font-medium mb-2 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
-                    File *
+                    File <span className="text-red-500">*</span>
                   </label>
                   {newDocumentFile ? (
                     <div className={`flex items-center gap-3 p-3 rounded-lg border ${
