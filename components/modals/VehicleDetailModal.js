@@ -1951,10 +1951,11 @@ const VehicleDetailModal = ({
                         </span>
                       </label>
 
-                      {/* Existing Images Grid */}
-                      {viewingVehicle.images_resolved && viewingVehicle.images_resolved.length > 0 && (
+                      {/* Combined Images Grid - existing and new images together */}
+                      {((viewingVehicle.images_resolved?.length || 0) + vehicleImageFiles.length > 0) && (
                         <div className="grid grid-cols-3 gap-3 mb-3">
-                          {viewingVehicle.images_resolved.map((img, index) => (
+                          {/* Existing Images */}
+                          {viewingVehicle.images_resolved?.map((img, index) => (
                             <div key={`existing-${index}`} className="relative group">
                               <div className="aspect-square">
                                 <FadeInImage
@@ -2076,12 +2077,7 @@ const VehicleDetailModal = ({
                               </div>
                             </div>
                           ))}
-                        </div>
-                      )}
-
-                      {/* New Images to Upload Grid */}
-                      {vehicleImageFiles.length > 0 && (
-                        <div className="grid grid-cols-3 gap-3 mb-3">
+                          {/* New Images to Upload */}
                           {vehicleImageFiles.map((imgFile, index) => (
                             <div key={`new-${index}`} className="relative group">
                               <div className="aspect-square">
