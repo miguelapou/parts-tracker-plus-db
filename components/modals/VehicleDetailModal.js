@@ -130,6 +130,8 @@ const VehicleDetailModal = ({
   // State for document/service event action overlays
   const [selectedDocId, setSelectedDocId] = useState(null);
   const [selectedEventId, setSelectedEventId] = useState(null);
+  // State for mobile image action overlay
+  const [selectedImageId, setSelectedImageId] = useState(null);
   // State for viewing service event info (notes + parts)
   const [viewingInfoEvent, setViewingInfoEvent] = useState(null);
   const [isInfoModalClosing, setIsInfoModalClosing] = useState(false);
@@ -897,11 +899,19 @@ const VehicleDetailModal = ({
                     <div
                       className="order-first rounded-lg overflow-hidden relative group touch-pan-y aspect-[4/3]"
                       onTouchStart={(e) => {
+                        // Stop propagation to prevent vehicle navigation
+                        e.stopPropagation();
                         if (!hasMultipleImages) return;
                         const touch = e.touches[0];
                         e.currentTarget.dataset.touchStartX = touch.clientX;
                       }}
+                      onTouchMove={(e) => {
+                        // Stop propagation to prevent vehicle navigation
+                        e.stopPropagation();
+                      }}
                       onTouchEnd={(e) => {
+                        // Stop propagation to prevent vehicle navigation
+                        e.stopPropagation();
                         if (!hasMultipleImages) return;
                         const touchStartX = parseFloat(e.currentTarget.dataset.touchStartX);
                         const touchEndX = e.changedTouches[0].clientX;
@@ -931,7 +941,7 @@ const VehicleDetailModal = ({
                           slideDirection === 'right' ? 'slide-in-left' : ''
                         }`}
                       />
-                      {/* Navigation arrows - visible on mobile, hover on desktop */}
+                      {/* Navigation arrows - desktop only on hover */}
                       {hasMultipleImages && (
                         <>
                           <button
@@ -939,7 +949,7 @@ const VehicleDetailModal = ({
                               setSlideDirection('right');
                               setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1);
                             }}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:bg-black/70"
+                            className="hidden md:block absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
                             title="Previous image"
                           >
                             <ChevronLeft className="w-5 h-5" />
@@ -949,12 +959,12 @@ const VehicleDetailModal = ({
                               setSlideDirection('left');
                               setCurrentImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1);
                             }}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:bg-black/70"
+                            className="hidden md:block absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
                             title="Next image"
                           >
                             <ChevronRight className="w-5 h-5" />
                           </button>
-                          {/* Image indicators - larger touch targets on mobile */}
+                          {/* Image indicators - clickable dots */}
                           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 md:gap-1.5">
                             {images.map((img, idx) => (
                               <button
@@ -982,12 +992,6 @@ const VehicleDetailModal = ({
                             {safeIndex + 1} / {images.length}
                           </div>
                         </>
-                      )}
-                      {/* Primary indicator */}
-                      {currentImage.isPrimary && hasMultipleImages && (
-                        <div className="absolute top-3 left-3 px-2 py-1 rounded bg-blue-600 text-white text-xs font-medium">
-                          Primary
-                        </div>
                       )}
                     </div>
                   );
@@ -1781,8 +1785,8 @@ const VehicleDetailModal = ({
             {viewingVehicle && (
               <div className="p-6 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Basic Information - Right on desktop */}
-                  <div className="order-last space-y-4">
+                  {/* Basic Information */}
+                  <div className="space-y-4">
                     <div>
                       <label className={`block text-sm font-medium mb-2 ${
                         darkMode ? 'text-gray-300' : 'text-slate-700'
@@ -2006,7 +2010,7 @@ const VehicleDetailModal = ({
                           type="date"
                           value={viewingVehicle.purchase_date || ''}
                           onChange={(e) => setViewingVehicle({ ...viewingVehicle, purchase_date: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          className={`w-36 md:w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                             darkMode
                               ? 'bg-gray-700 border-gray-600 text-gray-100'
                               : 'bg-slate-50 border-slate-300 text-slate-800'
@@ -2016,8 +2020,8 @@ const VehicleDetailModal = ({
                     </div>
                   </div>
 
-                  {/* Multi-Image Upload - Left on desktop */}
-                  <div className="order-first space-y-4 flex flex-col">
+                  {/* Multi-Image Upload */}
+                  <div className="space-y-4 flex flex-col">
                     <div className="flex flex-col flex-1">
                       <label className={`block text-sm font-medium mb-2 ${
                         darkMode ? 'text-gray-300' : 'text-slate-700'
@@ -2032,15 +2036,23 @@ const VehicleDetailModal = ({
 
                       {/* Combined Images Grid - existing and new images together */}
                       {((viewingVehicle.images_resolved?.length || 0) + vehicleImageFiles.length > 0) && (
-                        <div className="grid grid-cols-3 gap-3 mb-3">
+                        <div className="grid grid-cols-2 gap-3 mb-3">
                           {/* Existing Images */}
                           {viewingVehicle.images_resolved?.map((img, index) => (
-                            <div key={`existing-${index}`} className="relative group">
+                            <div
+                              key={`existing-${index}`}
+                              className="relative group"
+                              onClick={() => {
+                                if (window.innerWidth < 768) {
+                                  setSelectedImageId(selectedImageId === `existing-${index}` ? null : `existing-${index}`);
+                                }
+                              }}
+                            >
                               <div className="aspect-square">
                                 <FadeInImage
                                   src={img.url}
                                   alt={`Vehicle image ${index + 1}`}
-                                  className={`w-full h-full object-cover rounded-t-lg md:rounded-lg ${
+                                  className={`w-full h-full object-cover rounded-lg ${
                                     darkMode ? 'bg-gray-700' : 'bg-gray-200'
                                   }`}
                                 />
@@ -2051,14 +2063,20 @@ const VehicleDetailModal = ({
                                   Primary
                                 </div>
                               )}
-                              {/* Action buttons - always visible on mobile, hover on desktop */}
-                              {/* Mobile: bottom bar */}
-                              <div className={`md:hidden flex rounded-b-lg overflow-hidden ${
-                                darkMode ? 'bg-gray-700' : 'bg-gray-200'
-                              }`}>
+                              {/* Mobile: tap-to-show overlay */}
+                              <div
+                                className={`md:hidden absolute inset-0 rounded-lg flex items-center justify-center gap-3 transition-opacity duration-150 ${
+                                  selectedImageId === `existing-${index}` ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                                } ${darkMode ? 'bg-gray-800/95' : 'bg-gray-100/95'}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedImageId(null);
+                                }}
+                              >
                                 {!img.isPrimary && (
                                   <button
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                      e.stopPropagation();
                                       const updatedImages = viewingVehicle.images_resolved.map((i, idx) => ({
                                         ...i,
                                         isPrimary: idx === index
@@ -2073,16 +2091,21 @@ const VehicleDetailModal = ({
                                       });
                                       // Clear primary from new images
                                       setVehicleImageFiles(prev => prev.map(img => ({ ...img, isPrimary: false })));
+                                      setSelectedImageId(null);
                                     }}
-                                    className={`flex-1 py-2 text-xs font-medium ${
-                                      darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
+                                    className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
+                                      darkMode
+                                        ? 'bg-gray-700 text-blue-400 can-hover:hover:ring-2 can-hover:hover:ring-blue-400'
+                                        : 'bg-white text-blue-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-blue-600'
                                     }`}
                                   >
-                                    Set Primary
+                                    <CheckCircle className="w-5 h-5 mb-0.5" />
+                                    <span className="text-[10px] font-medium">Primary</span>
                                   </button>
                                 )}
                                 <button
-                                  onClick={() => {
+                                  onClick={(e) => {
+                                    e.stopPropagation();
                                     const wasPrimary = img.isPrimary;
                                     const updatedImages = viewingVehicle.images_resolved.filter((_, idx) => idx !== index);
                                     const updatedDbImages = viewingVehicle.images?.filter((_, idx) => idx !== index);
@@ -2099,12 +2122,16 @@ const VehicleDetailModal = ({
                                       image_url: updatedImages.length > 0 ? viewingVehicle.image_url : '',
                                       image_url_resolved: updatedImages.length > 0 ? viewingVehicle.image_url_resolved : ''
                                     });
+                                    setSelectedImageId(null);
                                   }}
-                                  className={`flex-1 py-2 text-xs font-medium ${
-                                    darkMode ? 'bg-red-600 text-white' : 'bg-red-500 text-white'
+                                  className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
+                                    darkMode
+                                      ? 'bg-gray-700 text-red-400 can-hover:hover:ring-2 can-hover:hover:ring-red-400'
+                                      : 'bg-white text-red-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-red-600'
                                   }`}
                                 >
-                                  Remove
+                                  <Trash2 className="w-5 h-5 mb-0.5" />
+                                  <span className="text-[10px] font-medium">Remove</span>
                                 </button>
                               </div>
                               {/* Desktop: hover overlay */}
@@ -2162,12 +2189,20 @@ const VehicleDetailModal = ({
                           ))}
                           {/* New Images to Upload */}
                           {vehicleImageFiles.map((imgFile, index) => (
-                            <div key={`new-${index}`} className="relative group">
+                            <div
+                              key={`new-${index}`}
+                              className="relative group"
+                              onClick={() => {
+                                if (window.innerWidth < 768) {
+                                  setSelectedImageId(selectedImageId === `new-${index}` ? null : `new-${index}`);
+                                }
+                              }}
+                            >
                               <div className="aspect-square">
                                 <FadeInImage
                                   src={imgFile.preview}
                                   alt={`New image ${index + 1}`}
-                                  className={`w-full h-full object-cover rounded-t-lg md:rounded-lg ${
+                                  className={`w-full h-full object-cover rounded-lg ${
                                     darkMode ? 'bg-gray-700' : 'bg-gray-200'
                                   }`}
                                 />
@@ -2182,13 +2217,20 @@ const VehicleDetailModal = ({
                                   Primary
                                 </div>
                               )}
-                              {/* Mobile: bottom bar */}
-                              <div className={`md:hidden flex rounded-b-lg overflow-hidden ${
-                                darkMode ? 'bg-gray-700' : 'bg-gray-200'
-                              }`}>
+                              {/* Mobile: tap-to-show overlay */}
+                              <div
+                                className={`md:hidden absolute inset-0 rounded-lg flex items-center justify-center gap-3 transition-opacity duration-150 ${
+                                  selectedImageId === `new-${index}` ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                                } ${darkMode ? 'bg-gray-800/95' : 'bg-gray-100/95'}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedImageId(null);
+                                }}
+                              >
                                 {!imgFile.isPrimary && (
                                   <button
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                      e.stopPropagation();
                                       // Unset primary from existing images
                                       if (viewingVehicle.images_resolved?.length > 0) {
                                         setViewingVehicle({
@@ -2198,21 +2240,32 @@ const VehicleDetailModal = ({
                                         });
                                       }
                                       setPrimaryImageFile(index);
+                                      setSelectedImageId(null);
                                     }}
-                                    className={`flex-1 py-2 text-xs font-medium ${
-                                      darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
+                                    className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
+                                      darkMode
+                                        ? 'bg-gray-700 text-blue-400 can-hover:hover:ring-2 can-hover:hover:ring-blue-400'
+                                        : 'bg-white text-blue-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-blue-600'
                                     }`}
                                   >
-                                    Set Primary
+                                    <CheckCircle className="w-5 h-5 mb-0.5" />
+                                    <span className="text-[10px] font-medium">Primary</span>
                                   </button>
                                 )}
                                 <button
-                                  onClick={() => removeImageFile(index)}
-                                  className={`flex-1 py-2 text-xs font-medium ${
-                                    darkMode ? 'bg-red-600 text-white' : 'bg-red-500 text-white'
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeImageFile(index);
+                                    setSelectedImageId(null);
+                                  }}
+                                  className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg transition-all ${
+                                    darkMode
+                                      ? 'bg-gray-700 text-red-400 can-hover:hover:ring-2 can-hover:hover:ring-red-400'
+                                      : 'bg-white text-red-600 shadow-sm can-hover:hover:ring-2 can-hover:hover:ring-red-600'
                                   }`}
                                 >
-                                  Remove
+                                  <Trash2 className="w-5 h-5 mb-0.5" />
+                                  <span className="text-[10px] font-medium">Remove</span>
                                 </button>
                               </div>
                               {/* Desktop: hover overlay */}
