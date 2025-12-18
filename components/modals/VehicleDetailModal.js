@@ -547,6 +547,7 @@ const VehicleDetailModal = ({
           // Dismiss any visible overlay buttons when clicking anywhere in the modal
           setSelectedDocId(null);
           setSelectedEventId(null);
+          setSelectedImageId(null);
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -2042,7 +2043,8 @@ const VehicleDetailModal = ({
                             <div
                               key={`existing-${index}`}
                               className="relative"
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 setSelectedImageId(selectedImageId === `existing-${index}` ? null : `existing-${index}`);
                               }}
                             >
@@ -2139,7 +2141,8 @@ const VehicleDetailModal = ({
                             <div
                               key={`new-${index}`}
                               className="relative"
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 setSelectedImageId(selectedImageId === `new-${index}` ? null : `new-${index}`);
                               }}
                             >
