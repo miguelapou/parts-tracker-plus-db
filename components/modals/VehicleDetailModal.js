@@ -1617,6 +1617,7 @@ const VehicleDetailModal = ({
                           const completedTodos = project.todos ? project.todos.filter(t => t.completed).length : 0;
                           const uncompletedTodos = project.todos ? project.todos.filter(t => !t.completed).length : 0;
 
+                          const statusColors = getStatusColors(darkMode);
                           return (
                             <button
                               key={project.id}
@@ -1624,12 +1625,20 @@ const VehicleDetailModal = ({
                                 e.stopPropagation();
                                 setVehicleModalProjectView(project);
                               }}
-                              className={`flex flex-col rounded-lg p-4 border-l-4 text-left transition-all duration-200 cursor-pointer can-hover:hover:shadow-2xl can-hover:hover:scale-[1.03] ${
+                              className={`relative flex flex-col rounded-lg p-4 border-l-4 text-left transition-all duration-200 cursor-pointer can-hover:hover:shadow-2xl can-hover:hover:scale-[1.03] ${
                                 darkMode ? 'bg-gray-700' : 'bg-gray-50'
                               }`}
                               style={{ borderLeftColor: getPriorityBorderColor(project.priority) }}
                             >
-                              <h4 className={`font-semibold mb-2 ${
+                              {/* Status Badge */}
+                              <span className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-medium ${
+                                statusColors[project.status]
+                              } ${!darkMode ? 'ring-1 ring-inset ring-current' : ''}`}>
+                                {project.status === 'in_progress' ? 'IN PROGRESS' :
+                                 project.status === 'on_hold' ? 'ON HOLD' :
+                                 project.status?.toUpperCase() || 'PLANNING'}
+                              </span>
+                              <h4 className={`font-semibold mb-2 pr-20 ${
                                 darkMode ? 'text-gray-200' : 'text-gray-800'
                               }`}>
                                 {project.name}
