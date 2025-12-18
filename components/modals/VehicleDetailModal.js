@@ -993,12 +993,6 @@ const VehicleDetailModal = ({
                           </div>
                         </>
                       )}
-                      {/* Primary indicator */}
-                      {currentImage.isPrimary && hasMultipleImages && (
-                        <div className="absolute top-3 left-3 px-2 py-1 rounded bg-blue-600 text-white text-xs font-medium">
-                          Primary
-                        </div>
-                      )}
                     </div>
                   );
                 })()}
