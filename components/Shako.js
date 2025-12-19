@@ -2101,6 +2101,8 @@ const Shako = ({ isDemo = false }) => {
             unlinkPartFromProject={unlinkPartFromProject}
             loadProjects={loadProjects}
             updateProject={updateProject}
+            addProject={addProject}
+            addNewPart={addNewPart}
             toast={toast}
             setActiveTab={setActiveTab}
           />

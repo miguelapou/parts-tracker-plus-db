@@ -89,6 +89,8 @@ const VehiclesTab = ({
   updateProject,
   unlinkPartFromProject,
   loadProjects,
+  addProject,
+  addNewPart,
   setConfirmDialog,
   getStatusColors,
   getPriorityColors,
@@ -118,6 +120,88 @@ const VehiclesTab = ({
       return () => clearTimeout(timer);
     }
   }, [layoutMode]);
+
+  // State for adding demo data
+  const [addingDemoData, setAddingDemoData] = useState(false);
+
+  // Add demo vehicle with project and parts
+  const handleAddDemoData = async () => {
+    setAddingDemoData(true);
+    try {
+      // Demo vehicle data (Samwise - Land Cruiser)
+      const demoVehicle = {
+        name: "Land Cruiser",
+        nickname: "Samwise",
+        make: "Toyota",
+        year: "1995",
+        license_plate: "ABC-123",
+        vin: "HZJ73-0005847",
+        color: "#77bb41",
+        odometer_range: "100000",
+        odometer_unit: "km",
+        purchase_price: "22654",
+        purchase_date: "2025-10-15",
+        insurance_policy: "Progressive",
+        fuel_filter: "Wix 33138 (23303-64010)",
+        air_filter: "(17801-68020)",
+        oil_filter: "Wix 57254 (90915-30002)",
+        oil_type: "15w-40",
+        oil_capacity: "9.3 liters",
+        oil_brand: "Shell Rotella",
+        drain_plug: "14mm",
+        battery: "--",
+        image_url: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop",
+        images: [
+          { url: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop", isPrimary: true }
+        ]
+      };
+
+      // Add the vehicle first
+      const newVehicle = await addVehicle(demoVehicle);
+      if (!newVehicle?.id) {
+        throw new Error('Failed to create vehicle');
+      }
+
+      // Demo project data (Fluids)
+      const demoProject = {
+        name: "Fluids",
+        description: "Regular maintenance and upgrades to engine components.",
+        budget: 1500,
+        priority: "high",
+        vehicle_id: newVehicle.id
+      };
+
+      // Add the project
+      const newProject = await addProject(demoProject);
+      if (!newProject?.id) {
+        throw new Error('Failed to create project');
+      }
+
+      // Demo parts for the Fluids project
+      const demoParts = [
+        { part: "Fuel Filter", partNumber: "23303-64010", vendor: "Toyota", price: 15.93, shipping: 0, duties: 0, purchased: true, shipped: true, delivered: true, projectId: newProject.id },
+        { part: "Oil Filter x 2", partNumber: "90915-30002", vendor: "Toyota", price: 36.77, shipping: 0, duties: 0, purchased: true, shipped: true, delivered: true, projectId: newProject.id },
+        { part: "Air Filter", partNumber: "17801-68020", vendor: "Toyota", price: 21.24, shipping: 0, duties: 0, purchased: true, shipped: true, delivered: true, projectId: newProject.id },
+        { part: "Oil Plug Gaskets", partNumber: "90430-12031", vendor: "Amazon", price: 10.70, shipping: 0, duties: 0, purchased: true, shipped: true, delivered: true, projectId: newProject.id }
+      ];
+
+      // Add all parts
+      for (const part of demoParts) {
+        await addNewPart(part);
+      }
+
+      // Reload vehicles and projects to refresh the UI
+      await loadVehicles();
+      await loadProjects();
+
+      toast?.success('Demo vehicle added successfully!');
+    } catch (error) {
+      console.error('Error adding demo data:', error);
+      toast?.error('Failed to add demo vehicle. Please try again.');
+    } finally {
+      setAddingDemoData(false);
+    }
+  };
 
   return (
     <div
@@ -464,13 +548,27 @@ const VehiclesTab = ({
             }`}>
               Add your first vehicle to track maintenance and information
             </p>
-            <button
-              onClick={() => setShowAddVehicleModal(true)}
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition-colors font-medium"
-            >
-              <Plus className="w-5 h-5" />
-              Add a vehicle
-            </button>
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <button
+                onClick={() => setShowAddVehicleModal(true)}
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition-colors font-medium"
+              >
+                <Plus className="w-5 h-5" />
+                Add a vehicle
+              </button>
+              <button
+                onClick={handleAddDemoData}
+                disabled={addingDemoData}
+                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg shadow-md transition-colors font-medium ${
+                  addingDemoData
+                    ? 'bg-yellow-400 cursor-not-allowed opacity-70'
+                    : 'bg-yellow-500 hover:bg-yellow-600'
+                } text-gray-900`}
+              >
+                <Car className="w-5 h-5" />
+                {addingDemoData ? 'Adding...' : 'Add demo vehicle'}
+              </button>
+            </div>
           </div>
         )}
 
