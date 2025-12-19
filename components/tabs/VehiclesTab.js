@@ -156,8 +156,8 @@ const VehiclesTab = ({
         ]
       };
 
-      // Add the vehicle first
-      const newVehicle = await addVehicle(demoVehicle);
+      // Add the vehicle first (skip reload to avoid flashing)
+      const newVehicle = await addVehicle(demoVehicle, { skipReload: true });
       if (!newVehicle?.id) {
         throw new Error('Failed to create vehicle');
       }
@@ -171,8 +171,8 @@ const VehiclesTab = ({
         vehicle_id: newVehicle.id
       };
 
-      // Add the project
-      const newProject = await addProject(demoProject);
+      // Add the project (skip reload to avoid flashing)
+      const newProject = await addProject(demoProject, { skipReload: true });
       if (!newProject?.id) {
         throw new Error('Failed to create project');
       }

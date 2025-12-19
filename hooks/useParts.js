@@ -328,9 +328,12 @@ const useParts = (userId, toast, isDemo = false) => {
           vehicleId: partData.vehicleId || null,
           createdAt
         };
-        const updatedParts = [...parts, partToAdd];
-        setParts(updatedParts);
-        saveDemoParts(updatedParts);
+        // Use functional update to handle multiple rapid calls
+        setParts(prevParts => {
+          const updatedParts = [...prevParts, partToAdd];
+          saveDemoParts(updatedParts);
+          return updatedParts;
+        });
         return partToAdd;
       }
 
@@ -364,7 +367,8 @@ const useParts = (userId, toast, isDemo = false) => {
         vehicleId: partData.vehicleId || null,
         createdAt
       };
-      setParts([...parts, partToAdd]);
+      // Use functional update to handle multiple rapid calls
+      setParts(prevParts => [...prevParts, partToAdd]);
       return partToAdd;
     } catch (error) {
       console.error('Error creating part:', error);

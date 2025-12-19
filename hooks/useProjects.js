@@ -81,9 +81,12 @@ const useProjects = (userId, toast, isDemo = false) => {
 
   /**
    * Add a new project
+   * @param {Object} projectData - Project data to create
+   * @param {Object} options - Options for the operation
+   * @param {boolean} options.skipReload - Skip reloading projects after creation
    * @returns {Object|null} The created project, or null on error
    */
-  const addProject = async (projectData) => {
+  const addProject = async (projectData, { skipReload = false } = {}) => {
     if (!userId) return null;
 
     // Validate budget
@@ -110,7 +113,7 @@ const useProjects = (userId, toast, isDemo = false) => {
         display_order: demoProjects.length
       };
       saveDemoProjects([...demoProjects, newProject]);
-      setProjects([...demoProjects, newProject]);
+      if (!skipReload) setProjects([...demoProjects, newProject]);
       return newProject;
     }
 
@@ -125,7 +128,7 @@ const useProjects = (userId, toast, isDemo = false) => {
         vehicle_id: projectData.vehicle_id || null,
         todos: []
       }, userId);
-      await loadProjects();
+      if (!skipReload) await loadProjects();
       return data?.[0] || null;
     } catch (error) {
       toast?.error('Error adding project');
