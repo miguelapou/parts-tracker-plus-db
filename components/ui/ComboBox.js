@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ChevronDown, X } from 'lucide-react';
 
 /**
@@ -12,6 +12,7 @@ import { ChevronDown, X } from 'lucide-react';
  * @param {string} customInputPlaceholder - Placeholder for custom input (optional)
  * @param {boolean} allowCustom - Whether to allow custom input (default: true)
  * @param {function} formatOption - Optional function to format option display
+ * @param {boolean} showSearch - Whether to show search input (default: auto based on options count)
  */
 const ComboBox = ({
   value,
@@ -21,13 +22,23 @@ const ComboBox = ({
   darkMode,
   customInputPlaceholder,
   allowCustom = true,
-  formatOption
+  formatOption,
+  showSearch
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isClosing, setIsClosing] = useState(false);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
+  const isOpenRef = useRef(isOpen);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  // Auto-hide search for small option lists (5 or fewer)
+  const shouldShowSearch = showSearch !== undefined ? showSearch : options.length > 5;
 
   // Filter options based on search term
   const filteredOptions = options.filter(option =>
@@ -36,6 +47,17 @@ const ComboBox = ({
 
   // Check if current value is in options
   const isCustomValue = value && !options.includes(value.toString());
+
+  const closeDropdown = useCallback(() => {
+    if (isOpenRef.current && !isClosing) {
+      setIsClosing(true);
+      setTimeout(() => {
+        setIsOpen(false);
+        setIsClosing(false);
+        setSearchTerm('');
+      }, 150);
+    }
+  }, [isClosing]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -46,18 +68,7 @@ const ComboBox = ({
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const closeDropdown = () => {
-    if (isOpen && !isClosing) {
-      setIsClosing(true);
-      setTimeout(() => {
-        setIsOpen(false);
-        setIsClosing(false);
-        setSearchTerm('');
-      }, 150);
-    }
-  };
+  }, [closeDropdown]);
 
   const handleSelect = (option) => {
     onChange(option);
@@ -75,8 +86,10 @@ const ComboBox = ({
       closeDropdown();
     } else {
       setIsOpen(true);
-      // Focus search input after opening
-      setTimeout(() => inputRef.current?.focus(), 50);
+      // Focus search input after opening (only if search is shown)
+      if (shouldShowSearch) {
+        setTimeout(() => inputRef.current?.focus(), 50);
+      }
     }
   };
 
@@ -128,48 +141,50 @@ const ComboBox = ({
             darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-slate-300'
           }`}
         >
-          {/* Search input */}
-          <div className={`sticky top-0 p-2 border-b ${
-            darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-slate-200'
-          }`}>
-            <div className="relative">
-              <input
-                ref={inputRef}
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder={allowCustom ? (customInputPlaceholder || 'Search or type custom...') : 'Search...'}
-                className={`w-full px-3 py-1.5 pr-8 text-sm border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  darkMode
-                    ? 'bg-gray-600 border-gray-500 text-gray-100 placeholder-gray-400'
-                    : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                }`}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && allowCustom && searchTerm) {
-                    e.preventDefault();
-                    // If there's an exact match, select it; otherwise use the custom value
-                    const exactMatch = filteredOptions.find(
-                      opt => opt.toString().toLowerCase() === searchTerm.toLowerCase()
-                    );
-                    handleSelect(exactMatch || searchTerm);
-                  } else if (e.key === 'Escape') {
-                    closeDropdown();
-                  }
-                }}
-              />
-              {searchTerm && (
-                <button
-                  type="button"
-                  onClick={() => setSearchTerm('')}
-                  className={`absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full transition-colors ${
-                    darkMode ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-500' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-200'
+          {/* Search input - only shown if shouldShowSearch is true */}
+          {shouldShowSearch && (
+            <div className={`sticky top-0 p-2 border-b ${
+              darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-slate-200'
+            }`}>
+              <div className="relative">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder={allowCustom ? (customInputPlaceholder || 'Search or type custom...') : 'Search...'}
+                  className={`w-full px-3 py-1.5 pr-8 text-sm border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    darkMode
+                      ? 'bg-gray-600 border-gray-500 text-gray-100 placeholder-gray-400'
+                      : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
                   }`}
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              )}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && allowCustom && searchTerm) {
+                      e.preventDefault();
+                      // If there's an exact match, select it; otherwise use the custom value
+                      const exactMatch = filteredOptions.find(
+                        opt => opt.toString().toLowerCase() === searchTerm.toLowerCase()
+                      );
+                      handleSelect(exactMatch || searchTerm);
+                    } else if (e.key === 'Escape') {
+                      closeDropdown();
+                    }
+                  }}
+                />
+                {searchTerm && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchTerm('')}
+                    className={`absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full transition-colors ${
+                      darkMode ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-500' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Options list */}
           <div className="overflow-y-auto max-h-48">
