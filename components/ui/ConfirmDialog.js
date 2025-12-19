@@ -117,11 +117,7 @@ const ConfirmDialog = ({
                 isLoading
                   ? 'opacity-75 cursor-not-allowed'
                   : ''
-              } ${
-                secondaryDangerous
-                  ? 'bg-red-800 hover:bg-red-900 text-white'
-                  : 'bg-blue-800 hover:bg-blue-900 text-white'
-              }`}
+              } bg-gray-900 hover:bg-black text-white`}
             >
               {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
               {secondaryText}
