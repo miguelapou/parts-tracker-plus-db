@@ -1716,14 +1716,19 @@ const VehicleDetailModal = ({
                     ) : (
                       <button
                         onClick={() => {
-                          handleCloseModal();
+                          handleCloseModal(() => {
+                            setShowVehicleDetailModal(false);
+                            setViewingVehicle(null);
+                          });
                           setActiveTab('projects');
                         }}
                         className={`text-center py-8 rounded-lg border w-full group ${
                           darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
                         }`}
                       >
-                        <ListChecks className="w-12 h-12 mx-auto mb-2 opacity-40" />
+                        <ListChecks className={`w-12 h-12 mx-auto mb-2 opacity-40 ${
+                          darkMode ? 'group-hover:text-blue-400' : 'group-hover:text-blue-600'
+                        } transition-colors`} />
                         <p className={`text-sm ${
                           darkMode ? 'group-hover:text-blue-400' : 'group-hover:text-blue-600'
                         } transition-colors`}>
@@ -1810,7 +1815,10 @@ const VehicleDetailModal = ({
                   darkMode={darkMode}
                   setConfirmDialog={setConfirmDialog}
                   onNavigateToTab={(tab) => {
-                    handleCloseModal();
+                    handleCloseModal(() => {
+                      setShowVehicleDetailModal(false);
+                      setViewingVehicle(null);
+                    });
                     setActiveTab(tab);
                   }}
                 />

@@ -41,7 +41,9 @@ const LinkedPartsSection = ({
             darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
           }`}
         >
-          <Package className="w-12 h-12 mx-auto mb-2 opacity-40" />
+          <Package className={`w-12 h-12 mx-auto mb-2 opacity-40 ${
+            darkMode ? 'group-hover:text-blue-400' : 'group-hover:text-blue-600'
+          } transition-colors`} />
           <p className={`text-sm ${
             darkMode ? 'group-hover:text-blue-400' : 'group-hover:text-blue-600'
           } transition-colors`}>No parts linked</p>

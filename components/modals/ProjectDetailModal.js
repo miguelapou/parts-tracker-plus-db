@@ -320,7 +320,9 @@ const ProjectDetailModal = ({
                 darkMode={darkMode}
                 setConfirmDialog={setConfirmDialog}
                 onNavigateToTab={(tab) => {
-                  handleCloseModal();
+                  handleCloseModal(() => {
+                    onClose();
+                  });
                   setActiveTab(tab);
                 }}
               />

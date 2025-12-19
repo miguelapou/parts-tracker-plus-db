@@ -258,22 +258,16 @@ const VehiclesTab = ({
                                 )}
                               </div>
                             ) : (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setActiveTab('projects');
-                                }}
-                                className="flex items-center gap-2 py-1 group"
-                              >
+                              <div className="flex items-center gap-2 py-1">
                                 <ListChecks className={`w-4 h-4 opacity-40 ${
                                   darkMode ? 'text-gray-400' : 'text-gray-500'
                                 }`} />
                                 <span className={`text-xs ${
-                                  darkMode ? 'text-gray-400 group-hover:text-blue-400' : 'text-gray-500 group-hover:text-blue-600'
-                                } transition-colors`}>
+                                  darkMode ? 'text-gray-400' : 'text-gray-500'
+                                }`}>
                                   No projects linked
                                 </span>
-                              </button>
+                              </div>
                             )}
                           </>
                         );
@@ -404,22 +398,16 @@ const VehiclesTab = ({
                                   )}
                                 </div>
                               ) : (
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setActiveTab('projects');
-                                  }}
-                                  className="text-center py-2 w-full group"
-                                >
+                                <div className="text-center py-2">
                                   <ListChecks className={`w-6 h-6 mx-auto mb-1 opacity-40 ${
                                     darkMode ? 'text-gray-400' : 'text-gray-500'
                                   }`} />
                                   <p className={`text-xs ${
-                                    darkMode ? 'text-gray-400 group-hover:text-blue-400' : 'text-gray-500 group-hover:text-blue-600'
-                                  } transition-colors`}>
+                                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                                  }`}>
                                     No projects linked
                                   </p>
-                                </button>
+                                </div>
                               )}
                             </div>
                           );
