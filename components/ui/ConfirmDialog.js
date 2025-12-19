@@ -107,37 +107,8 @@ const ConfirmDialog = ({
           <p>{message}</p>
         </div>
         {/* Footer */}
-        <div className={`px-6 py-4 flex justify-end gap-3 border-t ${darkMode ? 'border-gray-700' : 'border-slate-200'}`}>
-          <button
-            onClick={handleClose}
-            disabled={isLoading}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              isLoading
-                ? 'opacity-50 cursor-not-allowed'
-                : ''
-            } ${
-              darkMode
-                ? 'bg-gray-700 hover:bg-gray-600 text-gray-100'
-                : 'bg-slate-200 hover:bg-slate-300 text-slate-800'
-            }`}
-          >
-            {cancelText}
-          </button>
-          <button
-            onClick={handleConfirm}
-            disabled={isLoading}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              isLoading
-                ? 'opacity-50 cursor-not-allowed'
-                : ''
-            } ${
-              isDangerous
-                ? 'bg-red-600 hover:bg-red-700 text-white'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
-            }`}
-          >
-            {confirmText}
-          </button>
+        <div className={`px-6 py-4 flex ${secondaryAction && secondaryText ? 'justify-between' : 'justify-end'} gap-3 border-t ${darkMode ? 'border-gray-700' : 'border-slate-200'}`}>
+          {/* Secondary action on the left */}
           {secondaryAction && secondaryText && (
             <button
               onClick={handleSecondary}
@@ -156,6 +127,39 @@ const ConfirmDialog = ({
               {secondaryText}
             </button>
           )}
+          {/* Primary actions on the right */}
+          <div className="flex gap-3">
+            <button
+              onClick={handleClose}
+              disabled={isLoading}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                isLoading
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
+              } ${
+                darkMode
+                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-100'
+                  : 'bg-slate-200 hover:bg-slate-300 text-slate-800'
+              }`}
+            >
+              {cancelText}
+            </button>
+            <button
+              onClick={handleConfirm}
+              disabled={isLoading}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                isLoading
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
+              } ${
+                isDangerous
+                  ? 'bg-red-600 hover:bg-red-700 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
+            >
+              {confirmText}
+            </button>
+          </div>
         </div>
       </div>
     </div>

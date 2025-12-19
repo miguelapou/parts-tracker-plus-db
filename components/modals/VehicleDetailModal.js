@@ -3106,12 +3106,11 @@ const VehicleDetailModal = ({
                         const hasParts = partsForVehicle.length > 0;
                         const hasDocuments = documents.length > 0;
                         let message = 'Are you sure you want to permanently delete this vehicle? This action cannot be undone.';
-                        if (hasProjects || hasParts || hasDocuments) {
+                        if (hasProjects || hasParts) {
                           const items = [];
                           if (hasProjects) items.push(`${projectsForVehicle.length} project(s)`);
                           if (hasParts) items.push(`${partsForVehicle.length} part(s)`);
-                          if (hasDocuments) items.push(`${documents.length} document(s)`);
-                          message = `This vehicle has ${items.join(', ')} linked to it. Deleting it will ${hasDocuments ? 'permanently delete documents and ' : ''}unlink other items. This action cannot be undone.`;
+                          message = `This vehicle has ${items.join(', ')} linked to it. 'Delete' will unlink other items, 'Delete All' will delete linked items as well. This action cannot be undone.`;
                         }
                         setConfirmDialog({
                           isOpen: true,
