@@ -883,17 +883,25 @@ const VehicleDetailModal = ({
 
                   if (!hasImages) {
                     return (
-                      <div className={`order-first rounded-lg border min-h-[300px] flex flex-col items-center justify-center ${
+                      <div className={`order-first rounded-lg border md:aspect-[8/9] flex flex-col items-center justify-center ${
                         darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-gray-50 border-gray-200'
                       }`}>
                         <Camera className={`w-12 h-12 mx-auto mb-2 opacity-40 ${
                           darkMode ? 'text-gray-400' : 'text-gray-500'
                         }`} />
-                        <p className={`text-sm ${
+                        <p className={`text-sm mb-3 ${
                           darkMode ? 'text-gray-400' : 'text-gray-500'
                         }`}>
-                          No image
+                          No images
                         </p>
+                        <button
+                          onClick={() => setVehicleModalEditMode('vehicle')}
+                          className={`text-sm font-medium ${
+                            darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
+                          } transition-colors`}
+                        >
+                          Add images
+                        </button>
                       </div>
                     );
                   }
@@ -1821,8 +1829,8 @@ const VehicleDetailModal = ({
             {viewingVehicle && (
               <div className="p-6 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Basic Information */}
-                  <div className="space-y-4">
+                  {/* Basic Information - Right column on desktop */}
+                  <div className="space-y-4 md:order-2">
                     <div>
                       <label className={`block text-sm font-medium mb-2 ${
                         darkMode ? 'text-gray-300' : 'text-slate-700'
@@ -2056,8 +2064,8 @@ const VehicleDetailModal = ({
                     </div>
                   </div>
 
-                  {/* Multi-Image Upload */}
-                  <div className="space-y-4 flex flex-col">
+                  {/* Multi-Image Upload - Left column on desktop */}
+                  <div className="space-y-4 flex flex-col md:order-1">
                     <div className="flex flex-col flex-1">
                       <label className={`block text-sm font-medium mb-2 ${
                         darkMode ? 'text-gray-300' : 'text-slate-700'
