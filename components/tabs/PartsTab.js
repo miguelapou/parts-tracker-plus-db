@@ -1461,11 +1461,20 @@ const PartsTab = ({
             </h3>
             <p className={`${
               darkMode ? 'text-gray-400' : 'text-slate-600'
-            }`}>
+            } ${!(searchTerm || statusFilter !== 'all' || vendorFilter !== 'all') ? 'mb-4' : ''}`}>
               {searchTerm || statusFilter !== 'all' || vendorFilter !== 'all'
                 ? 'Try adjusting your filters or search term'
                 : 'Start tracking your parts by adding your first one'}
             </p>
+            {!(searchTerm || statusFilter !== 'all' || vendorFilter !== 'all') && (
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition-colors font-medium"
+              >
+                <Plus className="w-5 h-5" />
+                Add a part
+              </button>
+            )}
           </div>
         )}
 
@@ -1762,11 +1771,20 @@ const PartsTab = ({
             </h3>
             <p className={`${
               darkMode ? 'text-gray-400' : 'text-slate-600'
-            }`}>
+            } ${!(searchTerm || statusFilter !== 'all' || vendorFilter !== 'all') ? 'mb-4' : ''}`}>
               {searchTerm || statusFilter !== 'all' || vendorFilter !== 'all'
                 ? 'Try adjusting your filters or search term'
                 : 'Start tracking your parts by adding your first one'}
             </p>
+            {!(searchTerm || statusFilter !== 'all' || vendorFilter !== 'all') && (
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition-colors font-medium"
+              >
+                <Plus className="w-5 h-5" />
+                Add a part
+              </button>
+            )}
           </div>
         )}
       </>

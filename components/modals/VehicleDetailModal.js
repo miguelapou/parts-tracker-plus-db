@@ -110,7 +110,8 @@ const VehicleDetailModal = ({
   getVendorColor,
   calculateProjectTotal,
   calculateProjectStatus,
-  toast
+  toast,
+  setActiveTab
 }) => {
   // State for image gallery navigation
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -882,18 +883,21 @@ const VehicleDetailModal = ({
 
                   if (!hasImages) {
                     return (
-                      <div className={`order-first rounded-lg border min-h-[300px] flex flex-col items-center justify-center ${
-                        darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-gray-50 border-gray-200'
-                      }`}>
+                      <button
+                        onClick={() => setVehicleModalEditMode('vehicle')}
+                        className={`order-first rounded-lg border md:h-[427px] w-full flex flex-col items-center justify-center group ${
+                          darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
+                        }`}
+                      >
                         <Camera className={`w-12 h-12 mx-auto mb-2 opacity-40 ${
-                          darkMode ? 'text-gray-400' : 'text-gray-500'
-                        }`} />
+                          darkMode ? 'group-hover:text-blue-400' : 'group-hover:text-blue-600'
+                        } transition-colors`} />
                         <p className={`text-sm ${
-                          darkMode ? 'text-gray-400' : 'text-gray-500'
-                        }`}>
-                          No image
+                          darkMode ? 'group-hover:text-blue-400' : 'group-hover:text-blue-600'
+                        } transition-colors`}>
+                          No images
                         </p>
-                      </div>
+                      </button>
                     );
                   }
 
@@ -1432,14 +1436,21 @@ const VehicleDetailModal = ({
                     )}
                   </div>
                 ) : (
-                  <div className={`text-center py-8 rounded-lg border ${
-                    darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
-                  }`}>
-                    <Gauge className="w-12 h-12 mx-auto mb-2 opacity-40" />
-                    <p className="text-sm">
+                  <button
+                    onClick={() => setVehicleModalEditMode('vehicle')}
+                    className={`text-center py-8 rounded-lg border w-full group ${
+                      darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
+                    }`}
+                  >
+                    <Gauge className={`w-12 h-12 mx-auto mb-2 opacity-40 ${
+                      darkMode ? 'group-hover:text-blue-400' : 'group-hover:text-blue-600'
+                    } transition-colors`} />
+                    <p className={`text-sm ${
+                      darkMode ? 'group-hover:text-blue-400' : 'group-hover:text-blue-600'
+                    } transition-colors`}>
                       No maintenance information added yet
                     </p>
-                  </div>
+                  </button>
                 )}
                 </div>
               </div>
@@ -1705,14 +1716,27 @@ const VehicleDetailModal = ({
                         })}
                       </div>
                     ) : (
-                      <div className={`text-center py-8 rounded-lg border ${
-                        darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
-                      }`}>
-                        <ListChecks className="w-12 h-12 mx-auto mb-2 opacity-40" />
-                        <p className="text-sm">
+                      <button
+                        onClick={() => {
+                          handleCloseModal(() => {
+                            setShowVehicleDetailModal(false);
+                            setViewingVehicle(null);
+                          });
+                          setActiveTab('projects');
+                        }}
+                        className={`text-center py-8 rounded-lg border w-full group ${
+                          darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
+                        }`}
+                      >
+                        <ListChecks className={`w-12 h-12 mx-auto mb-2 opacity-40 ${
+                          darkMode ? 'group-hover:text-blue-400' : 'group-hover:text-blue-600'
+                        } transition-colors`} />
+                        <p className={`text-sm ${
+                          darkMode ? 'group-hover:text-blue-400' : 'group-hover:text-blue-600'
+                        } transition-colors`}>
                           No projects linked
                         </p>
-                      </div>
+                      </button>
                     )}
                   </div>
                 );
@@ -1758,6 +1782,13 @@ const VehicleDetailModal = ({
                   setEditingTodoText={setEditingTodoText}
                   newTodoText={newTodoText}
                   setNewTodoText={setNewTodoText}
+                  onNavigateToTab={(tab) => {
+                    handleCloseModal(() => {
+                      setShowVehicleDetailModal(false);
+                      setViewingVehicle(null);
+                    });
+                    setActiveTab(tab);
+                  }}
                 />
               </div>
             )}
@@ -1792,6 +1823,13 @@ const VehicleDetailModal = ({
                   vendorColors={vendorColors}
                   darkMode={darkMode}
                   setConfirmDialog={setConfirmDialog}
+                  onNavigateToTab={(tab) => {
+                    handleCloseModal(() => {
+                      setShowVehicleDetailModal(false);
+                      setViewingVehicle(null);
+                    });
+                    setActiveTab(tab);
+                  }}
                 />
               </div>
             )}
@@ -1808,8 +1846,8 @@ const VehicleDetailModal = ({
             {viewingVehicle && (
               <div className="p-6 space-y-6 max-h-[calc(90vh-164px)] overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Basic Information */}
-                  <div className="space-y-4">
+                  {/* Basic Information - Right column on desktop */}
+                  <div className="space-y-4 md:order-2">
                     <div>
                       <label className={`block text-sm font-medium mb-2 ${
                         darkMode ? 'text-gray-300' : 'text-slate-700'
@@ -2043,8 +2081,8 @@ const VehicleDetailModal = ({
                     </div>
                   </div>
 
-                  {/* Multi-Image Upload */}
-                  <div className="space-y-4 flex flex-col">
+                  {/* Multi-Image Upload - Left column on desktop */}
+                  <div className="space-y-4 flex flex-col md:order-1">
                     <div className="flex flex-col flex-1">
                       <label className={`block text-sm font-medium mb-2 ${
                         darkMode ? 'text-gray-300' : 'text-slate-700'

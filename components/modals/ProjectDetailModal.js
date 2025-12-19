@@ -39,6 +39,7 @@ const ProjectDetailModal = ({
   calculateProjectTotal,
   calculateProjectStatus,
   setConfirmDialog,
+  setActiveTab,
   onClose
 }) => {
   // Touch refs for swipe gestures
@@ -286,6 +287,12 @@ const ProjectDetailModal = ({
                 setEditingTodoText={setEditingTodoText}
                 newTodoText={newTodoText}
                 setNewTodoText={setNewTodoText}
+                onNavigateToTab={(tab) => {
+                  handleCloseModal(() => {
+                    onClose();
+                  });
+                  setActiveTab(tab);
+                }}
               />
             </div>
           </div>
@@ -318,6 +325,12 @@ const ProjectDetailModal = ({
                 vendorColors={vendorColors}
                 darkMode={darkMode}
                 setConfirmDialog={setConfirmDialog}
+                onNavigateToTab={(tab) => {
+                  handleCloseModal(() => {
+                    onClose();
+                  });
+                  setActiveTab(tab);
+                }}
               />
             </div>
           </div>

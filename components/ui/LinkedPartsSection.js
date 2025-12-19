@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Package } from 'lucide-react';
 import { getVendorDisplayColor } from '../../utils/colorUtils';
 
@@ -10,9 +10,12 @@ const LinkedPartsSection = ({
   getVendorColor,
   vendorColors,
   darkMode,
-  setConfirmDialog
+  setConfirmDialog,
+  setActiveTab,
+  onNavigateToTab
 }) => {
   const linkedParts = parts.filter(part => part.projectId === projectId);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div className={`mt-6 pt-6 border-t ${
@@ -27,12 +30,24 @@ const LinkedPartsSection = ({
         </div>
       </h3>
       {linkedParts.length === 0 ? (
-        <div className={`text-center py-8 rounded-lg border ${
-          darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
-        }`}>
+        <button
+          onClick={() => {
+            if (onNavigateToTab) {
+              onNavigateToTab('parts');
+            } else if (setActiveTab) {
+              setActiveTab('parts');
+            }
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className={`text-center py-8 rounded-lg border w-full cursor-pointer transition-colors ${
+            darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-gray-50 border-gray-200'
+          }`}
+          style={{ color: isHovered ? (darkMode ? '#60a5fa' : '#2563eb') : (darkMode ? '#9ca3af' : '#6b7280') }}
+        >
           <Package className="w-12 h-12 mx-auto mb-2 opacity-40" />
           <p className="text-sm">No parts linked</p>
-        </div>
+        </button>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:max-h-[540px] overflow-y-auto pr-2">
           {linkedParts.map((part) => (
