@@ -37,7 +37,7 @@ const LinkedPartsSection = ({
               setActiveTab('parts');
             }
           }}
-          className={`text-center py-8 rounded-lg border w-full group ${
+          className={`text-center py-8 rounded-lg border w-full group cursor-pointer ${
             darkMode ? 'bg-gray-700/30 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-500'
           }`}
         >
