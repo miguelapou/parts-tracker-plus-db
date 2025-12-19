@@ -3,6 +3,16 @@ import { X, Upload, CheckCircle } from 'lucide-react';
 import { inputClasses } from '../../utils/styleUtils';
 import { useUI } from '../../contexts';
 import FadeInImage from '../ui/FadeInImage';
+import ComboBox from '../ui/ComboBox';
+import {
+  VEHICLE_MAKES,
+  VEHICLE_YEARS,
+  OIL_BRANDS,
+  OIL_TYPES,
+  ODOMETER_RANGES,
+  FUEL_TYPES,
+  formatOdometer
+} from '../../utils/vehicleOptions';
 
 const AddVehicleModal = ({
   isOpen,
@@ -55,6 +65,7 @@ const AddVehicleModal = ({
       newVehicle.oil_brand?.trim() ||
       newVehicle.drain_plug?.trim() ||
       newVehicle.battery?.trim() ||
+      newVehicle.fuel_type?.trim() ||
       vehicleImageFile ||
       (vehicleImageFiles && vehicleImageFiles.length > 0)
     );
@@ -166,19 +177,13 @@ const AddVehicleModal = ({
                   }`}>
                     Year
                   </label>
-                  <input
-                    type="number"
-                    inputMode="numeric"
+                  <ComboBox
                     value={newVehicle.year}
-                    onChange={(e) => setNewVehicle({ ...newVehicle, year: e.target.value })}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      darkMode
-                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                    }`}
-                    placeholder="e.g. 1995"
-                    min="1900"
-                    max="2100"
+                    onChange={(value) => setNewVehicle({ ...newVehicle, year: value })}
+                    options={VEHICLE_YEARS}
+                    placeholder="Select year..."
+                    darkMode={darkMode}
+                    customInputPlaceholder="Search or enter year..."
                   />
                 </div>
               </div>
@@ -190,16 +195,13 @@ const AddVehicleModal = ({
                   }`}>
                     Make
                   </label>
-                  <input
-                    type="text"
+                  <ComboBox
                     value={newVehicle.make}
-                    onChange={(e) => setNewVehicle({ ...newVehicle, make: e.target.value })}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      darkMode
-                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                    }`}
-                    placeholder="e.g. Toyota"
+                    onChange={(value) => setNewVehicle({ ...newVehicle, make: value })}
+                    options={VEHICLE_MAKES}
+                    placeholder="Select make..."
+                    darkMode={darkMode}
+                    customInputPlaceholder="Search or enter make..."
                   />
                 </div>
 
@@ -270,25 +272,14 @@ const AddVehicleModal = ({
                   }`}>
                     Odometer Range
                   </label>
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
+                  <ComboBox
                     value={newVehicle.odometer_range}
-                    onChange={(e) => setNewVehicle({ ...newVehicle, odometer_range: e.target.value })}
-                    onBlur={(e) => {
-                      const value = parseInt(e.target.value) || 0;
-                      const rounded = Math.round(value / 10000) * 10000;
-                      setNewVehicle({ ...newVehicle, odometer_range: rounded || '' });
-                    }}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      darkMode
-                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                    }`}
-                    placeholder="e.g. 150000"
-                    min="0"
-                    step="10000"
+                    onChange={(value) => setNewVehicle({ ...newVehicle, odometer_range: value })}
+                    options={ODOMETER_RANGES}
+                    placeholder="Select range..."
+                    darkMode={darkMode}
+                    customInputPlaceholder="Search or enter value..."
+                    formatOption={formatOdometer}
                   />
                 </div>
                 <div>
@@ -596,12 +587,13 @@ const AddVehicleModal = ({
                   }`}>
                     Oil Type
                   </label>
-                  <input
-                    type="text"
+                  <ComboBox
                     value={newVehicle.oil_type}
-                    onChange={(e) => setNewVehicle({ ...newVehicle, oil_type: e.target.value })}
-                    className={inputClasses(darkMode)}
-                    placeholder="e.g. 5W-30"
+                    onChange={(value) => setNewVehicle({ ...newVehicle, oil_type: value })}
+                    options={OIL_TYPES}
+                    placeholder="Select oil type..."
+                    darkMode={darkMode}
+                    customInputPlaceholder="Search or enter type..."
                   />
                 </div>
 
@@ -611,12 +603,13 @@ const AddVehicleModal = ({
                   }`}>
                     Oil Brand
                   </label>
-                  <input
-                    type="text"
+                  <ComboBox
                     value={newVehicle.oil_brand}
-                    onChange={(e) => setNewVehicle({ ...newVehicle, oil_brand: e.target.value })}
-                    className={inputClasses(darkMode)}
-                    placeholder="e.g. Mobil 1"
+                    onChange={(value) => setNewVehicle({ ...newVehicle, oil_brand: value })}
+                    options={OIL_BRANDS}
+                    placeholder="Select oil brand..."
+                    darkMode={darkMode}
+                    customInputPlaceholder="Search or enter brand..."
                   />
                 </div>
 
@@ -632,6 +625,22 @@ const AddVehicleModal = ({
                     onChange={(e) => setNewVehicle({ ...newVehicle, drain_plug: e.target.value })}
                     className={inputClasses(darkMode)}
                     placeholder="e.g. M14x1.5"
+                  />
+                </div>
+
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${
+                    darkMode ? 'text-gray-300' : 'text-slate-700'
+                  }`}>
+                    Fuel Type
+                  </label>
+                  <ComboBox
+                    value={newVehicle.fuel_type}
+                    onChange={(value) => setNewVehicle({ ...newVehicle, fuel_type: value })}
+                    options={FUEL_TYPES}
+                    placeholder="Select fuel type..."
+                    darkMode={darkMode}
+                    allowCustom={false}
                   />
                 </div>
               </div>
@@ -707,6 +716,7 @@ const AddVehicleModal = ({
                   oil_brand: '',
                   drain_plug: '',
                   battery: '',
+                  fuel_type: '',
                   image_url: '',
                   images: []
                 });

@@ -45,6 +45,7 @@ const useVehicles = (userId, toast, isDemo = false) => {
     oil_brand: '',
     drain_plug: '',
     battery: '',
+    fuel_type: '',
     image_url: '',
     images: [], // Array of { url: string, isPrimary: boolean }
     color: '#3B82F6' // Default blue color
