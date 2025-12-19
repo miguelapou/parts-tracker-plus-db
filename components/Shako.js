@@ -1588,7 +1588,7 @@ const Shako = ({ isDemo = false }) => {
                   {/* Sliding background indicator */}
                   <div
                     className={`absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-2px)] rounded-md transition-all duration-200 ease-in-out ${
-                      darkMode ? 'bg-yellow-600' : 'bg-yellow-500'
+                      darkMode ? 'bg-green-600' : 'bg-green-500'
                     } ${
                       vehicleLayoutMode === 'compact' ? 'translate-x-full' : 'translate-x-0'
                     }`}
