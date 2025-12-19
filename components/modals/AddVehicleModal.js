@@ -617,7 +617,7 @@ const AddVehicleModal = ({
                   <label className={`block text-sm font-medium mb-2 ${
                     darkMode ? 'text-gray-300' : 'text-slate-700'
                   }`}>
-                    Drain Plug
+                    Oil Drain Plug
                   </label>
                   <input
                     type="text"

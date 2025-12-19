@@ -93,8 +93,28 @@ const ComboBox = ({
       // Check if dropdown should open upward
       if (triggerRef.current) {
         const rect = triggerRef.current.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const spaceAbove = rect.top;
+
+        // Find the closest scrollable parent (modal) or use viewport
+        let scrollableParent = triggerRef.current.parentElement;
+        while (scrollableParent) {
+          const style = window.getComputedStyle(scrollableParent);
+          const overflowY = style.overflowY;
+          if (overflowY === 'auto' || overflowY === 'scroll' || scrollableParent.classList.contains('modal-scrollable')) {
+            break;
+          }
+          scrollableParent = scrollableParent.parentElement;
+        }
+
+        let spaceBelow, spaceAbove;
+        if (scrollableParent) {
+          const parentRect = scrollableParent.getBoundingClientRect();
+          spaceBelow = parentRect.bottom - rect.bottom;
+          spaceAbove = rect.top - parentRect.top;
+        } else {
+          spaceBelow = window.innerHeight - rect.bottom;
+          spaceAbove = rect.top;
+        }
+
         // Open upward if not enough space below but enough above
         setOpenUpward(spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow);
       }

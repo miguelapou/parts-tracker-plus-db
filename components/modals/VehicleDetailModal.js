@@ -1438,7 +1438,7 @@ const VehicleDetailModal = ({
                       <div>
                         <p className={`text-sm font-medium mb-1 ${
                           darkMode ? 'text-gray-400' : 'text-slate-600'
-                        }`}>Drain Plug</p>
+                        }`}>Oil Drain Plug</p>
                         <p className={`text-base ${
                           darkMode ? 'text-gray-100' : 'text-slate-800'
                         }`}>{viewingVehicle.drain_plug}</p>
@@ -2472,7 +2472,7 @@ const VehicleDetailModal = ({
                         <label className={`block text-sm font-medium mb-2 ${
                           darkMode ? 'text-gray-300' : 'text-slate-700'
                         }`}>
-                          Drain Plug
+                          Oil Drain Plug
                         </label>
                         <input
                           type="text"
