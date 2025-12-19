@@ -34,7 +34,8 @@ const VALID_VEHICLE_COLUMNS = [
   'oil_brand',
   'drain_plug',
   'battery',
-  'insurance_policy'
+  'insurance_policy',
+  'fuel_type'
 ];
 
 // Columns that should skip empty strings (to avoid type mismatch with numeric/date types)

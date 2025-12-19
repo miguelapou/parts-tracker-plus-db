@@ -81,14 +81,18 @@ const useProjects = (userId, toast, isDemo = false) => {
 
   /**
    * Add a new project
+   * @param {Object} projectData - Project data to create
+   * @param {Object} options - Options for the operation
+   * @param {boolean} options.skipReload - Skip reloading projects after creation
+   * @returns {Object|null} The created project, or null on error
    */
-  const addProject = async (projectData) => {
-    if (!userId) return;
+  const addProject = async (projectData, { skipReload = false } = {}) => {
+    if (!userId) return null;
 
     // Validate budget
     const budgetValidation = validateBudget(projectData.budget, toast);
     if (!budgetValidation.isValid) {
-      return; // Toast already shown by validateBudget
+      return null; // Toast already shown by validateBudget
     }
 
     // Demo mode: save to localStorage
@@ -109,12 +113,12 @@ const useProjects = (userId, toast, isDemo = false) => {
         display_order: demoProjects.length
       };
       saveDemoProjects([...demoProjects, newProject]);
-      setProjects([...demoProjects, newProject]);
-      return;
+      if (!skipReload) setProjects([...demoProjects, newProject]);
+      return newProject;
     }
 
     try {
-      await projectsService.createProject({
+      const data = await projectsService.createProject({
         name: projectData.name,
         description: projectData.description,
         status: projectData.status || 'planning',
@@ -124,9 +128,11 @@ const useProjects = (userId, toast, isDemo = false) => {
         vehicle_id: projectData.vehicle_id || null,
         todos: []
       }, userId);
-      await loadProjects();
+      if (!skipReload) await loadProjects();
+      return data?.[0] || null;
     } catch (error) {
       toast?.error('Error adding project');
+      return null;
     }
   };
 

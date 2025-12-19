@@ -155,6 +155,7 @@ const Shako = ({ isDemo = false }) => {
     loadVendors,
     updateVendorColor,
     addNewPart,
+    createPartDirectly,
     updatePartStatus,
     saveTrackingInfo,
     skipTrackingInfo,
@@ -605,6 +606,25 @@ const Shako = ({ isDemo = false }) => {
 
   // Track previous userId to detect user changes
   const prevUserIdRef = useRef(null);
+  const vehiclesLoadedRef = useRef(false);
+  const vehiclesLoadedAtRef = useRef(null);
+
+  // Refresh vehicle images when tab becomes visible after being away
+  // Supabase signed URLs expire after 1 hour, so refresh if >45 minutes have passed
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && vehiclesLoadedRef.current && vehiclesLoadedAtRef.current) {
+        const minutesSinceLoad = (Date.now() - vehiclesLoadedAtRef.current) / 1000 / 60;
+        if (minutesSinceLoad > 45) {
+          vehiclesLoadedAtRef.current = Date.now();
+          loadVehicles();
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [loadVehicles]);
 
   // Load parts, projects, and vendors from Supabase when user is authenticated
   // Also reset state when user changes (logout + login as different user)
@@ -617,6 +637,7 @@ const Shako = ({ isDemo = false }) => {
         setParts([]);
         setProjects([]);
         setVehicles([]);
+        vehiclesLoadedRef.current = false;
       }
 
       loadParts();
@@ -625,6 +646,7 @@ const Shako = ({ isDemo = false }) => {
 
       // Also load vehicles if user changed (to clear stale data)
       if (userChanged && activeTab === 'vehicles') {
+        vehiclesLoadedAtRef.current = Date.now();
         loadVehicles();
       }
     }
@@ -635,7 +657,9 @@ const Shako = ({ isDemo = false }) => {
 
   // Load vehicles when the vehicles tab is accessed and user is authenticated
   useEffect(() => {
-    if (userId && activeTab === 'vehicles' && vehicles.length === 0) {
+    if (userId && activeTab === 'vehicles' && !vehiclesLoadedRef.current) {
+      vehiclesLoadedRef.current = true;
+      vehiclesLoadedAtRef.current = Date.now();
       loadVehicles();
     }
   }, [activeTab, userId]);
@@ -1071,7 +1095,7 @@ const Shako = ({ isDemo = false }) => {
   }
 
   return (
-    <AppProviders darkMode={darkMode} setDarkMode={setDarkMode} userId={userId} toast={toast}>
+    <AppProviders darkMode={darkMode} setDarkMode={setDarkMode} userId={userId} toast={toast} isDemo={isDemo}>
     <div className={`min-h-screen p-3 sm:p-6 transition-colors duration-200 ${
       darkMode
         ? 'bg-gray-900 dark-scrollbar'
@@ -1564,7 +1588,7 @@ const Shako = ({ isDemo = false }) => {
                   {/* Sliding background indicator */}
                   <div
                     className={`absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-2px)] rounded-md transition-all duration-200 ease-in-out ${
-                      darkMode ? 'bg-yellow-600' : 'bg-yellow-500'
+                      darkMode ? 'bg-green-600' : 'bg-green-500'
                     } ${
                       vehicleLayoutMode === 'compact' ? 'translate-x-full' : 'translate-x-0'
                     }`}
@@ -2078,6 +2102,10 @@ const Shako = ({ isDemo = false }) => {
             unlinkPartFromProject={unlinkPartFromProject}
             loadProjects={loadProjects}
             updateProject={updateProject}
+            addProject={addProject}
+            createPartDirectly={createPartDirectly}
+            deleteProject={deleteProject}
+            deletePart={deletePart}
             toast={toast}
             setActiveTab={setActiveTab}
           />
@@ -2097,6 +2125,9 @@ const Shako = ({ isDemo = false }) => {
         cancelText={confirmDialog.cancelText}
         isDangerous={confirmDialog.isDangerous !== false}
         darkMode={darkMode}
+        secondaryAction={confirmDialog.secondaryAction}
+        secondaryText={confirmDialog.secondaryText}
+        secondaryDangerous={confirmDialog.secondaryDangerous}
       />
       {/* Delete Account Modal */}
       <DeleteAccountModal

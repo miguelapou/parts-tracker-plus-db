@@ -45,6 +45,7 @@ const useVehicles = (userId, toast, isDemo = false) => {
     oil_brand: '',
     drain_plug: '',
     battery: '',
+    fuel_type: '',
     image_url: '',
     images: [], // Array of { url: string, isPrimary: boolean }
     color: '#3B82F6' // Default blue color
@@ -251,9 +252,13 @@ const useVehicles = (userId, toast, isDemo = false) => {
 
   /**
    * Add a new vehicle
+   * @param {Object} vehicleData - Vehicle data to create
+   * @param {Object} options - Options for the operation
+   * @param {boolean} options.skipReload - Skip reloading vehicles after creation
+   * @returns {Object|null} The created vehicle, or null on error
    */
-  const addVehicle = async (vehicleData) => {
-    if (!userId) return;
+  const addVehicle = async (vehicleData, { skipReload = false } = {}) => {
+    if (!userId) return null;
 
     // Demo mode: save to localStorage
     if (isDemo) {
@@ -267,15 +272,17 @@ const useVehicles = (userId, toast, isDemo = false) => {
         archived: false
       };
       saveDemoVehicles([...demoVehicles, newVehicle]);
-      await loadVehicles();
-      return;
+      if (!skipReload) await loadVehicles();
+      return newVehicle;
     }
 
     try {
-      await vehiclesService.createVehicle(vehicleData, userId);
-      await loadVehicles();
+      const data = await vehiclesService.createVehicle(vehicleData, userId);
+      if (!skipReload) await loadVehicles();
+      return data?.[0] || null;
     } catch (error) {
       toast?.error('Error adding vehicle');
+      return null;
     }
   };
 

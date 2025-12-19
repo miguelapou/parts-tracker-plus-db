@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Loader2 } from 'lucide-react';
 
 // ConfirmDialog - Custom styled confirmation modal
 const ConfirmDialog = ({
@@ -10,26 +11,57 @@ const ConfirmDialog = ({
   confirmText = 'Delete',
   cancelText = 'Cancel',
   darkMode,
-  isDangerous = true
+  isDangerous = true,
+  // Optional secondary action (e.g., "Delete All")
+  secondaryAction,
+  secondaryText,
+  secondaryDangerous = true
 }) => {
   const [isClosing, setIsClosing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Reset loading state when dialog closes
+  useEffect(() => {
+    if (!isOpen) {
+      setIsLoading(false);
+    }
+  }, [isOpen]);
 
   const handleClose = useCallback(() => {
+    if (isLoading) return; // Prevent closing while loading
     setIsClosing(true);
     setTimeout(() => {
       setIsClosing(false);
       onClose();
     }, 150);
-  }, [onClose]);
+  }, [onClose, isLoading]);
 
   const handleConfirm = useCallback(() => {
+    if (isLoading) return;
     setIsClosing(true);
     setTimeout(() => {
       setIsClosing(false);
       onConfirm();
       onClose();
     }, 150);
-  }, [onConfirm, onClose]);
+  }, [onConfirm, onClose, isLoading]);
+
+  const handleSecondary = useCallback(async () => {
+    if (!secondaryAction || isLoading) return;
+    setIsLoading(true);
+    try {
+      await secondaryAction();
+      setIsClosing(true);
+      setTimeout(() => {
+        setIsClosing(false);
+        setIsLoading(false);
+        onClose();
+      }, 150);
+    } catch (error) {
+      console.error('Secondary action failed:', error);
+      setIsLoading(false);
+    }
+  }, [secondaryAction, onClose, isLoading]);
 
   // Handle Enter key to confirm
   useEffect(() => {
@@ -75,27 +107,55 @@ const ConfirmDialog = ({
           <p>{message}</p>
         </div>
         {/* Footer */}
-        <div className={`px-6 py-4 flex justify-end gap-3 border-t ${darkMode ? 'border-gray-700' : 'border-slate-200'}`}>
-          <button
-            onClick={handleClose}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              darkMode
-                ? 'bg-gray-700 hover:bg-gray-600 text-gray-100'
-                : 'bg-slate-200 hover:bg-slate-300 text-slate-800'
-            }`}
-          >
-            {cancelText}
-          </button>
-          <button
-            onClick={handleConfirm}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              isDangerous
-                ? 'bg-red-600 hover:bg-red-700 text-white'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
-            }`}
-          >
-            {confirmText}
-          </button>
+        <div className={`px-6 py-4 flex ${secondaryAction && secondaryText ? 'justify-between' : 'justify-end'} gap-3 border-t ${darkMode ? 'border-gray-700' : 'border-slate-200'}`}>
+          {/* Secondary action on the left */}
+          {secondaryAction && secondaryText && (
+            <button
+              onClick={handleSecondary}
+              disabled={isLoading}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+                isLoading
+                  ? 'opacity-75 cursor-not-allowed'
+                  : ''
+              } bg-gray-900 hover:bg-black text-white`}
+            >
+              {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {secondaryText}
+            </button>
+          )}
+          {/* Primary actions on the right */}
+          <div className="flex gap-3">
+            <button
+              onClick={handleClose}
+              disabled={isLoading}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                isLoading
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
+              } ${
+                darkMode
+                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-100'
+                  : 'bg-slate-200 hover:bg-slate-300 text-slate-800'
+              }`}
+            >
+              {cancelText}
+            </button>
+            <button
+              onClick={handleConfirm}
+              disabled={isLoading}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                isLoading
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
+              } ${
+                isDangerous
+                  ? 'bg-red-600 hover:bg-red-700 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
+            >
+              {confirmText}
+            </button>
+          </div>
         </div>
       </div>
     </div>

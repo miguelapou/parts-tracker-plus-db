@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertTriangle, ArrowLeft, CheckCircle } from 'lucide-react';
+import { HandMetal, ArrowLeft, CheckCircle } from 'lucide-react';
 import PrimaryButton from '../ui/PrimaryButton';
 
 /**
@@ -30,18 +30,18 @@ const NewUserConfirmModal = ({
       >
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
-          <div className={`p-2 rounded-full ${darkMode ? 'bg-yellow-900/50' : 'bg-yellow-100'}`}>
-            <AlertTriangle className={`w-6 h-6 ${darkMode ? 'text-yellow-400' : 'text-yellow-600'}`} />
+          <div className={`p-2 rounded-full ${darkMode ? 'bg-green-900/50' : 'bg-green-100'}`}>
+            <HandMetal className={`w-6 h-6 ${darkMode ? 'text-green-400' : 'text-green-600'}`} />
           </div>
           <h2 className={`text-xl font-semibold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-            New Account
+            Welcome to Shako
           </h2>
         </div>
 
         {/* Content */}
         <div className={`mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
           <p className="mb-4">
-            You're signing in with an email that hasn't been used before:
+            You're signing in with a new email:
           </p>
 
           <div className={`p-3 rounded-lg mb-4 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -51,7 +51,7 @@ const NewUserConfirmModal = ({
           </div>
 
           <p>
-            This will create a new account. Is this the correct email?
+            Please confirm account creation.
           </p>
         </div>
 
@@ -76,7 +76,7 @@ const NewUserConfirmModal = ({
             className="flex-1 flex items-center justify-center gap-2"
           >
             <CheckCircle className="w-4 h-4" />
-            {isLoading ? 'Creating...' : 'Create Account'}
+            {isLoading ? 'Creating...' : 'Confirm'}
           </PrimaryButton>
         </div>
       </div>

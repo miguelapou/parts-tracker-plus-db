@@ -49,6 +49,18 @@ import {
 import { inputClasses } from '../../utils/styleUtils';
 import { generateVehicleReportPDF, downloadBlob } from '../../utils/pdfUtils';
 import { useDocuments, useServiceEvents } from '../../contexts';
+import ComboBox from '../ui/ComboBox';
+import {
+  VEHICLE_MAKES,
+  VEHICLE_YEARS,
+  OIL_BRANDS,
+  OIL_TYPES,
+  OIL_CAPACITIES,
+  ODOMETER_RANGES,
+  FUEL_TYPES,
+  formatOdometer,
+  formatOilCapacity
+} from '../../utils/vehicleOptions';
 
 const VehicleDetailModal = ({
   isOpen,
@@ -102,6 +114,8 @@ const VehicleDetailModal = ({
   getVehicleProjects,
   unlinkPartFromProject,
   loadProjects,
+  deleteProject,
+  deletePart,
   setConfirmDialog,
   getStatusColors,
   getPriorityColors,
@@ -1351,9 +1365,19 @@ const VehicleDetailModal = ({
                 }`}>
                   Maintenance
                 </h3>
-                {(viewingVehicle.fuel_filter || viewingVehicle.air_filter || viewingVehicle.oil_filter || viewingVehicle.oil_type || viewingVehicle.oil_capacity || viewingVehicle.oil_brand || viewingVehicle.drain_plug || viewingVehicle.battery) ? (
+                {(viewingVehicle.fuel_filter || viewingVehicle.air_filter || viewingVehicle.oil_filter || viewingVehicle.oil_type || viewingVehicle.oil_capacity || viewingVehicle.oil_brand || viewingVehicle.drain_plug || viewingVehicle.battery || viewingVehicle.fuel_type) ? (
                   <div className="grid grid-cols-2 gap-4 px-4">
                     {/* Mobile two-column layout: Left (fuel filter, air filter, battery, drain plug) | Right (oil filter, oil capacity, oil type, oil brand) */}
+                    {viewingVehicle.fuel_type && (
+                      <div>
+                        <p className={`text-sm font-medium mb-1 ${
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
+                        }`}>Fuel Type</p>
+                        <p className={`text-base ${
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
+                        }`}>{viewingVehicle.fuel_type}</p>
+                      </div>
+                    )}
                     {viewingVehicle.fuel_filter && (
                       <div>
                         <p className={`text-sm font-medium mb-1 ${
@@ -1418,7 +1442,7 @@ const VehicleDetailModal = ({
                       <div>
                         <p className={`text-sm font-medium mb-1 ${
                           darkMode ? 'text-gray-400' : 'text-slate-600'
-                        }`}>Drain Plug</p>
+                        }`}>Oil Drain Plug</p>
                         <p className={`text-base ${
                           darkMode ? 'text-gray-100' : 'text-slate-800'
                         }`}>{viewingVehicle.drain_plug}</p>
@@ -1893,19 +1917,13 @@ const VehicleDetailModal = ({
                         }`}>
                           Year
                         </label>
-                        <input
-                          type="number"
-                          inputMode="numeric"
+                        <ComboBox
                           value={viewingVehicle.year || ''}
-                          onChange={(e) => setViewingVehicle({ ...viewingVehicle, year: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                            darkMode
-                              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                              : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                          }`}
-                          placeholder="e.g. 1995"
-                          min="1900"
-                          max="2100"
+                          onChange={(value) => setViewingVehicle({ ...viewingVehicle, year: value })}
+                          options={VEHICLE_YEARS}
+                          placeholder="Select year..."
+                          darkMode={darkMode}
+                          customInputPlaceholder="Search or enter year..."
                         />
                       </div>
                     </div>
@@ -1917,16 +1935,13 @@ const VehicleDetailModal = ({
                         }`}>
                           Make
                         </label>
-                        <input
-                          type="text"
+                        <ComboBox
                           value={viewingVehicle.make || ''}
-                          onChange={(e) => setViewingVehicle({ ...viewingVehicle, make: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                            darkMode
-                              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                              : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                          }`}
-                          placeholder="e.g. Toyota"
+                          onChange={(value) => setViewingVehicle({ ...viewingVehicle, make: value })}
+                          options={VEHICLE_MAKES}
+                          placeholder="Select make..."
+                          darkMode={darkMode}
+                          customInputPlaceholder="Search or enter make..."
                         />
                       </div>
 
@@ -1997,25 +2012,14 @@ const VehicleDetailModal = ({
                         }`}>
                           Odometer Range
                         </label>
-                        <input
-                          type="number"
-                          inputMode="numeric"
-                          pattern="[0-9]*"
-                          value={viewingVehicle.odometer_range || ''}
-                          onChange={(e) => setViewingVehicle({ ...viewingVehicle, odometer_range: e.target.value })}
-                          onBlur={(e) => {
-                            const value = parseInt(e.target.value) || 0;
-                            const rounded = Math.round(value / 10000) * 10000;
-                            setViewingVehicle({ ...viewingVehicle, odometer_range: rounded || '' });
-                          }}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                            darkMode
-                              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                              : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                          }`}
-                          placeholder="e.g. 150000"
-                          min="0"
-                          step="10000"
+                        <ComboBox
+                          value={viewingVehicle.odometer_range?.toString() || ''}
+                          onChange={(value) => setViewingVehicle({ ...viewingVehicle, odometer_range: value })}
+                          options={ODOMETER_RANGES}
+                          placeholder="Select range..."
+                          darkMode={darkMode}
+                          customInputPlaceholder="Search or enter value..."
+                          formatOption={formatOdometer}
                         />
                       </div>
                       <div>
@@ -2423,16 +2427,13 @@ const VehicleDetailModal = ({
                         }`}>
                           Oil Type
                         </label>
-                        <input
-                          type="text"
+                        <ComboBox
                           value={viewingVehicle.oil_type || ''}
-                          onChange={(e) => setViewingVehicle({ ...viewingVehicle, oil_type: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                            darkMode
-                              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                              : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                          }`}
-                          placeholder="e.g. 5W-30"
+                          onChange={(value) => setViewingVehicle({ ...viewingVehicle, oil_type: value })}
+                          options={OIL_TYPES}
+                          placeholder="Select oil type..."
+                          darkMode={darkMode}
+                          customInputPlaceholder="Search or enter type..."
                         />
                       </div>
 
@@ -2442,16 +2443,13 @@ const VehicleDetailModal = ({
                         }`}>
                           Oil Capacity
                         </label>
-                        <input
-                          type="text"
+                        <ComboBox
                           value={viewingVehicle.oil_capacity || ''}
-                          onChange={(e) => setViewingVehicle({ ...viewingVehicle, oil_capacity: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                            darkMode
-                              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                              : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                          }`}
-                          placeholder="e.g. 5.7L"
+                          onChange={(value) => setViewingVehicle({ ...viewingVehicle, oil_capacity: formatOilCapacity(value) })}
+                          options={OIL_CAPACITIES}
+                          placeholder="Select capacity..."
+                          darkMode={darkMode}
+                          customInputPlaceholder="Search or enter capacity..."
                         />
                       </div>
 
@@ -2461,16 +2459,13 @@ const VehicleDetailModal = ({
                         }`}>
                           Oil Brand
                         </label>
-                        <input
-                          type="text"
+                        <ComboBox
                           value={viewingVehicle.oil_brand || ''}
-                          onChange={(e) => setViewingVehicle({ ...viewingVehicle, oil_brand: e.target.value })}
-                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                            darkMode
-                              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                              : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                          }`}
-                          placeholder="e.g. Mobil 1"
+                          onChange={(value) => setViewingVehicle({ ...viewingVehicle, oil_brand: value })}
+                          options={OIL_BRANDS}
+                          placeholder="Select oil brand..."
+                          darkMode={darkMode}
+                          customInputPlaceholder="Search or enter brand..."
                         />
                       </div>
 
@@ -2478,7 +2473,7 @@ const VehicleDetailModal = ({
                         <label className={`block text-sm font-medium mb-2 ${
                           darkMode ? 'text-gray-300' : 'text-slate-700'
                         }`}>
-                          Drain Plug
+                          Oil Drain Plug
                         </label>
                         <input
                           type="text"
@@ -2505,6 +2500,22 @@ const VehicleDetailModal = ({
                           onChange={(e) => setViewingVehicle({ ...viewingVehicle, battery: e.target.value })}
                           className={inputClasses(darkMode)}
                           placeholder="e.g. Group 35, 650 CCA"
+                        />
+                      </div>
+
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${
+                          darkMode ? 'text-gray-300' : 'text-slate-700'
+                        }`}>
+                          Fuel Type
+                        </label>
+                        <ComboBox
+                          value={viewingVehicle.fuel_type || ''}
+                          onChange={(value) => setViewingVehicle({ ...viewingVehicle, fuel_type: value })}
+                          options={FUEL_TYPES}
+                          placeholder="Select fuel type..."
+                          darkMode={darkMode}
+                          allowCustom={false}
                         />
                       </div>
                     </div>
@@ -3095,12 +3106,11 @@ const VehicleDetailModal = ({
                         const hasParts = partsForVehicle.length > 0;
                         const hasDocuments = documents.length > 0;
                         let message = 'Are you sure you want to permanently delete this vehicle? This action cannot be undone.';
-                        if (hasProjects || hasParts || hasDocuments) {
+                        if (hasProjects || hasParts) {
                           const items = [];
                           if (hasProjects) items.push(`${projectsForVehicle.length} project(s)`);
                           if (hasParts) items.push(`${partsForVehicle.length} part(s)`);
-                          if (hasDocuments) items.push(`${documents.length} document(s)`);
-                          message = `This vehicle has ${items.join(', ')} linked to it. Deleting it will ${hasDocuments ? 'permanently delete documents and ' : ''}unlink other items. This action cannot be undone.`;
+                          message = `This vehicle has ${items.join(', ')} linked to it. 'Delete' will unlink other items, 'Delete All' will delete linked items as well. This action cannot be undone.`;
                         }
                         setConfirmDialog({
                           isOpen: true,
@@ -3112,7 +3122,26 @@ const VehicleDetailModal = ({
                             setViewingVehicle(null);
                             setOriginalVehicleData(null);
                             setVehicleModalEditMode(null);
-                          }
+                          },
+                          // Only show "Delete All" if there are linked projects or parts
+                          ...(hasProjects || hasParts ? {
+                            secondaryText: 'Delete All',
+                            secondaryAction: async () => {
+                              // Delete all parts linked to this vehicle's projects
+                              for (const part of partsForVehicle) {
+                                await deletePart(part.id);
+                              }
+                              // Delete all projects linked to this vehicle
+                              for (const project of projectsForVehicle) {
+                                await deleteProject(project.id);
+                              }
+                              // Delete the vehicle
+                              await deleteVehicle(viewingVehicle.id);
+                              setViewingVehicle(null);
+                              setOriginalVehicleData(null);
+                              setVehicleModalEditMode(null);
+                            }
+                          } : {})
                         });
                       }}
                       className={`h-10 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
