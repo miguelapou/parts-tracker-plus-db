@@ -3155,12 +3155,18 @@ const VehicleDetailModal = ({
                     </button>
                     <button
                       onClick={async () => {
+                        const linkedProjects = projects.filter(p => p.vehicle_id === viewingVehicle.id && !p.archived);
+                        const linkedProjectCount = linkedProjects.length;
+                        let archiveMessage = 'Are you sure you want to archive this vehicle? It will still be visible but with limited information.';
+                        if (linkedProjectCount > 0) {
+                          archiveMessage += ` This will also archive ${linkedProjectCount} linked project${linkedProjectCount > 1 ? 's' : ''}.`;
+                        }
                         setConfirmDialog({
                           isOpen: true,
                           title: viewingVehicle.archived ? 'Unarchive Vehicle' : 'Archive Vehicle',
                           message: viewingVehicle.archived
                             ? 'Are you sure you want to unarchive this vehicle?'
-                            : 'Are you sure you want to archive this vehicle? It will still be visible but with limited information.',
+                            : archiveMessage,
                           confirmText: viewingVehicle.archived ? 'Unarchive' : 'Archive',
                           isDangerous: false,
                           onConfirm: async () => {
@@ -3173,6 +3179,12 @@ const VehicleDetailModal = ({
                               // Archiving: set display_order to max + 1
                               const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
                               updates.display_order = maxOrder + 1;
+                              // Also archive all linked projects
+                              for (const project of linkedProjects) {
+                                await updateProject(project.id, { archived: true });
+                              }
+                              // Reload projects to update the UI
+                              await loadProjects();
                             }
                             const updatedVehicle = {
                               ...viewingVehicle,

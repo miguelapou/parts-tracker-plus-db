@@ -227,12 +227,20 @@ const useDragDrop = ({
       return;
     }
 
+    // Find linked projects that are not already archived
+    const linkedProjects = projects.filter(p => p.vehicle_id === draggedVehicle.id && !p.archived);
+    const linkedProjectCount = linkedProjects.length;
+    let archiveMessage = `Are you sure you want to archive "${draggedVehicle.nickname || draggedVehicle.name}"? It will still be visible but with limited information.`;
+    if (shouldArchive && linkedProjectCount > 0) {
+      archiveMessage += ` This will also archive ${linkedProjectCount} linked project${linkedProjectCount > 1 ? 's' : ''}.`;
+    }
+
     // Show confirmation dialog
     setConfirmDialog({
       isOpen: true,
       title: shouldArchive ? 'Archive Vehicle' : 'Unarchive Vehicle',
       message: shouldArchive
-        ? `Are you sure you want to archive "${draggedVehicle.nickname || draggedVehicle.name}"? It will still be visible but with limited information.`
+        ? archiveMessage
         : `Are you sure you want to unarchive "${draggedVehicle.nickname || draggedVehicle.name}"?`,
       confirmText: shouldArchive ? 'Archive' : 'Unarchive',
       isDangerous: false,
@@ -242,9 +250,14 @@ const useDragDrop = ({
           // Archiving: set display_order to max + 1
           const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
           updates.display_order = maxOrder + 1;
+          // Also archive all linked projects
+          for (const project of linkedProjects) {
+            await updateProject(project.id, { archived: true });
+          }
         }
         await updateVehicle(draggedVehicle.id, updates);
         await loadVehicles();
+        await loadProjects();
       }
     });
 
