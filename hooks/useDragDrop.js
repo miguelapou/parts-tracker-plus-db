@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import * as projectsService from '../services/projectsService';
 
 /**
  * Custom hook for managing drag and drop state and handlers
@@ -255,14 +254,13 @@ const useDragDrop = ({
         secondaryText: 'Restore All',
         secondaryDangerous: false,
         secondaryAction: async () => {
-          // Unarchive vehicle and all linked projects using service directly
+          // Unarchive vehicle and all linked projects
           await updateVehicle(draggedVehicle.id, { archived: false });
-          // Restore all archived linked projects in parallel using service directly
-          await Promise.all(linkedProjectsToRestore.map(project =>
-            projectsService.updateProject(project.id, { archived: false })
-          ));
+          // Restore all archived linked projects sequentially to avoid state conflicts
+          for (const project of linkedProjectsToRestore) {
+            await updateProject(project.id, { archived: false });
+          }
           await loadVehicles();
-          await loadProjects();
         }
       } : {}),
       onConfirm: async () => {
@@ -271,14 +269,13 @@ const useDragDrop = ({
           // Archiving: set display_order to max + 1
           const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
           updates.display_order = maxOrder + 1;
-          // Archive all linked projects in parallel using service directly
-          await Promise.all(linkedProjectsToArchive.map(project =>
-            projectsService.updateProject(project.id, { archived: true })
-          ));
+          // Archive all linked projects sequentially to avoid state conflicts
+          for (const project of linkedProjectsToArchive) {
+            await updateProject(project.id, { archived: true });
+          }
         }
         await updateVehicle(draggedVehicle.id, updates);
         await loadVehicles();
-        await loadProjects();
       }
     });
 

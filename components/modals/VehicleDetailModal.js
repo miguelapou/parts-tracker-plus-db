@@ -49,8 +49,6 @@ import {
 import { inputClasses } from '../../utils/styleUtils';
 import { generateVehicleReportPDF, downloadBlob } from '../../utils/pdfUtils';
 import { useDocuments, useServiceEvents } from '../../contexts';
-import * as projectsService from '../../services/projectsService';
-import { supabase } from '../../lib/supabase';
 import ComboBox from '../ui/ComboBox';
 import {
   VEHICLE_MAKES,
@@ -3181,17 +3179,16 @@ const VehicleDetailModal = ({
                             secondaryText: 'Restore All',
                             secondaryDangerous: false,
                             secondaryAction: async () => {
-                              // Unarchive vehicle and all linked projects using service directly
+                              // Unarchive vehicle and all linked projects
                               const updatedVehicle = {
                                 ...viewingVehicle,
                                 archived: false
                               };
                               await updateVehicle(viewingVehicle.id, { archived: false });
-                              // Restore all archived linked projects in parallel using service directly
-                              await Promise.all(linkedProjectsToRestore.map(project =>
-                                projectsService.updateProject(project.id, { archived: false })
-                              ));
-                              await loadProjects();
+                              // Restore all archived linked projects sequentially to avoid state conflicts
+                              for (const project of linkedProjectsToRestore) {
+                                await updateProject(project.id, { archived: false });
+                              }
                               setViewingVehicle(updatedVehicle);
                               setOriginalVehicleData({ ...updatedVehicle });
                             }
@@ -3202,27 +3199,14 @@ const VehicleDetailModal = ({
                             const updates = {
                               archived: !viewingVehicle.archived
                             };
-                            console.log('[Archive Debug] viewingVehicle.archived:', viewingVehicle.archived);
-                            console.log('[Archive Debug] linkedProjectsToArchive:', linkedProjectsToArchive);
-                            console.log('[Archive Debug] archiveCount:', archiveCount);
                             if (!viewingVehicle.archived) {
                               // Archiving: set display_order to max + 1
                               const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
                               updates.display_order = maxOrder + 1;
-                              // Archive all linked projects in parallel using direct supabase call
-                              console.log('[Archive Debug] About to archive projects:', linkedProjectsToArchive.map(p => p.id));
-                              const results = await Promise.all(linkedProjectsToArchive.map(async (project) => {
-                                const { data, error } = await supabase
-                                  .from('projects')
-                                  .update({ archived: true })
-                                  .eq('id', project.id)
-                                  .select();
-                                console.log(`[Archive Debug] Project ${project.id} update result:`, { data, error });
-                                return { data, error };
-                              }));
-                              console.log('[Archive Debug] All archive results:', results);
-                              // Reload projects to update the UI
-                              await loadProjects();
+                              // Archive all linked projects sequentially to avoid state conflicts
+                              for (const project of linkedProjectsToArchive) {
+                                await updateProject(project.id, { archived: true });
+                              }
                             }
                             const updatedVehicle = {
                               ...viewingVehicle,
