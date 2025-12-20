@@ -3201,14 +3201,19 @@ const VehicleDetailModal = ({
                             const updates = {
                               archived: !viewingVehicle.archived
                             };
+                            console.log('[Archive Debug] viewingVehicle.archived:', viewingVehicle.archived);
+                            console.log('[Archive Debug] linkedProjectsToArchive:', linkedProjectsToArchive);
+                            console.log('[Archive Debug] archiveCount:', archiveCount);
                             if (!viewingVehicle.archived) {
                               // Archiving: set display_order to max + 1
                               const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
                               updates.display_order = maxOrder + 1;
                               // Archive all linked projects in parallel using service directly
-                              await Promise.all(linkedProjectsToArchive.map(project =>
+                              console.log('[Archive Debug] About to archive projects:', linkedProjectsToArchive.map(p => p.id));
+                              const results = await Promise.all(linkedProjectsToArchive.map(project =>
                                 projectsService.updateProject(project.id, { archived: true })
                               ));
+                              console.log('[Archive Debug] Archive results:', results);
                               // Reload projects to update the UI
                               await loadProjects();
                             }
