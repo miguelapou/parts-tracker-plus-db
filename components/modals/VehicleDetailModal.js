@@ -3155,20 +3155,47 @@ const VehicleDetailModal = ({
                     </button>
                     <button
                       onClick={async () => {
-                        const linkedProjects = projects.filter(p => p.vehicle_id === viewingVehicle.id && !p.archived);
-                        const linkedProjectCount = linkedProjects.length;
+                        const linkedProjectsToArchive = projects.filter(p => p.vehicle_id === viewingVehicle.id && !p.archived);
+                        const linkedProjectsToRestore = projects.filter(p => p.vehicle_id === viewingVehicle.id && p.archived);
+                        const archiveCount = linkedProjectsToArchive.length;
+                        const restoreCount = linkedProjectsToRestore.length;
+
                         let archiveMessage = 'Are you sure you want to archive this vehicle? It will still be visible but with limited information.';
-                        if (linkedProjectCount > 0) {
-                          archiveMessage += ` This will also archive ${linkedProjectCount} linked project${linkedProjectCount > 1 ? 's' : ''}.`;
+                        if (archiveCount > 0) {
+                          archiveMessage += ` This will also archive ${archiveCount} linked project${archiveCount > 1 ? 's' : ''}.`;
                         }
+
+                        let unarchiveMessage = 'Are you sure you want to unarchive this vehicle?';
+                        if (restoreCount > 0) {
+                          unarchiveMessage += ` This vehicle has ${restoreCount} archived project${restoreCount > 1 ? 's' : ''} that can be restored.`;
+                        }
+
                         setConfirmDialog({
                           isOpen: true,
                           title: viewingVehicle.archived ? 'Unarchive Vehicle' : 'Archive Vehicle',
-                          message: viewingVehicle.archived
-                            ? 'Are you sure you want to unarchive this vehicle?'
-                            : archiveMessage,
+                          message: viewingVehicle.archived ? unarchiveMessage : archiveMessage,
                           confirmText: viewingVehicle.archived ? 'Unarchive' : 'Archive',
                           isDangerous: false,
+                          // Show Restore button when unarchiving and there are archived projects
+                          ...(viewingVehicle.archived && restoreCount > 0 ? {
+                            secondaryText: 'Restore All',
+                            secondaryDangerous: false,
+                            secondaryAction: async () => {
+                              // Unarchive vehicle and all linked projects
+                              const updatedVehicle = {
+                                ...viewingVehicle,
+                                archived: false
+                              };
+                              await updateVehicle(viewingVehicle.id, { archived: false });
+                              // Restore all archived linked projects in parallel
+                              await Promise.all(linkedProjectsToRestore.map(project =>
+                                updateProject(project.id, { archived: false })
+                              ));
+                              await loadProjects();
+                              setViewingVehicle(updatedVehicle);
+                              setOriginalVehicleData({ ...updatedVehicle });
+                            }
+                          } : {}),
                           onConfirm: async () => {
                             // When archiving, set display_order to a high number to move to end
                             // When unarchiving, keep current display_order
@@ -3179,10 +3206,10 @@ const VehicleDetailModal = ({
                               // Archiving: set display_order to max + 1
                               const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
                               updates.display_order = maxOrder + 1;
-                              // Also archive all linked projects
-                              for (const project of linkedProjects) {
-                                await updateProject(project.id, { archived: true });
-                              }
+                              // Also archive all linked projects in parallel
+                              await Promise.all(linkedProjectsToArchive.map(project =>
+                                updateProject(project.id, { archived: true })
+                              ));
                               // Reload projects to update the UI
                               await loadProjects();
                             }
