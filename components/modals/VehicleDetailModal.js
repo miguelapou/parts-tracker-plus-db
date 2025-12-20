@@ -49,6 +49,7 @@ import {
 import { inputClasses } from '../../utils/styleUtils';
 import { generateVehicleReportPDF, downloadBlob } from '../../utils/pdfUtils';
 import { useDocuments, useServiceEvents } from '../../contexts';
+import * as projectsService from '../../services/projectsService';
 import ComboBox from '../ui/ComboBox';
 import {
   VEHICLE_MAKES,
@@ -3160,15 +3161,13 @@ const VehicleDetailModal = ({
                         const archiveCount = linkedProjectsToArchive.length;
                         const restoreCount = linkedProjectsToRestore.length;
 
-                        let archiveMessage = 'Are you sure you want to archive this vehicle? It will still be visible but with limited information.';
-                        if (archiveCount > 0) {
-                          archiveMessage += ` This will also archive ${archiveCount} linked project${archiveCount > 1 ? 's' : ''}.`;
-                        }
+                        let archiveMessage = archiveCount > 0
+                          ? `Are you sure you want to archive this vehicle? It will remain visible with limited information, and ${archiveCount} linked project${archiveCount > 1 ? 's' : ''} will also be archived.`
+                          : 'Are you sure you want to archive this vehicle? It will remain visible with limited information.';
 
-                        let unarchiveMessage = 'Are you sure you want to unarchive this vehicle?';
-                        if (restoreCount > 0) {
-                          unarchiveMessage += ` This vehicle has ${restoreCount} archived project${restoreCount > 1 ? 's' : ''} that can be restored.`;
-                        }
+                        let unarchiveMessage = restoreCount > 0
+                          ? `Are you sure you want to unarchive this vehicle? It has ${restoreCount} archived project${restoreCount > 1 ? 's' : ''} that can be restored.`
+                          : 'Are you sure you want to unarchive this vehicle?';
 
                         setConfirmDialog({
                           isOpen: true,
@@ -3181,15 +3180,15 @@ const VehicleDetailModal = ({
                             secondaryText: 'Restore All',
                             secondaryDangerous: false,
                             secondaryAction: async () => {
-                              // Unarchive vehicle and all linked projects
+                              // Unarchive vehicle and all linked projects using service directly
                               const updatedVehicle = {
                                 ...viewingVehicle,
                                 archived: false
                               };
                               await updateVehicle(viewingVehicle.id, { archived: false });
-                              // Restore all archived linked projects in parallel
+                              // Restore all archived linked projects in parallel using service directly
                               await Promise.all(linkedProjectsToRestore.map(project =>
-                                updateProject(project.id, { archived: false })
+                                projectsService.updateProject(project.id, { archived: false })
                               ));
                               await loadProjects();
                               setViewingVehicle(updatedVehicle);
@@ -3206,9 +3205,9 @@ const VehicleDetailModal = ({
                               // Archiving: set display_order to max + 1
                               const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
                               updates.display_order = maxOrder + 1;
-                              // Also archive all linked projects in parallel
+                              // Archive all linked projects in parallel using service directly
                               await Promise.all(linkedProjectsToArchive.map(project =>
-                                updateProject(project.id, { archived: true })
+                                projectsService.updateProject(project.id, { archived: true })
                               ));
                               // Reload projects to update the UI
                               await loadProjects();
