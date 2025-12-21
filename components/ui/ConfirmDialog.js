@@ -12,6 +12,7 @@ const ConfirmDialog = ({
   cancelText = 'Cancel',
   darkMode,
   isDangerous = true,
+  isWarning = false,
   // Optional secondary action (e.g., "Delete All")
   secondaryAction,
   secondaryText,
@@ -150,7 +151,9 @@ const ConfirmDialog = ({
               } ${
                 isDangerous
                   ? 'bg-red-600 hover:bg-red-700 text-white'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  : isWarning
+                    ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'
               }`}
             >
               {confirmText}

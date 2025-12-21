@@ -1073,46 +1073,6 @@ const PartDetailModal = ({
                   <span className="hidden sm:inline">{isRefreshingTracking ? 'Updating...' : 'Refresh'}</span>
                 </button>
               )}
-              {/* Archive/Unarchive button */}
-              <button
-                onClick={() => {
-                  const isArchived = viewingPart.archived;
-                  setConfirmDialog({
-                    isOpen: true,
-                    title: isArchived ? 'Unarchive Part' : 'Archive Part',
-                    message: isArchived
-                      ? 'This will restore the part to your active parts list.'
-                      : 'This will move the part to your archive. You can restore it later.',
-                    confirmText: isArchived ? 'Unarchive' : 'Archive',
-                    onConfirm: async () => {
-                      await archivePart(viewingPart.id, !isArchived);
-                      setShowPartDetailModal(false);
-                      setViewingPart(null);
-                    }
-                  });
-                }}
-                className={`inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  viewingPart.archived
-                    ? (darkMode
-                        ? 'bg-green-900/30 hover:bg-green-900/50 text-green-400 border border-green-700'
-                        : 'bg-green-50 hover:bg-green-100 text-green-600 border border-green-300')
-                    : (darkMode
-                        ? 'bg-amber-900/30 hover:bg-amber-900/50 text-amber-400 border border-amber-700'
-                        : 'bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-300')
-                }`}
-              >
-                {viewingPart.archived ? (
-                  <>
-                    <ArchiveRestore className="w-5 h-5 sm:w-4 sm:h-4" />
-                    <span className="hidden sm:inline">Unarchive</span>
-                  </>
-                ) : (
-                  <>
-                    <Archive className="w-5 h-5 sm:w-4 sm:h-4" />
-                    <span className="hidden sm:inline">Archive</span>
-                  </>
-                )}
-              </button>
               <PrimaryButton
                 onClick={() => {
                   const partData = {
@@ -1678,6 +1638,51 @@ const PartDetailModal = ({
               >
                 <Trash2 className="w-4 h-4" />
                 <span className="hidden sm:inline">Delete</span>
+              </button>
+              {/* Archive/Unarchive button */}
+              <button
+                onClick={() => {
+                  const isArchived = viewingPart.archived;
+                  setConfirmDialog({
+                    isOpen: true,
+                    title: isArchived ? 'Unarchive Part' : 'Archive Part',
+                    message: isArchived
+                      ? 'This will restore the part to your active parts list.'
+                      : 'This will move the part to your archive. You can restore it later.',
+                    confirmText: isArchived ? 'Unarchive' : 'Archive',
+                    isDangerous: false,
+                    isWarning: !isArchived,
+                    onConfirm: async () => {
+                      await archivePart(viewingPart.id, !isArchived);
+                      setShowPartDetailModal(false);
+                      setViewingPart(null);
+                      setPartDetailView('detail');
+                      setEditingPart(null);
+                      setOriginalPartData(null);
+                    }
+                  });
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
+                  viewingPart.archived
+                    ? (darkMode
+                        ? 'bg-green-900/30 hover:bg-green-900/50 text-green-400 border border-green-700'
+                        : 'bg-green-50 hover:bg-green-100 text-green-600 border border-green-300')
+                    : (darkMode
+                        ? 'bg-amber-900/30 hover:bg-amber-900/50 text-amber-400 border border-amber-700'
+                        : 'bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-300')
+                }`}
+              >
+                {viewingPart.archived ? (
+                  <>
+                    <ArchiveRestore className="w-4 h-4" />
+                    <span className="hidden sm:inline">Unarchive</span>
+                  </>
+                ) : (
+                  <>
+                    <Archive className="w-4 h-4" />
+                    <span className="hidden sm:inline">Archive</span>
+                  </>
+                )}
               </button>
             </div>
             <div className="flex items-center gap-2">

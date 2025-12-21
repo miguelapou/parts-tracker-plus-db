@@ -3195,6 +3195,7 @@ const VehicleDetailModal = ({
                           message: viewingVehicle.archived ? unarchiveMessage : archiveMessage,
                           confirmText: viewingVehicle.archived ? 'Unarchive' : 'Archive',
                           isDangerous: false,
+                          isWarning: !viewingVehicle.archived,
                           // Show Restore button when unarchiving and there are archived projects or parts
                           ...(viewingVehicle.archived && (projectRestoreCount > 0 || partRestoreCount > 0) ? {
                             secondaryText: 'Restore All',
@@ -3255,8 +3256,8 @@ const VehicleDetailModal = ({
                         viewingVehicle.archived
                           ? 'bg-green-600 hover:bg-green-700 text-white'
                           : darkMode
-                            ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border border-gray-600'
-                            : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
+                            ? 'bg-amber-900/30 hover:bg-amber-900/50 text-amber-400 border border-amber-700'
+                            : 'bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-300'
                       }`}
                     >
                       <Archive className="w-4 h-4" />
