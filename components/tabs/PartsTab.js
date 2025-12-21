@@ -693,7 +693,7 @@ const PartsTab = ({
                 <div key={`${statusFilter === 'pending' ? 'pending' : statusFilter === 'purchased' ? 'purchased' : 'all-ordered'}-${showArchivedParts}`} className={hasClickedStatusCard ? 'status-card-content' : ''}>
                   <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
-                  }`}>{showArchivedParts ? (statusFilter === 'pending' ? 'Archived Unordered' : 'Archived Ordered') : (statusFilter === 'pending' ? 'Active Unordered' : 'Active Ordered')}</p>
+                  }`}>{showArchivedParts ? (statusFilter === 'pending' ? 'Archived Unordered' : 'Archived Ordered') : (statusFilter === 'pending' ? 'Unordered' : 'Ordered')}</p>
                   <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{statusFilter === 'pending' ? stats.pending : stats.purchased}</p>
@@ -737,7 +737,7 @@ const PartsTab = ({
                 <div key={`shipped-${showArchivedParts}`}>
                   <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
-                  }`}>{showArchivedParts ? 'Archived Shipped' : 'Active Shipped'}</p>
+                  }`}>{showArchivedParts ? 'Archived Shipped' : 'Shipped'}</p>
                   <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{stats.shipped}</p>
@@ -795,7 +795,7 @@ const PartsTab = ({
                 <div key={`${deliveredFilter}-${showArchivedParts}`} className={hasClickedStatusCard ? 'status-card-content' : ''}>
                   <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
-                  }`}>{showArchivedParts ? (deliveredFilter === 'hide' ? 'Archived Undelivered' : 'Archived Delivered') : (deliveredFilter === 'hide' ? 'Active Undelivered' : 'Active Delivered')}</p>
+                  }`}>{showArchivedParts ? (deliveredFilter === 'hide' ? 'Archived Undelivered' : 'Archived Delivered') : (deliveredFilter === 'hide' ? 'Undelivered' : 'Delivered')}</p>
                   <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{deliveredFilter === 'hide' ? stats.undelivered : stats.delivered}</p>
