@@ -690,10 +690,10 @@ const PartsTab = ({
                     <ShoppingCart className={`w-6 h-6 text-yellow-500 transition-opacity ${statusFilter === 'purchased' ? 'opacity-70' : 'opacity-20'}`} />
                   )}
                 </span>
-                <div key={statusFilter === 'pending' ? 'pending' : statusFilter === 'purchased' ? 'purchased' : 'all-ordered'} className={hasClickedStatusCard ? 'status-card-content' : ''}>
+                <div key={`${statusFilter === 'pending' ? 'pending' : statusFilter === 'purchased' ? 'purchased' : 'all-ordered'}-${showArchivedParts}`} className={hasClickedStatusCard ? 'status-card-content' : ''}>
                   <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
-                  }`}>{statusFilter === 'pending' ? 'Unordered' : 'Ordered'}</p>
+                  }`}>{showArchivedParts ? (statusFilter === 'pending' ? 'Archived Unordered' : 'Archived Ordered') : (statusFilter === 'pending' ? 'Unordered' : 'Ordered')}</p>
                   <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{statusFilter === 'pending' ? stats.pending : stats.purchased}</p>
@@ -734,10 +734,10 @@ const PartsTab = ({
                 style={{ touchAction: 'manipulation' }}
               >
                 <Truck className={`w-6 h-6 text-blue-500 absolute top-2 right-2 transition-opacity ${statusFilter === 'shipped' ? 'opacity-70' : 'opacity-20'}`} />
-                <div>
+                <div key={`shipped-${showArchivedParts}`}>
                   <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
-                  }`}>Shipped</p>
+                  }`}>{showArchivedParts ? 'Archived Shipped' : 'Shipped'}</p>
                   <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{stats.shipped}</p>
@@ -792,10 +792,10 @@ const PartsTab = ({
                     <CheckCircle className={`w-6 h-6 text-green-500 transition-opacity ${deliveredFilter !== 'all' ? 'opacity-70' : 'opacity-20'}`} />
                   )}
                 </span>
-                <div key={deliveredFilter} className={hasClickedStatusCard ? 'status-card-content' : ''}>
+                <div key={`${deliveredFilter}-${showArchivedParts}`} className={hasClickedStatusCard ? 'status-card-content' : ''}>
                   <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
-                  }`}>{deliveredFilter === 'hide' ? 'Undelivered' : 'Delivered'}</p>
+                  }`}>{showArchivedParts ? (deliveredFilter === 'hide' ? 'Archived Undelivered' : 'Archived Delivered') : (deliveredFilter === 'hide' ? 'Undelivered' : 'Delivered')}</p>
                   <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{deliveredFilter === 'hide' ? stats.undelivered : stats.delivered}</p>
