@@ -27,6 +27,7 @@ const useFilters = () => {
   const [partsDateFilter, setPartsDateFilter] = useState('all'); // 'all', '1week', '2weeks', '1month'
   const [isFilteringParts, setIsFilteringParts] = useState(false);
   const [showDateFilterDropdown, setShowDateFilterDropdown] = useState(false);
+  const [showArchivedParts, setShowArchivedParts] = useState(false); // Show archived parts only
 
   // Project filters
   const [projectVehicleFilter, setProjectVehicleFilter] = useState('all'); // 'all' or vehicle ID
@@ -134,6 +135,8 @@ const useFilters = () => {
     setIsFilteringParts,
     showDateFilterDropdown,
     setShowDateFilterDropdown,
+    showArchivedParts,
+    setShowArchivedParts,
 
     // Project filters
     projectVehicleFilter,

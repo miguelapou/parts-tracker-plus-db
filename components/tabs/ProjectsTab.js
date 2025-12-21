@@ -72,7 +72,8 @@ const ProjectsTab = ({
   getStatusTextColor,
   getVendorColor,
   setConfirmDialog,
-  setActiveTab
+  setActiveTab,
+  archivePart
 }) => {
   return (
     <div
@@ -586,6 +587,7 @@ const ProjectsTab = ({
           calculateProjectStatus={calculateProjectStatus}
           setConfirmDialog={setConfirmDialog}
           setActiveTab={setActiveTab}
+          archivePart={archivePart}
           onClose={() => {
             setShowProjectDetailModal(false);
             setViewingProject(null);

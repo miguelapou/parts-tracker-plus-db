@@ -4,6 +4,7 @@ import ProjectDetailView from '../ui/ProjectDetailView';
 import ProjectEditForm from '../ui/ProjectEditForm';
 import LinkedPartsSection from '../ui/LinkedPartsSection';
 import PrimaryButton from '../ui/PrimaryButton';
+import * as partsService from '../../services/partsService';
 
 const ProjectDetailModal = ({
   isOpen,
@@ -40,6 +41,7 @@ const ProjectDetailModal = ({
   calculateProjectStatus,
   setConfirmDialog,
   setActiveTab,
+  archivePart,
   onClose
 }) => {
   // Touch refs for swipe gestures
@@ -404,20 +406,56 @@ const ProjectDetailModal = ({
                 </button>
                 <button
                   onClick={async () => {
+                    const linkedPartsToArchive = parts.filter(p => p.projectId === viewingProject.id && !p.archived);
+                    const linkedPartsToRestore = parts.filter(p => p.projectId === viewingProject.id && p.archived);
+                    const archiveCount = linkedPartsToArchive.length;
+                    const restoreCount = linkedPartsToRestore.length;
+
+                    let archiveMessage = archiveCount > 0
+                      ? `Are you sure you want to archive this project? It will remain visible with limited information, and ${archiveCount} linked part${archiveCount > 1 ? 's' : ''} will also be archived.`
+                      : 'Are you sure you want to archive this project? It will still be visible but with limited information.';
+
+                    let unarchiveMessage = restoreCount > 0
+                      ? `Are you sure you want to unarchive this project? It has ${restoreCount} archived part${restoreCount > 1 ? 's' : ''} that can be restored.`
+                      : 'Are you sure you want to unarchive this project?';
+
                     setConfirmDialog({
                       isOpen: true,
                       title: viewingProject.archived ? 'Unarchive Project' : 'Archive Project',
-                      message: viewingProject.archived
-                        ? 'Are you sure you want to unarchive this project?'
-                        : 'Are you sure you want to archive this project? It will still be visible but with limited information.',
+                      message: viewingProject.archived ? unarchiveMessage : archiveMessage,
                       confirmText: viewingProject.archived ? 'Unarchive' : 'Archive',
                       isDangerous: false,
+                      // Show Restore button when unarchiving and there are archived parts
+                      ...(viewingProject.archived && restoreCount > 0 ? {
+                        secondaryText: 'Restore All',
+                        secondaryDangerous: false,
+                        secondaryAction: async () => {
+                          // Unarchive project and all linked parts using service directly
+                          const updatedProject = {
+                            ...viewingProject,
+                            archived: false
+                          };
+                          await updateProject(viewingProject.id, { archived: false });
+                          // Restore all archived linked parts in parallel using service directly
+                          await Promise.all(linkedPartsToRestore.map(part =>
+                            partsService.updatePart(part.id, { archived: false })
+                          ));
+                          setViewingProject(updatedProject);
+                          setOriginalProjectData({ ...updatedProject });
+                        }
+                      } : {}),
                       onConfirm: async () => {
                         const updatedProject = {
                           ...viewingProject,
                           archived: !viewingProject.archived
                         };
                         await updateProject(viewingProject.id, { archived: !viewingProject.archived });
+                        // When archiving, also archive all linked parts in parallel using service directly
+                        if (!viewingProject.archived) {
+                          await Promise.all(linkedPartsToArchive.map(part =>
+                            partsService.updatePart(part.id, { archived: true })
+                          ));
+                        }
                         setViewingProject(updatedProject);
                         setOriginalProjectData({ ...updatedProject });
                       }

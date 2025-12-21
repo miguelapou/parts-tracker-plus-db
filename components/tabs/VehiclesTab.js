@@ -89,6 +89,7 @@ const VehiclesTab = ({
   updateProject,
   unlinkPartFromProject,
   loadProjects,
+  loadParts,
   addProject,
   createPartDirectly,
   deleteProject,
@@ -102,7 +103,8 @@ const VehiclesTab = ({
   calculateProjectTotal,
   calculateProjectStatus,
   toast,
-  setActiveTab
+  setActiveTab,
+  archivePart
   // Document and service event props removed - now handled via context in VehicleDetailModal
 }) => {
   // Track layout transitions for animation
@@ -901,6 +903,7 @@ const VehiclesTab = ({
           getVehicleProjects={getVehicleProjects}
           unlinkPartFromProject={unlinkPartFromProject}
           loadProjects={loadProjects}
+          loadParts={loadParts}
           deleteProject={deleteProject}
           deletePart={deletePart}
           setConfirmDialog={setConfirmDialog}
@@ -913,6 +916,7 @@ const VehiclesTab = ({
           calculateProjectStatus={calculateProjectStatus}
           toast={toast}
           setActiveTab={setActiveTab}
+          archivePart={archivePart}
         />
       </>
     </div>

@@ -3,7 +3,7 @@ import {
   Search, Package, Receipt, Truck, CheckCircle, Clock,
   ChevronDown, Plus, X, ExternalLink, ShoppingCart, Car,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,
-  PackageCheck, PackageSearch, PackageX, BadgeCheck
+  PackageCheck, PackageSearch, PackageX, BadgeCheck, Archive
 } from 'lucide-react';
 import PriceDisplay from '../ui/PriceDisplay';
 import { getVendorDisplayColor } from '../../utils/colorUtils';
@@ -34,6 +34,8 @@ const PartsTab = ({
   isSearching,
   setIsSearching,
   isFilteringParts,
+  showArchivedParts,
+  setShowArchivedParts,
   openDropdown,
   setOpenDropdown,
   projects,
@@ -800,45 +802,81 @@ const PartsTab = ({
                 </div>
               </div>
 
-            {/* Search Box - Shows in left column at 800px+ */}
+            {/* Search Box and Archive Button Row - Shows in left column at 800px+ */}
             <div className={`hidden search-box-800 rounded-lg shadow-md p-3 ${
               darkMode ? 'bg-gray-800' : 'bg-slate-100'
             }`}>
-              <div className="relative">
-                <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
-                  darkMode ? 'text-gray-500' : 'text-gray-400'
-                }`} />
-                <input
-                  type="text"
-                  placeholder={stats.total === 0 ? "Add parts to use search" : "Search parts..."}
-                  className={`w-full pl-10 pr-10 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    darkMode
-                      ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                      : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                  }`}
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setIsSearching(true);
-                    setSearchTerm(e.target.value);
-                    setTimeout(() => setIsSearching(false), 600);
-                  }}
-                  disabled={stats.total === 0}
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => {
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
+                    darkMode ? 'text-gray-500' : 'text-gray-400'
+                  }`} />
+                  <input
+                    type="text"
+                    placeholder={stats.total === 0 && stats.archivedCount === 0 ? "Add parts to use search" :
+                      showArchivedParts
+                        ? (statusFilter === 'shipped' ? "Search archived shipped..." :
+                           statusFilter === 'purchased' ? "Search archived ordered..." :
+                           statusFilter === 'pending' ? "Search archived unordered..." :
+                           deliveredFilter === 'only' ? "Search archived delivered..." :
+                           deliveredFilter === 'hide' ? "Search archived undelivered..." :
+                           "Search archived...")
+                        : (statusFilter === 'shipped' ? "Search shipped..." :
+                           statusFilter === 'purchased' ? "Search ordered..." :
+                           statusFilter === 'pending' ? "Search unordered..." :
+                           deliveredFilter === 'only' ? "Search delivered..." :
+                           deliveredFilter === 'hide' ? "Search undelivered..." :
+                           "Search parts...")
+                    }
+                    className={`w-full pl-10 pr-10 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      darkMode
+                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                    }`}
+                    value={searchTerm}
+                    onChange={(e) => {
                       setIsSearching(true);
-                      setSearchTerm('');
+                      setSearchTerm(e.target.value);
                       setTimeout(() => setIsSearching(false), 600);
                     }}
-                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors ${
-                      darkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
-                    }`}
-                    title="Clear search"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
+                    disabled={stats.total === 0 && stats.archivedCount === 0}
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => {
+                        setIsSearching(true);
+                        setSearchTerm('');
+                        setTimeout(() => setIsSearching(false), 600);
+                      }}
+                      className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors ${
+                        darkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
+                      }`}
+                      title="Clear search"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+                {/* Archive Toggle Button */}
+                <button
+                  onClick={() => {
+                    setIsStatusFiltering(true);
+                    setShowArchivedParts(!showArchivedParts);
+                    setTimeout(() => setIsStatusFiltering(false), 600);
+                  }}
+                  className={`flex items-center justify-center h-[38px] w-[38px] rounded-lg border transition-all ${
+                    showArchivedParts
+                      ? (darkMode
+                          ? 'text-amber-300 border-amber-600 hover:text-amber-200 hover:border-amber-500'
+                          : 'text-amber-600 border-amber-400 hover:text-amber-700 hover:border-amber-500')
+                      : (darkMode
+                          ? 'text-gray-400 border-gray-600 hover:text-gray-300 hover:border-gray-500'
+                          : 'text-slate-400 border-slate-300 hover:text-slate-600 hover:border-slate-400')
+                  }`}
+                  title={showArchivedParts ? "Show active parts" : "Show archived parts"}
+                >
+                  <Archive className="w-5 h-5" />
+                </button>
               </div>
             </div>
 
@@ -996,45 +1034,81 @@ const PartsTab = ({
           </div>
           </div>
 
-          {/* Search Box - Mobile grid row 4 */}
+          {/* Search Box and Archive Button Row - Mobile grid row 4 */}
           <div className={`search-box-mobile-800 rounded-lg shadow-md p-3 ${
             darkMode ? 'bg-gray-800' : 'bg-slate-100'
           }`}>
-            <div className="relative">
-              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
-                darkMode ? 'text-gray-500' : 'text-gray-400'
-              }`} />
-              <input
-                type="text"
-                placeholder={stats.total === 0 ? "Add parts to use search" : "Search parts..."}
-                className={`w-full pl-10 pr-10 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  darkMode
-                    ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                    : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                }`}
-                value={searchTerm}
-                onChange={(e) => {
-                  setIsSearching(true);
-                  setSearchTerm(e.target.value);
-                  setTimeout(() => setIsSearching(false), 600);
-                }}
-                disabled={stats.total === 0}
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => {
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
+                  darkMode ? 'text-gray-500' : 'text-gray-400'
+                }`} />
+                <input
+                  type="text"
+                  placeholder={stats.total === 0 && stats.archivedCount === 0 ? "Add parts to use search" :
+                    showArchivedParts
+                      ? (statusFilter === 'shipped' ? "Search archived shipped..." :
+                         statusFilter === 'purchased' ? "Search archived ordered..." :
+                         statusFilter === 'pending' ? "Search archived unordered..." :
+                         deliveredFilter === 'only' ? "Search archived delivered..." :
+                         deliveredFilter === 'hide' ? "Search archived undelivered..." :
+                         "Search archived...")
+                      : (statusFilter === 'shipped' ? "Search shipped..." :
+                         statusFilter === 'purchased' ? "Search ordered..." :
+                         statusFilter === 'pending' ? "Search unordered..." :
+                         deliveredFilter === 'only' ? "Search delivered..." :
+                         deliveredFilter === 'hide' ? "Search undelivered..." :
+                         "Search parts...")
+                  }
+                  className={`w-full pl-10 pr-10 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    darkMode
+                      ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                      : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                  }`}
+                  value={searchTerm}
+                  onChange={(e) => {
                     setIsSearching(true);
-                    setSearchTerm('');
+                    setSearchTerm(e.target.value);
                     setTimeout(() => setIsSearching(false), 600);
                   }}
-                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors ${
-                    darkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
-                  }`}
-                  title="Clear search"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
+                  disabled={stats.total === 0 && stats.archivedCount === 0}
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => {
+                      setIsSearching(true);
+                      setSearchTerm('');
+                      setTimeout(() => setIsSearching(false), 600);
+                    }}
+                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors ${
+                      darkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
+                    }`}
+                    title="Clear search"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+              {/* Archive Toggle Button */}
+              <button
+                onClick={() => {
+                  setIsStatusFiltering(true);
+                  setShowArchivedParts(!showArchivedParts);
+                  setTimeout(() => setIsStatusFiltering(false), 600);
+                }}
+                className={`flex items-center justify-center h-[38px] w-[38px] rounded-lg border transition-all ${
+                  showArchivedParts
+                    ? (darkMode
+                        ? 'text-amber-300 border-amber-600 hover:text-amber-200 hover:border-amber-500'
+                        : 'text-amber-600 border-amber-400 hover:text-amber-700 hover:border-amber-500')
+                    : (darkMode
+                        ? 'text-gray-400 border-gray-600 hover:text-gray-300 hover:border-gray-500'
+                        : 'text-slate-400 border-slate-300 hover:text-slate-600 hover:border-slate-400')
+                }`}
+                title={showArchivedParts ? "Show active parts" : "Show archived parts"}
+              >
+                <Archive className="w-5 h-5" />
+              </button>
             </div>
           </div>
         </div>

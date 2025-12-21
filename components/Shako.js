@@ -161,6 +161,7 @@ const Shako = ({ isDemo = false }) => {
     skipTrackingInfo,
     saveEditedPart,
     deletePart,
+    archivePart,
     renameVendor,
     deleteVendor,
     unlinkPartFromProject,
@@ -257,6 +258,8 @@ const Shako = ({ isDemo = false }) => {
     setIsFilteringParts,
     showDateFilterDropdown,
     setShowDateFilterDropdown,
+    showArchivedParts,
+    setShowArchivedParts,
     projectVehicleFilter,
     setProjectVehicleFilter,
     isFilteringProjects,
@@ -815,6 +818,7 @@ const Shako = ({ isDemo = false }) => {
     setStatusFilter('all');
     setVendorFilter('all');
     setPartsDateFilter('all');
+    setShowArchivedParts(false);
     setOpenDropdown(null);
     setShowDateFilterDropdown(false);
   }, [activeTab]);
@@ -941,7 +945,10 @@ const Shako = ({ isDemo = false }) => {
           }
         }
 
-        return matchesSearch && matchesStatus && matchesVendor && matchesDeliveredFilter && matchesDate;
+        // Archive filter logic: show archived only when filter is on, hide archived otherwise
+        const matchesArchive = showArchivedParts ? part.archived : !part.archived;
+
+        return matchesSearch && matchesStatus && matchesVendor && matchesDeliveredFilter && matchesDate && matchesArchive;
       })
       .sort((a, b) => {
         let aVal, bVal;
@@ -985,7 +992,7 @@ const Shako = ({ isDemo = false }) => {
         }
       });
     return sorted;
-  }, [parts, searchTerm, statusFilter, vendorFilter, sortBy, sortOrder, projects, vehicles, deliveredFilter, partsDateFilter]);
+  }, [parts, searchTerm, statusFilter, vendorFilter, sortBy, sortOrder, projects, vehicles, deliveredFilter, partsDateFilter, showArchivedParts]);
 
   // Get unique vendors from existing parts for the dropdown
   const uniqueVendors = useMemo(() => {
@@ -998,19 +1005,22 @@ const Shako = ({ isDemo = false }) => {
   }, [parts]);
 
   const stats = useMemo(() => {
+    // Only count non-archived parts for main stats
+    const activeParts = parts.filter(p => !p.archived);
     // Filter out pending items (items where purchased is false) for cost calculations
-    const purchasedParts = parts.filter(p => p.purchased);
+    const purchasedParts = activeParts.filter(p => p.purchased);
     return {
-      total: parts.length,
-      delivered: parts.filter(p => p.delivered).length,
-      undelivered: parts.filter(p => !p.delivered && p.purchased).length,
-      shipped: parts.filter(p => p.shipped && !p.delivered).length,
-      purchased: parts.filter(p => p.purchased && !p.shipped).length,
-      pending: parts.filter(p => !p.purchased).length,
+      total: activeParts.length,
+      delivered: activeParts.filter(p => p.delivered).length,
+      undelivered: activeParts.filter(p => !p.delivered && p.purchased).length,
+      shipped: activeParts.filter(p => p.shipped && !p.delivered).length,
+      purchased: activeParts.filter(p => p.purchased && !p.shipped).length,
+      pending: activeParts.filter(p => !p.purchased).length,
       totalCost: purchasedParts.reduce((sum, p) => sum + p.total, 0),
       totalPrice: purchasedParts.reduce((sum, p) => sum + p.price, 0),
       totalShipping: purchasedParts.reduce((sum, p) => sum + p.shipping, 0),
       totalDuties: purchasedParts.reduce((sum, p) => sum + p.duties, 0),
+      archivedCount: parts.filter(p => p.archived).length,
     };
   }, [parts]);
 
@@ -1883,6 +1893,7 @@ const Shako = ({ isDemo = false }) => {
           handleCloseModal={handleCloseModal}
           saveEditedPart={handleSaveEditedPart}
           deletePart={deletePart}
+          archivePart={archivePart}
           setConfirmDialog={setConfirmDialog}
           setShowPartDetailModal={setShowPartDetailModal}
           setViewingPart={setViewingPart}
@@ -1924,6 +1935,8 @@ const Shako = ({ isDemo = false }) => {
             isSearching={isSearching}
             setIsSearching={setIsSearching}
             isFilteringParts={isFilteringParts}
+            showArchivedParts={showArchivedParts}
+            setShowArchivedParts={setShowArchivedParts}
             openDropdown={openDropdown}
             setOpenDropdown={setOpenDropdown}
             projects={projects}
@@ -2011,6 +2024,7 @@ const Shako = ({ isDemo = false }) => {
             showAddProjectVehicleDropdown={showAddProjectVehicleDropdown}
             setShowAddProjectVehicleDropdown={setShowAddProjectVehicleDropdown}
             setActiveTab={setActiveTab}
+            archivePart={archivePart}
           />
         )}
 
@@ -2101,6 +2115,7 @@ const Shako = ({ isDemo = false }) => {
             vendorColors={vendorColors}
             unlinkPartFromProject={unlinkPartFromProject}
             loadProjects={loadProjects}
+            loadParts={loadParts}
             updateProject={updateProject}
             addProject={addProject}
             createPartDirectly={createPartDirectly}
@@ -2108,6 +2123,7 @@ const Shako = ({ isDemo = false }) => {
             deletePart={deletePart}
             toast={toast}
             setActiveTab={setActiveTab}
+            archivePart={archivePart}
           />
         )}
 

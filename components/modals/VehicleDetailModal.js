@@ -49,6 +49,8 @@ import {
 import { inputClasses } from '../../utils/styleUtils';
 import { generateVehicleReportPDF, downloadBlob } from '../../utils/pdfUtils';
 import { useDocuments, useServiceEvents } from '../../contexts';
+import * as projectsService from '../../services/projectsService';
+import * as partsService from '../../services/partsService';
 import ComboBox from '../ui/ComboBox';
 import {
   VEHICLE_MAKES,
@@ -114,6 +116,7 @@ const VehicleDetailModal = ({
   getVehicleProjects,
   unlinkPartFromProject,
   loadProjects,
+  loadParts,
   deleteProject,
   deletePart,
   setConfirmDialog,
@@ -125,7 +128,8 @@ const VehicleDetailModal = ({
   calculateProjectTotal,
   calculateProjectStatus,
   toast,
-  setActiveTab
+  setActiveTab,
+  archivePart
 }) => {
   // State for image gallery navigation
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -3155,18 +3159,35 @@ const VehicleDetailModal = ({
                     </button>
                     <button
                       onClick={async () => {
-                        const linkedProjectsToArchive = projects.filter(p => p.vehicle_id === viewingVehicle.id && !p.archived);
-                        const linkedProjectsToRestore = projects.filter(p => p.vehicle_id === viewingVehicle.id && p.archived);
-                        const archiveCount = linkedProjectsToArchive.length;
-                        const restoreCount = linkedProjectsToRestore.length;
+                        const linkedProjectsToArchive = projects.filter(p => String(p.vehicle_id) === String(viewingVehicle.id) && !p.archived);
+                        const linkedProjectsToRestore = projects.filter(p => String(p.vehicle_id) === String(viewingVehicle.id) && p.archived);
+                        const projectArchiveCount = linkedProjectsToArchive.length;
+                        const projectRestoreCount = linkedProjectsToRestore.length;
 
-                        let archiveMessage = archiveCount > 0
-                          ? `Are you sure you want to archive this vehicle? It will remain visible with limited information, and ${archiveCount} linked project${archiveCount > 1 ? 's' : ''} will also be archived.`
-                          : 'Are you sure you want to archive this vehicle? It will remain visible with limited information.';
+                        // Find all linked parts through projects (convert IDs to strings for comparison)
+                        const linkedProjectIds = projects.filter(p => String(p.vehicle_id) === String(viewingVehicle.id)).map(p => String(p.id));
+                        const linkedPartsToArchive = parts.filter(p => linkedProjectIds.includes(String(p.projectId)) && !p.archived);
+                        const linkedPartsToRestore = parts.filter(p => linkedProjectIds.includes(String(p.projectId)) && p.archived);
+                        const partArchiveCount = linkedPartsToArchive.length;
+                        const partRestoreCount = linkedPartsToRestore.length;
 
-                        let unarchiveMessage = restoreCount > 0
-                          ? `Are you sure you want to unarchive this vehicle? It has ${restoreCount} archived project${restoreCount > 1 ? 's' : ''} that can be restored.`
-                          : 'Are you sure you want to unarchive this vehicle?';
+                        let archiveMessage = 'Are you sure you want to archive this vehicle? It will remain visible with limited information.';
+                        if (projectArchiveCount > 0 && partArchiveCount > 0) {
+                          archiveMessage = `Are you sure you want to archive this vehicle? It will remain visible with limited information, and ${projectArchiveCount} linked project${projectArchiveCount > 1 ? 's' : ''} and ${partArchiveCount} part${partArchiveCount > 1 ? 's' : ''} will also be archived.`;
+                        } else if (projectArchiveCount > 0) {
+                          archiveMessage = `Are you sure you want to archive this vehicle? It will remain visible with limited information, and ${projectArchiveCount} linked project${projectArchiveCount > 1 ? 's' : ''} will also be archived.`;
+                        } else if (partArchiveCount > 0) {
+                          archiveMessage = `Are you sure you want to archive this vehicle? It will remain visible with limited information, and ${partArchiveCount} linked part${partArchiveCount > 1 ? 's' : ''} will also be archived.`;
+                        }
+
+                        let unarchiveMessage = 'Are you sure you want to unarchive this vehicle?';
+                        if (projectRestoreCount > 0 && partRestoreCount > 0) {
+                          unarchiveMessage = `Are you sure you want to unarchive this vehicle? It has ${projectRestoreCount} archived project${projectRestoreCount > 1 ? 's' : ''} and ${partRestoreCount} part${partRestoreCount > 1 ? 's' : ''} that can be restored.`;
+                        } else if (projectRestoreCount > 0) {
+                          unarchiveMessage = `Are you sure you want to unarchive this vehicle? It has ${projectRestoreCount} archived project${projectRestoreCount > 1 ? 's' : ''} that can be restored.`;
+                        } else if (partRestoreCount > 0) {
+                          unarchiveMessage = `Are you sure you want to unarchive this vehicle? It has ${partRestoreCount} archived part${partRestoreCount > 1 ? 's' : ''} that can be restored.`;
+                        }
 
                         setConfirmDialog({
                           isOpen: true,
@@ -3174,21 +3195,27 @@ const VehicleDetailModal = ({
                           message: viewingVehicle.archived ? unarchiveMessage : archiveMessage,
                           confirmText: viewingVehicle.archived ? 'Unarchive' : 'Archive',
                           isDangerous: false,
-                          // Show Restore button when unarchiving and there are archived projects
-                          ...(viewingVehicle.archived && restoreCount > 0 ? {
+                          // Show Restore button when unarchiving and there are archived projects or parts
+                          ...(viewingVehicle.archived && (projectRestoreCount > 0 || partRestoreCount > 0) ? {
                             secondaryText: 'Restore All',
                             secondaryDangerous: false,
                             secondaryAction: async () => {
-                              // Unarchive vehicle and all linked projects
+                              // Unarchive vehicle and all linked projects and parts using services directly
                               const updatedVehicle = {
                                 ...viewingVehicle,
                                 archived: false
                               };
                               await updateVehicle(viewingVehicle.id, { archived: false });
-                              // Restore all archived linked projects sequentially to avoid state conflicts
-                              for (const project of linkedProjectsToRestore) {
-                                await updateProject(project.id, { archived: false });
-                              }
+                              // Restore all archived linked projects in parallel using service directly
+                              await Promise.all(linkedProjectsToRestore.map(project =>
+                                projectsService.updateProject(project.id, { archived: false })
+                              ));
+                              // Restore all archived linked parts in parallel using service directly
+                              await Promise.all(linkedPartsToRestore.map(part =>
+                                partsService.updatePart(part.id, { archived: false })
+                              ));
+                              await loadProjects();
+                              await loadParts();
                               setViewingVehicle(updatedVehicle);
                               setOriginalVehicleData({ ...updatedVehicle });
                             }
@@ -3203,10 +3230,16 @@ const VehicleDetailModal = ({
                               // Archiving: set display_order to max + 1
                               const maxOrder = Math.max(...vehicles.map(v => v.display_order || 0), 0);
                               updates.display_order = maxOrder + 1;
-                              // Archive all linked projects sequentially to avoid state conflicts
-                              for (const project of linkedProjectsToArchive) {
-                                await updateProject(project.id, { archived: true });
-                              }
+                              // Archive all linked projects in parallel using service directly
+                              await Promise.all(linkedProjectsToArchive.map(project =>
+                                projectsService.updateProject(project.id, { archived: true })
+                              ));
+                              // Archive all linked parts in parallel using service directly
+                              await Promise.all(linkedPartsToArchive.map(part =>
+                                partsService.updatePart(part.id, { archived: true })
+                              ));
+                              await loadProjects();
+                              await loadParts();
                             }
                             const updatedVehicle = {
                               ...viewingVehicle,

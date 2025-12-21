@@ -81,6 +81,7 @@ const useParts = (userId, toast, isDemo = false) => {
           projectId: part.project_id || null,
           vehicleId: part.vehicle_id || null,
           createdAt: part.created_at || null,
+          archived: part.archived || false,
           // Tracking data from Ship24
           ship24_id: part.ship24_id || null,
           tracking_status: part.tracking_status || null,
@@ -657,6 +658,32 @@ const useParts = (userId, toast, isDemo = false) => {
   };
 
   /**
+   * Archive or unarchive a part
+   */
+  const archivePart = async (partId, archived) => {
+    try {
+      // In demo mode, update localStorage
+      if (isDemo) {
+        const updatedParts = parts.map(part =>
+          part.id === partId ? { ...part, archived } : part
+        );
+        setParts(updatedParts);
+        saveDemoParts(updatedParts);
+        return;
+      }
+
+      // Update in database
+      await partsService.updatePart(partId, { archived });
+      // Update local state
+      setParts(prevParts => prevParts.map(part =>
+        part.id === partId ? { ...part, archived } : part
+      ));
+    } catch (error) {
+      toast?.error('Error updating part. Please try again.');
+    }
+  };
+
+  /**
    * Rename a vendor
    */
   const renameVendor = async (oldName, newName, editingPart, setEditingPart, setEditingVendor) => {
@@ -859,6 +886,7 @@ const useParts = (userId, toast, isDemo = false) => {
     skipTrackingInfo,
     saveEditedPart,
     deletePart,
+    archivePart,
     renameVendor,
     deleteVendor,
     unlinkPartFromProject,
