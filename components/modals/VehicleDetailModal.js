@@ -116,6 +116,7 @@ const VehicleDetailModal = ({
   getVehicleProjects,
   unlinkPartFromProject,
   loadProjects,
+  loadParts,
   deleteProject,
   deletePart,
   setConfirmDialog,
@@ -3163,10 +3164,10 @@ const VehicleDetailModal = ({
                         const projectArchiveCount = linkedProjectsToArchive.length;
                         const projectRestoreCount = linkedProjectsToRestore.length;
 
-                        // Find all linked parts through projects
-                        const linkedProjectIds = projects.filter(p => String(p.vehicle_id) === String(viewingVehicle.id)).map(p => p.id);
-                        const linkedPartsToArchive = parts.filter(p => linkedProjectIds.includes(p.projectId) && !p.archived);
-                        const linkedPartsToRestore = parts.filter(p => linkedProjectIds.includes(p.projectId) && p.archived);
+                        // Find all linked parts through projects (convert IDs to strings for comparison)
+                        const linkedProjectIds = projects.filter(p => String(p.vehicle_id) === String(viewingVehicle.id)).map(p => String(p.id));
+                        const linkedPartsToArchive = parts.filter(p => linkedProjectIds.includes(String(p.projectId)) && !p.archived);
+                        const linkedPartsToRestore = parts.filter(p => linkedProjectIds.includes(String(p.projectId)) && p.archived);
                         const partArchiveCount = linkedPartsToArchive.length;
                         const partRestoreCount = linkedPartsToRestore.length;
 
@@ -3214,6 +3215,7 @@ const VehicleDetailModal = ({
                                 partsService.updatePart(part.id, { archived: false })
                               ));
                               await loadProjects();
+                              await loadParts();
                               setViewingVehicle(updatedVehicle);
                               setOriginalVehicleData({ ...updatedVehicle });
                             }
@@ -3237,6 +3239,7 @@ const VehicleDetailModal = ({
                                 partsService.updatePart(part.id, { archived: true })
                               ));
                               await loadProjects();
+                              await loadParts();
                             }
                             const updatedVehicle = {
                               ...viewingVehicle,

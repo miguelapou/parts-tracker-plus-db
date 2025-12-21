@@ -2115,6 +2115,7 @@ const Shako = ({ isDemo = false }) => {
             vendorColors={vendorColors}
             unlinkPartFromProject={unlinkPartFromProject}
             loadProjects={loadProjects}
+            loadParts={loadParts}
             updateProject={updateProject}
             addProject={addProject}
             createPartDirectly={createPartDirectly}

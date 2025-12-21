@@ -89,6 +89,7 @@ const VehiclesTab = ({
   updateProject,
   unlinkPartFromProject,
   loadProjects,
+  loadParts,
   addProject,
   createPartDirectly,
   deleteProject,
@@ -902,6 +903,7 @@ const VehiclesTab = ({
           getVehicleProjects={getVehicleProjects}
           unlinkPartFromProject={unlinkPartFromProject}
           loadProjects={loadProjects}
+          loadParts={loadParts}
           deleteProject={deleteProject}
           deletePart={deletePart}
           setConfirmDialog={setConfirmDialog}
