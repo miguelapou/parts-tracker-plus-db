@@ -126,6 +126,42 @@ const VehiclesTab = ({
   // State for adding demo data
   const [addingDemoData, setAddingDemoData] = useState(false);
 
+  // Calculate max badges for compact mode based on available image height
+  const [compactBadgeLimit, setCompactBadgeLimit] = useState(3);
+
+  useEffect(() => {
+    const calculateBadgeLimit = () => {
+      const width = window.innerWidth;
+      // Estimate card width based on grid breakpoints (1 col < 768px, 2 cols < 1024px, 3 cols >= 1024px)
+      // Account for container padding (~48px) and gap between cards (~24px)
+      let cardWidth;
+      if (width < 768) {
+        cardWidth = width - 48; // Single column, full width minus padding
+      } else if (width < 1024) {
+        cardWidth = (width - 48 - 24) / 2; // 2 columns
+      } else {
+        cardWidth = (width - 48 - 48) / 3; // 3 columns
+      }
+
+      // Image is 50% of card width (w-1/2), minus internal padding (~32px for px-6 and gap-4)
+      const imageWidth = (cardWidth - 32) / 2;
+      // Since aspect-square, height equals width
+      const imageHeight = imageWidth;
+
+      // Available height = image height - header (~24px) - potential "+more" indicator (~20px)
+      const availableHeight = imageHeight - 24 - 20;
+      // Each badge is ~26px tall (py-1 = 8px + text ~12px + gap-1.5 = 6px)
+      const badgeHeight = 26;
+
+      const maxBadges = Math.max(1, Math.floor(availableHeight / badgeHeight));
+      setCompactBadgeLimit(Math.min(maxBadges, 5)); // Cap at 5 to avoid showing too many
+    };
+
+    calculateBadgeLimit();
+    window.addEventListener('resize', calculateBadgeLimit);
+    return () => window.removeEventListener('resize', calculateBadgeLimit);
+  }, []);
+
   // Add demo vehicle with project and parts
   const handleAddDemoData = async () => {
     setAddingDemoData(true);
@@ -320,7 +356,7 @@ const VehiclesTab = ({
                             </h4>
                             {vehicleProjects.length > 0 ? (
                               <div className="flex flex-col gap-1.5">
-                                {vehicleProjects.slice(0, 3).map((project) => (
+                                {vehicleProjects.slice(0, compactBadgeLimit).map((project) => (
                                   <span
                                     key={project.id}
                                     className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border ${
@@ -335,11 +371,11 @@ const VehiclesTab = ({
                                     <span className="truncate">{project.name}</span>
                                   </span>
                                 ))}
-                                {vehicleProjects.length > 3 && (
+                                {vehicleProjects.length > compactBadgeLimit && (
                                   <span className={`text-xs text-center ${
                                     darkMode ? 'text-gray-500' : 'text-gray-600'
                                   }`}>
-                                    +{vehicleProjects.length - 3} more
+                                    +{vehicleProjects.length - compactBadgeLimit} more
                                   </span>
                                 )}
                               </div>
