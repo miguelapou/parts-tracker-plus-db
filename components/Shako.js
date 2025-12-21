@@ -2024,6 +2024,7 @@ const Shako = ({ isDemo = false }) => {
             showAddProjectVehicleDropdown={showAddProjectVehicleDropdown}
             setShowAddProjectVehicleDropdown={setShowAddProjectVehicleDropdown}
             setActiveTab={setActiveTab}
+            archivePart={archivePart}
           />
         )}
 
@@ -2121,6 +2122,7 @@ const Shako = ({ isDemo = false }) => {
             deletePart={deletePart}
             toast={toast}
             setActiveTab={setActiveTab}
+            archivePart={archivePart}
           />
         )}
 
