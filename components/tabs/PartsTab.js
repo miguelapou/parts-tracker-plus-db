@@ -803,12 +803,12 @@ const PartsTab = ({
               </div>
 
             {/* Search Box and Archive Button Row - Shows in left column at 800px+ */}
-            <div className={`hidden search-box-800 rounded-lg shadow-md p-3 ${
-              darkMode ? 'bg-gray-800' : 'bg-slate-100'
-            }`}>
-              <div className="flex items-center gap-2">
-                {/* Search Input */}
-                <div className="relative flex-1">
+            <div className="hidden search-box-800 flex items-center gap-3">
+              {/* Search Box */}
+              <div className={`flex-1 rounded-lg shadow-md p-3 ${
+                darkMode ? 'bg-gray-800' : 'bg-slate-100'
+              }`}>
+                <div className="relative">
                   <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
                     darkMode ? 'text-gray-500' : 'text-gray-400'
                   }`} />
@@ -844,7 +844,11 @@ const PartsTab = ({
                     </button>
                   )}
                 </div>
-                {/* Archive Toggle Button */}
+              </div>
+              {/* Archive Toggle Button */}
+              <div className={`rounded-lg shadow-md p-3 ${
+                darkMode ? 'bg-gray-800' : 'bg-slate-100'
+              }`}>
                 <button
                   onClick={() => {
                     setIsStatusFiltering(true);
@@ -1026,12 +1030,12 @@ const PartsTab = ({
           </div>
 
           {/* Search Box and Archive Button Row - Mobile grid row 4 */}
-          <div className={`search-box-mobile-800 rounded-lg shadow-md p-3 ${
-            darkMode ? 'bg-gray-800' : 'bg-slate-100'
-          }`}>
-            <div className="flex items-center gap-2">
-              {/* Search Input */}
-              <div className="relative flex-1">
+          <div className="search-box-mobile-800 flex items-center gap-3">
+            {/* Search Box */}
+            <div className={`flex-1 rounded-lg shadow-md p-3 ${
+              darkMode ? 'bg-gray-800' : 'bg-slate-100'
+            }`}>
+              <div className="relative">
                 <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
                   darkMode ? 'text-gray-500' : 'text-gray-400'
                 }`} />
@@ -1067,7 +1071,11 @@ const PartsTab = ({
                   </button>
                 )}
               </div>
-              {/* Archive Toggle Button */}
+            </div>
+            {/* Archive Toggle Button */}
+            <div className={`rounded-lg shadow-md p-3 ${
+              darkMode ? 'bg-gray-800' : 'bg-slate-100'
+            }`}>
               <button
                 onClick={() => {
                   setIsStatusFiltering(true);
