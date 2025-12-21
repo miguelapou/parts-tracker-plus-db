@@ -693,7 +693,7 @@ const PartsTab = ({
                 <div key={`${statusFilter === 'pending' ? 'pending' : statusFilter === 'purchased' ? 'purchased' : 'all-ordered'}-${showArchivedParts}`} className={hasClickedStatusCard ? 'status-card-content' : ''}>
                   <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
-                  }`}>{showArchivedParts ? (statusFilter === 'pending' ? 'Archived Unordered' : 'Archived Ordered') : (statusFilter === 'pending' ? 'Unordered' : 'Ordered')}</p>
+                  }`}>{showArchivedParts ? (statusFilter === 'pending' ? 'Archived Unordered' : 'Archived Ordered') : (statusFilter === 'pending' ? 'Active Unordered' : 'Active Ordered')}</p>
                   <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{statusFilter === 'pending' ? stats.pending : stats.purchased}</p>
@@ -737,7 +737,7 @@ const PartsTab = ({
                 <div key={`shipped-${showArchivedParts}`}>
                   <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
-                  }`}>{showArchivedParts ? 'Archived Shipped' : 'Shipped'}</p>
+                  }`}>{showArchivedParts ? 'Archived Shipped' : 'Active Shipped'}</p>
                   <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{stats.shipped}</p>
@@ -795,7 +795,7 @@ const PartsTab = ({
                 <div key={`${deliveredFilter}-${showArchivedParts}`} className={hasClickedStatusCard ? 'status-card-content' : ''}>
                   <p className={`text-xs mb-1 ${
                     darkMode ? 'text-gray-400' : 'text-slate-600'
-                  }`}>{showArchivedParts ? (deliveredFilter === 'hide' ? 'Archived Undelivered' : 'Archived Delivered') : (deliveredFilter === 'hide' ? 'Undelivered' : 'Delivered')}</p>
+                  }`}>{showArchivedParts ? (deliveredFilter === 'hide' ? 'Archived Undelivered' : 'Archived Delivered') : (deliveredFilter === 'hide' ? 'Active Undelivered' : 'Active Delivered')}</p>
                   <p className={`text-xl font-bold truncate ${
                     darkMode ? 'text-gray-100' : 'text-gray-800'
                   }`}>{deliveredFilter === 'hide' ? stats.undelivered : stats.delivered}</p>
@@ -803,12 +803,11 @@ const PartsTab = ({
               </div>
 
             {/* Search Box and Archive Button Row - Shows in left column at 800px+ */}
-            <div className="hidden search-box-800 flex items-center gap-3">
-              {/* Search Box */}
-              <div className={`flex-1 rounded-lg shadow-md p-3 ${
-                darkMode ? 'bg-gray-800' : 'bg-slate-100'
-              }`}>
-                <div className="relative">
+            <div className={`hidden search-box-800 rounded-lg shadow-md p-3 ${
+              darkMode ? 'bg-gray-800' : 'bg-slate-100'
+            }`}>
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
                   <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
                     darkMode ? 'text-gray-500' : 'text-gray-400'
                   }`} />
@@ -844,25 +843,21 @@ const PartsTab = ({
                     </button>
                   )}
                 </div>
-              </div>
-              {/* Archive Toggle Button */}
-              <div className={`rounded-lg shadow-md p-3 ${
-                darkMode ? 'bg-gray-800' : 'bg-slate-100'
-              }`}>
+                {/* Archive Toggle Button */}
                 <button
                   onClick={() => {
                     setIsStatusFiltering(true);
                     setShowArchivedParts(!showArchivedParts);
                     setTimeout(() => setIsStatusFiltering(false), 600);
                   }}
-                  className={`flex items-center justify-center p-2 rounded-lg border transition-all ${
+                  className={`flex items-center justify-center p-2 rounded-lg transition-all ${
                     showArchivedParts
                       ? (darkMode
-                          ? 'bg-amber-900/30 text-amber-300 border-amber-700 hover:bg-amber-900/40'
-                          : 'bg-amber-100 text-amber-700 border-amber-300 hover:bg-amber-200')
+                          ? 'text-amber-300 hover:text-amber-200'
+                          : 'text-amber-600 hover:text-amber-700')
                       : (darkMode
-                          ? 'bg-gray-700 text-gray-400 border-gray-600 hover:bg-gray-600 hover:text-gray-300'
-                          : 'bg-slate-50 text-slate-500 border-slate-300 hover:bg-slate-200 hover:text-slate-700')
+                          ? 'text-gray-400 hover:text-gray-300'
+                          : 'text-slate-400 hover:text-slate-600')
                   }`}
                   title={showArchivedParts ? "Show active parts" : "Show archived parts"}
                 >
@@ -1026,12 +1021,11 @@ const PartsTab = ({
           </div>
 
           {/* Search Box and Archive Button Row - Mobile grid row 4 */}
-          <div className="search-box-mobile-800 flex items-center gap-3">
-            {/* Search Box */}
-            <div className={`flex-1 rounded-lg shadow-md p-3 ${
-              darkMode ? 'bg-gray-800' : 'bg-slate-100'
-            }`}>
-              <div className="relative">
+          <div className={`search-box-mobile-800 rounded-lg shadow-md p-3 ${
+            darkMode ? 'bg-gray-800' : 'bg-slate-100'
+          }`}>
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
                 <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
                   darkMode ? 'text-gray-500' : 'text-gray-400'
                 }`} />
@@ -1067,25 +1061,21 @@ const PartsTab = ({
                   </button>
                 )}
               </div>
-            </div>
-            {/* Archive Toggle Button */}
-            <div className={`rounded-lg shadow-md p-3 ${
-              darkMode ? 'bg-gray-800' : 'bg-slate-100'
-            }`}>
+              {/* Archive Toggle Button */}
               <button
                 onClick={() => {
                   setIsStatusFiltering(true);
                   setShowArchivedParts(!showArchivedParts);
                   setTimeout(() => setIsStatusFiltering(false), 600);
                 }}
-                className={`flex items-center justify-center p-2 rounded-lg border transition-all ${
+                className={`flex items-center justify-center p-2 rounded-lg transition-all ${
                   showArchivedParts
                     ? (darkMode
-                        ? 'bg-amber-900/30 text-amber-300 border-amber-700 hover:bg-amber-900/40'
-                        : 'bg-amber-100 text-amber-700 border-amber-300 hover:bg-amber-200')
+                        ? 'text-amber-300 hover:text-amber-200'
+                        : 'text-amber-600 hover:text-amber-700')
                     : (darkMode
-                        ? 'bg-gray-700 text-gray-400 border-gray-600 hover:bg-gray-600 hover:text-gray-300'
-                        : 'bg-slate-50 text-slate-500 border-slate-300 hover:bg-slate-200 hover:text-slate-700')
+                        ? 'text-gray-400 hover:text-gray-300'
+                        : 'text-slate-400 hover:text-slate-600')
                 }`}
                 title={showArchivedParts ? "Show active parts" : "Show archived parts"}
               >
