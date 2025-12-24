@@ -402,14 +402,15 @@ html:not(.has-hover) .drag-handle {
   }
 }
 
-/* Projects Grid - 3 columns at 1024px, 4 columns when > 1024px */
-@media (min-width: 1024px) and (max-width: 1024px) {
+/* Projects Grid - 3 columns at lg breakpoint, 4 columns at xl (1280px+) */
+/* Using max-width ensures 3 columns at exactly 1024px (iPad Pro portrait) */
+@media (min-width: 1024px) and (max-width: 1279px) {
   .projects-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1280px) {
   .projects-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   }
