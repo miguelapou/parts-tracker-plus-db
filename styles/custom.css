@@ -402,6 +402,13 @@ html:not(.has-hover) .drag-handle {
   }
 }
 
+/* Projects Grid - 4 columns when screen width > 1024px */
+@media (min-width: 1025px) {
+  .projects-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 /* Table Sorting Animation */
 .table-sorting tbody tr:not(.empty-row) {
   animation: tableFadeOnly 0.4s ease-out;
