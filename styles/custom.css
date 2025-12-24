@@ -291,12 +291,68 @@ input[type="number"] {
   animation: tableFadeOnly 0.6s ease-in;
 }
 
+/* ========================================
+   DISABLE HOVER EFFECTS ON TOUCH DEVICES
+   ======================================== */
+
+/*
+ * Disable ALL hover effects on touch devices using the has-hover class.
+ * The useHoverCapability hook adds 'has-hover' class when a mouse/trackpad is detected.
+ * When has-hover is NOT present (touch device), we disable hover effects.
+ */
+
+/*
+ * When no hover capability (touch device), prevent all hover visual effects.
+ * Strategy: For elements with hover classes, make hover state match non-hover state.
+ */
+
+/* Disable transitions only for elements with hover classes */
+html:not(.has-hover) [class*="hover:"] {
+  transition-property: none !important;
+  transition-duration: 0s !important;
+}
+
+/* Prevent scale transforms on hover */
+html:not(.has-hover) [class*="hover:scale"]:hover {
+  transform: none !important;
+}
+
+/* Prevent shadow changes on hover - keep base shadow if any */
+html:not(.has-hover) [class*="hover:shadow"]:hover {
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000) !important;
+}
+
+/* Prevent opacity changes on hover */
+html:not(.has-hover) [class*="hover:opacity"]:hover {
+  opacity: 1 !important;
+}
+
+/* Prevent underline on hover */
+html:not(.has-hover) [class*="hover:underline"]:hover {
+  text-decoration: none !important;
+}
+
+/* Prevent border color changes on hover - use currentColor as fallback */
+html:not(.has-hover) [class*="hover:border"]:hover {
+  border-color: inherit !important;
+}
+
+/* Prevent background color changes on hover */
+html:not(.has-hover) [class*="hover:bg"]:hover {
+  background-color: inherit !important;
+}
+
+/* Prevent text color changes on hover */
+html:not(.has-hover) [class*="hover:text"]:hover {
+  color: inherit !important;
+}
+
 /* Parts Table Row Hover - Only on Non-Touch Devices */
 @media (hover: hover) and (pointer: fine) {
   .parts-table-row.light:hover {
     background-color: #f8fafc; /* slate-50 */
   }
-  
+
   .parts-table-row.dark:hover {
     background-color: #374151; /* gray-700 */
   }
