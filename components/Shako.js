@@ -2200,8 +2200,8 @@ const Shako = ({ isDemo = false }) => {
       {/* Mobile Bottom Tab Navigation - Glassmorphism style */}
       <div className={`fixed bottom-0 left-0 right-0 z-50 sm:hidden border-t backdrop-blur-xl ${
         darkMode
-          ? 'bg-gray-900/70 border-white/10'
-          : 'bg-white/70 border-black/5 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]'
+          ? 'bg-gray-900/50 border-white/10'
+          : 'bg-white/50 border-black/5 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]'
       }`}
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
