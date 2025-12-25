@@ -2204,9 +2204,11 @@ const Shako = ({ isDemo = false }) => {
             ? 'bg-gray-900/50 border-white/10'
             : 'bg-white/50 border-black/5 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]'
         }`}
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        <div className="flex justify-around items-center h-12">
+        <div
+          className="flex justify-around items-center pt-3 pb-2"
+          style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom))' }}
+        >
           <button
             onClick={() => handleTabChange('vehicles')}
             className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
