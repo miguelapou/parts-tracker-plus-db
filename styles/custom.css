@@ -24,11 +24,10 @@
     bottom: calc(5rem + env(safe-area-inset-bottom));
     padding: 0.5rem;
   }
-}
 
-/* PWA standalone mode - use fixed values since safe-area is unreliable */
-@media (max-width: 639px) and (display-mode: standalone) {
-  .modal-backdrop {
+  /* PWA standalone mode - use fixed values since safe-area is unreliable */
+  /* Class added via JS: navigator.standalone (iOS) or matchMedia display-mode */
+  html.pwa-standalone .modal-backdrop {
     top: 4rem;    /* ~64px - clears status bar / dynamic island */
     bottom: 6rem; /* ~96px - clears bottom nav + home indicator */
   }
