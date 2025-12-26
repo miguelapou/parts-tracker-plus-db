@@ -26,11 +26,11 @@
   }
 }
 
-/* PWA standalone mode needs extra spacing since safe-area behaves differently */
+/* PWA standalone mode - use fixed values since safe-area is unreliable */
 @media (max-width: 639px) and (display-mode: standalone) {
   .modal-backdrop {
-    top: max(1rem, env(safe-area-inset-top, 1rem));
-    bottom: calc(5rem + env(safe-area-inset-bottom));
+    top: 4rem;    /* ~64px - clears status bar / dynamic island */
+    bottom: 6rem; /* ~96px - clears bottom nav + home indicator */
   }
 }
 
