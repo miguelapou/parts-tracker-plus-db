@@ -17,19 +17,35 @@
   transition: opacity 0.2s ease-out;
 }
 
-/* On mobile, prevent modals from going behind bottom navigation and add spacing */
+/* On mobile, modals become full-screen sheets above the bottom nav */
 @media (max-width: 639px) {
   .modal-backdrop {
-    top: calc(0.75rem + env(safe-area-inset-top));
-    bottom: calc(5rem + env(safe-area-inset-bottom));
-    padding: 0.5rem;
+    top: env(safe-area-inset-top, 0);
+    bottom: calc(3.5rem + env(safe-area-inset-bottom));
+    left: 0;
+    right: 0;
+    padding: 0;
+    align-items: stretch;
   }
 
-  /* PWA standalone mode - use fixed values since safe-area is unreliable */
-  /* Class added via JS: navigator.standalone (iOS) or matchMedia display-mode */
+  .modal-content {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: 100%;
+    height: 100%;
+    border-radius: 0 !important;
+    margin: 0;
+  }
+
+  /* PWA standalone mode */
   html.pwa-standalone .modal-backdrop {
-    top: 4rem;    /* ~64px - clears status bar / dynamic island */
-    bottom: 6rem; /* ~96px - clears bottom nav + home indicator */
+    top: 0;
+    bottom: calc(3.5rem + env(safe-area-inset-bottom, 34px));
+  }
+
+  /* Add safe area padding to modal header in PWA mode */
+  html.pwa-standalone .modal-content > div:first-child {
+    padding-top: calc(1rem + env(safe-area-inset-top, 47px));
   }
 }
 
