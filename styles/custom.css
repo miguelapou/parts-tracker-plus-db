@@ -26,6 +26,14 @@
   }
 }
 
+/* PWA standalone mode needs extra spacing since safe-area behaves differently */
+@media (max-width: 639px) and (display-mode: standalone) {
+  .modal-backdrop {
+    top: max(1rem, env(safe-area-inset-top, 1rem));
+    bottom: calc(4rem + env(safe-area-inset-bottom));
+  }
+}
+
 .modal-content {
   -webkit-overflow-scrolling: touch;
   transition: transform 0.2s cubic-bezier(0.4, 0, 1, 1), opacity 0.2s ease-out;
