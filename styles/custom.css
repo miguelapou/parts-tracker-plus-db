@@ -37,11 +37,11 @@
     margin: 0;
   }
 
-  /* Override vh-based heights inside modals - use flex/grid constraints instead */
+  /* Override vh-based heights inside modals - use grid constraints instead */
   .modal-content [class*="min-h-[calc(90vh"],
   .modal-content [class*="min-h-[calc(85vh"] {
     min-height: 0 !important;
-    overflow: hidden;
+    height: 100%;
   }
 
   .modal-content [class*="max-h-[calc(90vh"],
