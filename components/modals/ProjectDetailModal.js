@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useMemo, useRef } from 'react';
-import { X, Edit2, Trash2, Archive, Pause, Play, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Edit2, Trash2, Archive, ArchiveRestore, Pause, Play, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProjectDetailView from '../ui/ProjectDetailView';
 import ProjectEditForm from '../ui/ProjectEditForm';
 import LinkedPartsSection from '../ui/LinkedPartsSection';
@@ -248,7 +248,7 @@ const ProjectDetailModal = ({
         </div>
 
         {/* Content - with slide animation */}
-        <div className="relative min-h-[calc(90vh-180px)]">
+        <div className="relative min-h-0 sm:min-h-[calc(90vh-180px)] overflow-y-auto sm:overflow-visible modal-content-wrapper">
           {/* Project Details View */}
           <div
             className={`w-full transition-all duration-500 ease-in-out ${
@@ -259,7 +259,7 @@ const ProjectDetailModal = ({
           >
             <div
               key={viewingProject.id}
-              className="p-6 space-y-6 max-h-[calc(90vh-180px)] overflow-y-auto animate-fade-in"
+              className="p-6 space-y-6 sm:max-h-[calc(90vh-180px)] sm:overflow-y-auto animate-fade-in"
             >
               <ProjectDetailView
                 project={viewingProject}
@@ -308,7 +308,7 @@ const ProjectDetailModal = ({
                 : 'absolute opacity-0 pointer-events-none'
             }`}
           >
-            <div className="p-6 space-y-6 max-h-[calc(90vh-180px)] overflow-y-auto">
+            <div className="p-6 space-y-6 sm:max-h-[calc(90vh-180px)] sm:overflow-y-auto">
               <ProjectEditForm
                 project={viewingProject}
                 onProjectChange={setViewingProject}
@@ -464,13 +464,15 @@ const ProjectDetailModal = ({
                   }}
                   className={`h-10 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
                     viewingProject.archived
-                      ? 'bg-green-600 hover:bg-green-700 text-white'
+                      ? darkMode
+                        ? 'bg-green-900/30 hover:bg-green-900/50 text-green-400 border border-green-700'
+                        : 'bg-green-50 hover:bg-green-100 text-green-600 border border-green-300'
                       : darkMode
-                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border border-gray-600'
-                        : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
+                        ? 'bg-amber-900/30 hover:bg-amber-900/50 text-amber-400 border border-amber-700'
+                        : 'bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-300'
                   }`}
                 >
-                  <Archive className="w-4 h-4" />
+                  {viewingProject.archived ? <ArchiveRestore className="w-5 h-5 sm:w-4 sm:h-4" /> : <Archive className="w-5 h-5 sm:w-4 sm:h-4" />}
                   <span className="hidden sm:inline">{viewingProject.archived ? 'Unarchive' : 'Archive'}</span>
                 </button>
                 <button
@@ -485,7 +487,9 @@ const ProjectDetailModal = ({
                   }}
                   className={`h-10 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm ${
                     viewingProject.status === 'on_hold'
-                      ? 'bg-green-600 hover:bg-green-700 text-white'
+                      ? darkMode
+                        ? 'bg-green-900/30 hover:bg-green-900/50 text-green-400 border border-green-700'
+                        : 'bg-green-50 hover:bg-green-100 text-green-600 border border-green-300'
                       : darkMode
                         ? 'bg-gray-700 hover:bg-gray-600 text-gray-100 border border-gray-600'
                         : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
@@ -493,12 +497,12 @@ const ProjectDetailModal = ({
                 >
                   {viewingProject.status === 'on_hold' ? (
                     <>
-                      <Play className="w-4 h-4" />
+                      <Play className="w-5 h-5 sm:w-4 sm:h-4" />
                       <span className="hidden sm:inline">Resume</span>
                     </>
                   ) : (
                     <>
-                      <Pause className="w-4 h-4" />
+                      <Pause className="w-5 h-5 sm:w-4 sm:h-4" />
                       <span className="hidden sm:inline">Pause</span>
                     </>
                   )}
