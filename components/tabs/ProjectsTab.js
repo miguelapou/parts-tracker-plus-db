@@ -430,37 +430,6 @@ const ProjectsTab = ({
           >
             {projects.filter(p => p.archived).length > 0 ? (
               <>
-                {/* Unarchive Drop Zone - appears when dragging an archived project */}
-                {draggedProject && draggedProject.archived && (
-                  <div
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      setDragOverProjectArchiveZone(true);
-                    }}
-                    onDragLeave={() => setDragOverProjectArchiveZone(false)}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      handleProjectArchiveZoneDrop(false);
-                    }}
-                    className={`drag-handle mb-6 p-6 rounded-lg border-2 border-dashed transition-all ${
-                      dragOverProjectArchiveZone
-                        ? darkMode
-                          ? 'border-green-500 bg-green-500/10'
-                          : 'border-green-600 bg-green-100/50'
-                        : darkMode
-                          ? 'border-gray-600 bg-gray-800/50'
-                          : 'border-gray-300 bg-gray-100/50'
-                    }`}
-                  >
-                    <p className={`text-center text-sm ${
-                      dragOverProjectArchiveZone
-                        ? darkMode ? 'text-green-400' : 'text-green-600'
-                        : darkMode ? 'text-gray-400' : 'text-gray-600'
-                    }`}>
-                      Drop here to unarchive
-                    </p>
-                  </div>
-                )}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {projects.filter(p => p.archived).map((project) => {
                   const vehicle = project.vehicle_id ? vehicles.find(v => v.id === project.vehicle_id) : null;

@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useMemo, useRef } from 'react';
-import { X, Edit2, Trash2, Archive, Pause, Play, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Edit2, Trash2, Archive, ArchiveRestore, Pause, Play, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProjectDetailView from '../ui/ProjectDetailView';
 import ProjectEditForm from '../ui/ProjectEditForm';
 import LinkedPartsSection from '../ui/LinkedPartsSection';
@@ -470,7 +470,7 @@ const ProjectDetailModal = ({
                         : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
                   }`}
                 >
-                  <Archive className="w-4 h-4" />
+                  {viewingProject.archived ? <ArchiveRestore className="w-4 h-4" /> : <Archive className="w-4 h-4" />}
                   <span className="hidden sm:inline">{viewingProject.archived ? 'Unarchive' : 'Archive'}</span>
                 </button>
                 <button

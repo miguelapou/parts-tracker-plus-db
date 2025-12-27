@@ -684,37 +684,6 @@ const VehiclesTab = ({
           >
             {vehicles.filter(v => v.archived).length > 0 ? (
               <>
-                {/* Unarchive Drop Zone - appears when dragging an archived vehicle */}
-              {draggedVehicle && draggedVehicle.archived && (
-                <div
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    setDragOverArchiveZone(true);
-                  }}
-                  onDragLeave={() => setDragOverArchiveZone(false)}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    handleArchiveZoneDrop(false);
-                  }}
-                  className={`drag-handle mb-6 p-6 rounded-lg border-2 border-dashed transition-all ${
-                    dragOverArchiveZone
-                      ? darkMode
-                        ? 'border-green-500 bg-green-500/10'
-                        : 'border-green-600 bg-green-100/50'
-                      : darkMode
-                        ? 'border-gray-600 bg-gray-800/50'
-                        : 'border-gray-300 bg-gray-100/50'
-                  }`}
-                >
-                  <p className={`text-center text-sm ${
-                    dragOverArchiveZone
-                      ? darkMode ? 'text-green-400' : 'text-green-600'
-                      : darkMode ? 'text-gray-400' : 'text-gray-600'
-                  }`}>
-                    Drop here to unarchive
-                  </p>
-                </div>
-              )}
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {vehicles.filter(v => v.archived).map((vehicle) => {
                 const borderColor = getMutedColor(vehicle.color, darkMode);

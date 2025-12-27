@@ -10,6 +10,7 @@ import {
   Edit2,
   Trash2,
   Archive,
+  ArchiveRestore,
   ChevronDown,
   ChevronUp,
   ChevronLeft,
@@ -3266,7 +3267,7 @@ const VehicleDetailModal = ({
                             : 'bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300'
                       }`}
                     >
-                      <Archive className="w-4 h-4" />
+                      {viewingVehicle.archived ? <ArchiveRestore className="w-4 h-4" /> : <Archive className="w-4 h-4" />}
                       <span className="hidden sm:inline">{viewingVehicle.archived ? 'Unarchive' : 'Archive'}</span>
                     </button>
                   </>
