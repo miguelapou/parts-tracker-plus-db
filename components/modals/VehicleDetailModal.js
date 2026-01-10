@@ -406,6 +406,8 @@ const VehicleDetailModal = ({
     setNewEventNotes,
     newEventLinkedParts,
     setNewEventLinkedParts,
+    newEventCost,
+    setNewEventCost,
     editingServiceEvent,
     loadServiceEvents,
     addServiceEvent,
@@ -1374,6 +1376,25 @@ const VehicleDetailModal = ({
                                         )}
                                       </span>
                                     )}
+                                    {(() => {
+                                      // Calculate total cost: direct cost + linked parts
+                                      let totalCost = event.cost || 0;
+                                      if (event.linked_part_ids && event.linked_part_ids.length > 0) {
+                                        totalCost += event.linked_part_ids.reduce((sum, partId) => {
+                                          const part = parts.find(p => p.id === partId);
+                                          return sum + (part ? (part.total || 0) : 0);
+                                        }, 0);
+                                      }
+                                      if (totalCost === 0) return null;
+                                      return (
+                                        <span className={`text-xs flex items-center gap-1 whitespace-nowrap ${
+                                          darkMode ? 'text-green-400' : 'text-green-600'
+                                        }`}>
+                                          <BadgeDollarSign className="w-3 h-3 flex-shrink-0" />
+                                          ${totalCost.toFixed(2)}
+                                        </span>
+                                      );
+                                    })()}
                                   </div>
                                 </div>
                                 {/* Action overlay with fade animation */}
@@ -1494,6 +1515,8 @@ const VehicleDetailModal = ({
                   setNotes={setNewEventNotes}
                   linkedPartIds={newEventLinkedParts}
                   setLinkedPartIds={setNewEventLinkedParts}
+                  cost={newEventCost}
+                  setCost={setNewEventCost}
                   parts={parts}
                   vendorColors={vendorColors}
                   editingEvent={editingServiceEvent}
@@ -1504,7 +1527,8 @@ const VehicleDetailModal = ({
                         description: newEventDescription.trim(),
                         odometer: newEventOdometer ? parseInt(newEventOdometer, 10) : null,
                         notes: newEventNotes.trim() || null,
-                        linked_part_ids: newEventLinkedParts.length > 0 ? newEventLinkedParts : null
+                        linked_part_ids: newEventLinkedParts.length > 0 ? newEventLinkedParts : null,
+                        cost: newEventCost ? parseFloat(newEventCost) : null
                       });
                       return result;
                     } else {
@@ -1514,7 +1538,8 @@ const VehicleDetailModal = ({
                         newEventDescription,
                         newEventOdometer,
                         newEventNotes,
-                        newEventLinkedParts
+                        newEventLinkedParts,
+                        newEventCost
                       );
                       return result;
                     }
@@ -2657,6 +2682,36 @@ const VehicleDetailModal = ({
                   />
                 </div>
 
+                {/* Cost field */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    Cost
+                  </label>
+                  <div className="relative">
+                    <span className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                      darkMode ? 'text-gray-400' : 'text-gray-500'
+                    }`}>
+                      $
+                    </span>
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      step="0.01"
+                      min="0"
+                      value={newEventCost}
+                      onChange={(e) => setNewEventCost(e.target.value)}
+                      className={`w-full pl-8 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                          : 'bg-white border-gray-300 text-gray-800 placeholder-gray-400'
+                      }`}
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+
                 {/* Notes field */}
                 <div>
                   <label className={`block text-sm font-medium mb-2 ${
@@ -2973,6 +3028,39 @@ const VehicleDetailModal = ({
           >
             {viewingInfoEvent && isMobile && (
               <div className="p-6 pb-24 space-y-5 max-h-[calc(85vh-120px)] overflow-y-auto sm:max-h-[calc(90vh-164px)]">
+                {/* Cost Section */}
+                {(() => {
+                  let totalCost = viewingInfoEvent.cost || 0;
+                  if (viewingInfoEvent.linked_part_ids && viewingInfoEvent.linked_part_ids.length > 0) {
+                    totalCost += viewingInfoEvent.linked_part_ids.reduce((sum, partId) => {
+                      const part = parts.find(p => p.id === partId);
+                      return sum + (part ? (part.total || 0) : 0);
+                    }, 0);
+                  }
+                  if (totalCost === 0) return null;
+                  return (
+                    <div>
+                      <h4 className={`text-sm font-semibold mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        Total Cost
+                      </h4>
+                      <p className={`text-lg font-semibold ${
+                        darkMode ? 'text-green-400' : 'text-green-600'
+                      }`}>
+                        ${totalCost.toFixed(2)}
+                        {viewingInfoEvent.cost > 0 && viewingInfoEvent.linked_part_ids?.length > 0 && (
+                          <span className={`text-xs font-normal ml-2 ${
+                            darkMode ? 'text-gray-500' : 'text-gray-400'
+                          }`}>
+                            (${viewingInfoEvent.cost.toFixed(2)} + ${(totalCost - viewingInfoEvent.cost).toFixed(2)} parts)
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  );
+                })()}
+
                 {/* Notes Section */}
                 {viewingInfoEvent.notes && (
                   <div>
@@ -3526,7 +3614,8 @@ const VehicleDetailModal = ({
                         description: newEventDescription.trim(),
                         odometer: newEventOdometer ? parseInt(newEventOdometer, 10) : null,
                         notes: newEventNotes.trim() || null,
-                        linked_part_ids: newEventLinkedParts.length > 0 ? newEventLinkedParts : null
+                        linked_part_ids: newEventLinkedParts.length > 0 ? newEventLinkedParts : null,
+                        cost: newEventCost ? parseFloat(newEventCost) : null
                       });
                     } else {
                       result = await addServiceEvent(
@@ -3535,7 +3624,8 @@ const VehicleDetailModal = ({
                         newEventDescription,
                         newEventOdometer,
                         newEventNotes,
-                        newEventLinkedParts
+                        newEventLinkedParts,
+                        newEventCost
                       );
                     }
                     if (result) {
@@ -3743,6 +3833,39 @@ const VehicleDetailModal = ({
               </button>
             </div>
             <div className="p-5 max-h-[60vh] overflow-y-auto space-y-5">
+              {/* Cost Section */}
+              {(() => {
+                let totalCost = viewingInfoEvent?.cost || 0;
+                if (viewingInfoEvent?.linked_part_ids && viewingInfoEvent.linked_part_ids.length > 0) {
+                  totalCost += viewingInfoEvent.linked_part_ids.reduce((sum, partId) => {
+                    const part = parts.find(p => p.id === partId);
+                    return sum + (part ? (part.total || 0) : 0);
+                  }, 0);
+                }
+                if (totalCost === 0) return null;
+                return (
+                  <div>
+                    <h4 className={`text-sm font-semibold mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      Total Cost
+                    </h4>
+                    <p className={`text-lg font-semibold ${
+                      darkMode ? 'text-green-400' : 'text-green-600'
+                    }`}>
+                      ${totalCost.toFixed(2)}
+                      {viewingInfoEvent?.cost > 0 && viewingInfoEvent?.linked_part_ids?.length > 0 && (
+                        <span className={`text-xs font-normal ml-2 ${
+                          darkMode ? 'text-gray-500' : 'text-gray-400'
+                        }`}>
+                          (${viewingInfoEvent.cost.toFixed(2)} + ${(totalCost - viewingInfoEvent.cost).toFixed(2)} parts)
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                );
+              })()}
+
               {/* Notes Section */}
               {viewingInfoEvent?.notes && (
                 <div>
