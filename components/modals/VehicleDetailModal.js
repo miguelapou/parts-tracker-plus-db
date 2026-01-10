@@ -1376,6 +1376,25 @@ const VehicleDetailModal = ({
                                         )}
                                       </span>
                                     )}
+                                    {(() => {
+                                      // Calculate total cost: direct cost + linked parts
+                                      let totalCost = event.cost || 0;
+                                      if (event.linked_part_ids && event.linked_part_ids.length > 0) {
+                                        totalCost += event.linked_part_ids.reduce((sum, partId) => {
+                                          const part = parts.find(p => p.id === partId);
+                                          return sum + (part ? (part.total || 0) : 0);
+                                        }, 0);
+                                      }
+                                      if (totalCost === 0) return null;
+                                      return (
+                                        <span className={`text-xs flex items-center gap-1 whitespace-nowrap ${
+                                          darkMode ? 'text-green-400' : 'text-green-600'
+                                        }`}>
+                                          <BadgeDollarSign className="w-3 h-3 flex-shrink-0" />
+                                          ${totalCost.toFixed(2)}
+                                        </span>
+                                      );
+                                    })()}
                                   </div>
                                 </div>
                                 {/* Action overlay with fade animation */}
@@ -3009,6 +3028,39 @@ const VehicleDetailModal = ({
           >
             {viewingInfoEvent && isMobile && (
               <div className="p-6 pb-24 space-y-5 max-h-[calc(85vh-120px)] overflow-y-auto sm:max-h-[calc(90vh-164px)]">
+                {/* Cost Section */}
+                {(() => {
+                  let totalCost = viewingInfoEvent.cost || 0;
+                  if (viewingInfoEvent.linked_part_ids && viewingInfoEvent.linked_part_ids.length > 0) {
+                    totalCost += viewingInfoEvent.linked_part_ids.reduce((sum, partId) => {
+                      const part = parts.find(p => p.id === partId);
+                      return sum + (part ? (part.total || 0) : 0);
+                    }, 0);
+                  }
+                  if (totalCost === 0) return null;
+                  return (
+                    <div>
+                      <h4 className={`text-sm font-semibold mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        Total Cost
+                      </h4>
+                      <p className={`text-lg font-semibold ${
+                        darkMode ? 'text-green-400' : 'text-green-600'
+                      }`}>
+                        ${totalCost.toFixed(2)}
+                        {viewingInfoEvent.cost > 0 && viewingInfoEvent.linked_part_ids?.length > 0 && (
+                          <span className={`text-xs font-normal ml-2 ${
+                            darkMode ? 'text-gray-500' : 'text-gray-400'
+                          }`}>
+                            (${viewingInfoEvent.cost.toFixed(2)} + ${(totalCost - viewingInfoEvent.cost).toFixed(2)} parts)
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  );
+                })()}
+
                 {/* Notes Section */}
                 {viewingInfoEvent.notes && (
                   <div>
@@ -3781,6 +3833,39 @@ const VehicleDetailModal = ({
               </button>
             </div>
             <div className="p-5 max-h-[60vh] overflow-y-auto space-y-5">
+              {/* Cost Section */}
+              {(() => {
+                let totalCost = viewingInfoEvent?.cost || 0;
+                if (viewingInfoEvent?.linked_part_ids && viewingInfoEvent.linked_part_ids.length > 0) {
+                  totalCost += viewingInfoEvent.linked_part_ids.reduce((sum, partId) => {
+                    const part = parts.find(p => p.id === partId);
+                    return sum + (part ? (part.total || 0) : 0);
+                  }, 0);
+                }
+                if (totalCost === 0) return null;
+                return (
+                  <div>
+                    <h4 className={`text-sm font-semibold mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      Total Cost
+                    </h4>
+                    <p className={`text-lg font-semibold ${
+                      darkMode ? 'text-green-400' : 'text-green-600'
+                    }`}>
+                      ${totalCost.toFixed(2)}
+                      {viewingInfoEvent?.cost > 0 && viewingInfoEvent?.linked_part_ids?.length > 0 && (
+                        <span className={`text-xs font-normal ml-2 ${
+                          darkMode ? 'text-gray-500' : 'text-gray-400'
+                        }`}>
+                          (${viewingInfoEvent.cost.toFixed(2)} + ${(totalCost - viewingInfoEvent.cost).toFixed(2)} parts)
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                );
+              })()}
+
               {/* Notes Section */}
               {viewingInfoEvent?.notes && (
                 <div>
