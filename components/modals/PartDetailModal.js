@@ -1539,114 +1539,116 @@ const PartDetailModal = ({
                   />
                 </div>
 
-                {/* Price */}
-                <div>
-                  <label
-                    className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-slate-700'
-                    }`}
-                  >
-                    Price ($)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    inputMode="decimal"
-                    value={editingPart.price}
-                    onChange={(e) =>
-                      setEditingPart({
-                        ...editingPart,
-                        price: e.target.value
-                      })
-                    }
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                      darkMode
-                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                    }`}
-                    placeholder="0.00"
-                  />
-                </div>
+                {/* Price, Shipping, Duties, Quantity - 2x2 grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Price */}
+                  <div>
+                    <label
+                      className={`block text-sm font-medium mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-slate-700'
+                      }`}
+                    >
+                      Price ($)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      inputMode="decimal"
+                      value={editingPart.price}
+                      onChange={(e) =>
+                        setEditingPart({
+                          ...editingPart,
+                          price: e.target.value
+                        })
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                      placeholder="0.00"
+                    />
+                  </div>
 
-                {/* Shipping */}
-                <div>
-                  <label
-                    className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-slate-700'
-                    }`}
-                  >
-                    Shipping ($)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    inputMode="decimal"
-                    value={editingPart.shipping}
-                    onChange={(e) =>
-                      setEditingPart({
-                        ...editingPart,
-                        shipping: e.target.value
-                      })
-                    }
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                      darkMode
-                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                    }`}
-                    placeholder="0.00"
-                  />
-                </div>
+                  {/* Shipping */}
+                  <div>
+                    <label
+                      className={`block text-sm font-medium mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-slate-700'
+                      }`}
+                    >
+                      Shipping ($)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      inputMode="decimal"
+                      value={editingPart.shipping}
+                      onChange={(e) =>
+                        setEditingPart({
+                          ...editingPart,
+                          shipping: e.target.value
+                        })
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                      placeholder="0.00"
+                    />
+                  </div>
 
-                {/* Duties */}
-                <div>
-                  <label
-                    className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-slate-700'
-                    }`}
-                  >
-                    Import Duties ($)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    inputMode="decimal"
-                    value={editingPart.duties}
-                    onChange={(e) =>
-                      setEditingPart({
-                        ...editingPart,
-                        duties: e.target.value
-                      })
-                    }
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                      darkMode
-                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                    }`}
-                    placeholder="0.00"
-                  />
-                </div>
+                  {/* Duties */}
+                  <div>
+                    <label
+                      className={`block text-sm font-medium mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-slate-700'
+                      }`}
+                    >
+                      Import Duties ($)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      inputMode="decimal"
+                      value={editingPart.duties}
+                      onChange={(e) =>
+                        setEditingPart({
+                          ...editingPart,
+                          duties: e.target.value
+                        })
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                      placeholder="0.00"
+                    />
+                  </div>
 
-                {/* Quantity */}
-                <div>
-                  <label
-                    className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-slate-700'
-                    }`}
-                  >
-                    Quantity
-                  </label>
-                  <div className="relative">
-                    <div className="flex">
-                      <input
-                        ref={quantityInputRef}
-                        type="number"
-                        pattern="[0-9]*"
-                        inputMode="numeric"
-                        min="1"
-                        value={editingPart.quantity || 1}
-                        onChange={(e) =>
-                          setEditingPart({
-                            ...editingPart,
+                  {/* Quantity */}
+                  <div>
+                    <label
+                      className={`block text-sm font-medium mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-slate-700'
+                      }`}
+                    >
+                      Quantity
+                    </label>
+                    <div className="relative">
+                      <div className="flex">
+                        <input
+                          ref={quantityInputRef}
+                          type="number"
+                          pattern="[0-9]*"
+                          inputMode="numeric"
+                          min="1"
+                          value={editingPart.quantity || 1}
+                          onChange={(e) =>
+                            setEditingPart({
+                              ...editingPart,
                             quantity: parseInt(e.target.value) || 1
                           })
                         }
@@ -1709,6 +1711,7 @@ const PartDetailModal = ({
                         </div>
                       </>
                     )}
+                    </div>
                   </div>
                 </div>
 
