@@ -24,11 +24,24 @@ const AddPartModal = ({
   const [showVehicleDropdown, setShowVehicleDropdown] = useState(false);
   const [isDropdownClosing, setIsDropdownClosing] = useState(false);
 
+  // Quantity dropdown state
+  const [showQuantityDropdown, setShowQuantityDropdown] = useState(false);
+  const [isQuantityDropdownClosing, setIsQuantityDropdownClosing] = useState(false);
+  const quantityInputRef = useRef(null);
+
   const closeDropdownWithAnimation = useCallback(() => {
     setIsDropdownClosing(true);
     setTimeout(() => {
       setIsDropdownClosing(false);
       setShowVehicleDropdown(false);
+    }, 150);
+  }, []);
+
+  const closeQuantityDropdownWithAnimation = useCallback(() => {
+    setIsQuantityDropdownClosing(true);
+    setTimeout(() => {
+      setIsQuantityDropdownClosing(false);
+      setShowQuantityDropdown(false);
     }, 150);
   }, []);
 
@@ -60,6 +73,7 @@ const AddPartModal = ({
       parseFloat(newPart.price) > 0 ||
       parseFloat(newPart.shipping) > 0 ||
       parseFloat(newPart.duties) > 0 ||
+      (parseInt(newPart.quantity) || 1) !== 1 ||
       newPart.projectId ||
       newPart.vehicleId ||
       newPart.status !== 'pending'
@@ -186,7 +200,7 @@ const AddPartModal = ({
                   style={selectDropdownStyle}
                 >
                   <option value="">No Project</option>
-                  {projects.map(project => (
+                  {projects.filter(p => !p.archived).map(project => (
                     <option key={project.id} value={project.id}>
                       {project.name}
                     </option>
@@ -397,58 +411,140 @@ const AddPartModal = ({
                 />
               </div>
 
-              {/* Price */}
-              <div>
-                <label className={`block text-sm font-medium mb-2 ${
-                  darkMode ? 'text-gray-300' : 'text-slate-700'
-                }`}>
-                  Price ($)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  inputMode="decimal"
-                  value={newPart.price}
-                  onChange={(e) => setNewPart({ ...newPart, price: e.target.value })}
-                  className={inputClasses(darkMode, '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none')}
-                  placeholder="0.00"
-                />
-              </div>
+              {/* Price, Shipping, Duties, Quantity - 2x2 grid */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Price */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${
+                    darkMode ? 'text-gray-300' : 'text-slate-700'
+                  }`}>
+                    Price ($)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    inputMode="decimal"
+                    value={newPart.price}
+                    onChange={(e) => setNewPart({ ...newPart, price: e.target.value })}
+                    className={inputClasses(darkMode, '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none')}
+                    placeholder="0.00"
+                  />
+                </div>
 
-              {/* Shipping */}
-              <div>
-                <label className={`block text-sm font-medium mb-2 ${
-                  darkMode ? 'text-gray-300' : 'text-slate-700'
-                }`}>
-                  Shipping ($)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  inputMode="decimal"
-                  value={newPart.shipping}
-                  onChange={(e) => setNewPart({ ...newPart, shipping: e.target.value })}
-                  className={inputClasses(darkMode, '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none')}
-                  placeholder="0.00"
-                />
-              </div>
+                {/* Shipping */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${
+                    darkMode ? 'text-gray-300' : 'text-slate-700'
+                  }`}>
+                    Shipping ($)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    inputMode="decimal"
+                    value={newPart.shipping}
+                    onChange={(e) => setNewPart({ ...newPart, shipping: e.target.value })}
+                    className={inputClasses(darkMode, '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none')}
+                    placeholder="0.00"
+                  />
+                </div>
 
-              {/* Import Duties */}
-              <div>
-                <label className={`block text-sm font-medium mb-2 ${
-                  darkMode ? 'text-gray-300' : 'text-slate-700'
-                }`}>
-                  Import Duties ($)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  inputMode="decimal"
-                  value={newPart.duties}
-                  onChange={(e) => setNewPart({ ...newPart, duties: e.target.value })}
-                  className={inputClasses(darkMode, '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none')}
-                  placeholder="0.00"
-                />
+                {/* Import Duties */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${
+                    darkMode ? 'text-gray-300' : 'text-slate-700'
+                  }`}>
+                    Import Duties ($)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    inputMode="decimal"
+                    value={newPart.duties}
+                    onChange={(e) => setNewPart({ ...newPart, duties: e.target.value })}
+                    className={inputClasses(darkMode, '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none')}
+                    placeholder="0.00"
+                  />
+                </div>
+
+                {/* Quantity */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${
+                    darkMode ? 'text-gray-300' : 'text-slate-700'
+                  }`}>
+                    Quantity
+                  </label>
+                  <div className="relative">
+                    <div className="flex">
+                      <input
+                        ref={quantityInputRef}
+                        type="number"
+                        pattern="[0-9]*"
+                        inputMode="numeric"
+                        min="1"
+                        value={newPart.quantity}
+                        onChange={(e) => setNewPart({ ...newPart, quantity: parseInt(e.target.value) || 1 })}
+                        onFocus={() => setShowQuantityDropdown(false)}
+                        className={`w-full px-4 py-2 border rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                          darkMode
+                            ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                            : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                        }`}
+                        placeholder="1"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (showQuantityDropdown) {
+                            closeQuantityDropdownWithAnimation();
+                          } else {
+                            setShowQuantityDropdown(true);
+                          }
+                        }}
+                        className={`px-3 border-y border-r rounded-r-lg transition-colors ${
+                          darkMode
+                            ? 'bg-gray-600 border-gray-600 text-gray-300 hover:bg-gray-500'
+                            : 'bg-slate-100 border-slate-300 text-slate-600 hover:bg-slate-200'
+                        }`}
+                      >
+                        <ChevronDown className={`w-4 h-4 transition-transform ${showQuantityDropdown ? 'rotate-180' : ''}`} />
+                      </button>
+                    </div>
+                    {showQuantityDropdown && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-10"
+                          onClick={closeQuantityDropdownWithAnimation}
+                        />
+                        <div
+                          className={`absolute right-0 z-20 mt-1 rounded-lg border shadow-lg py-1 max-h-48 overflow-y-auto w-full ${
+                            isQuantityDropdownClosing ? 'dropdown-fade-out' : 'dropdown-fade-in'
+                        } ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-50 border-slate-300'}`}
+                      >
+                        {[1, 2, 3, 4, 5, 6, 8, 10, 12, 20].map(qty => (
+                          <button
+                            key={qty}
+                            type="button"
+                            onClick={() => {
+                              setNewPart({ ...newPart, quantity: qty });
+                              closeQuantityDropdownWithAnimation();
+                            }}
+                            className={`w-full px-4 py-2 text-left text-sm ${
+                              newPart.quantity === qty
+                                ? 'bg-blue-600 text-white'
+                                : darkMode
+                                  ? 'hover:bg-gray-600 text-gray-100'
+                                  : 'hover:bg-gray-100 text-gray-900'
+                            }`}
+                          >
+                            {qty}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  </div>
+                </div>
               </div>
 
               {/* Calculated Total - aligned to bottom */}
@@ -466,9 +562,16 @@ const AddPartModal = ({
                   <span className={`text-xl font-bold ${
                     darkMode ? 'text-green-400' : 'text-green-600'
                   }`}>
-                    ${((parseFloat(newPart.price) || 0) + (parseFloat(newPart.shipping) || 0) + (parseFloat(newPart.duties) || 0)).toFixed(2)}
+                    ${(((parseFloat(newPart.price) || 0) * (parseInt(newPart.quantity) || 1)) + (parseFloat(newPart.shipping) || 0) + (parseFloat(newPart.duties) || 0)).toFixed(2)}
                   </span>
                 </div>
+                {(parseInt(newPart.quantity) || 1) > 1 && (
+                  <div className={`text-xs mt-1 text-right ${
+                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                  }`}>
+                    ${(parseFloat(newPart.price) || 0).toFixed(2)} × {parseInt(newPart.quantity) || 1}
+                  </div>
+                )}
               </div>
             </div>
           </div>

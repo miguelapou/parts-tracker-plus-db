@@ -75,11 +75,24 @@ const PartDetailModal = ({
   const [showVehicleDropdown, setShowVehicleDropdown] = useState(false);
   const [isVehicleDropdownClosing, setIsVehicleDropdownClosing] = useState(false);
 
+  // Quantity dropdown state for edit view
+  const [showQuantityDropdown, setShowQuantityDropdown] = useState(false);
+  const [isQuantityDropdownClosing, setIsQuantityDropdownClosing] = useState(false);
+  const quantityInputRef = useRef(null);
+
   const closeVehicleDropdownWithAnimation = useCallback(() => {
     setIsVehicleDropdownClosing(true);
     setTimeout(() => {
       setIsVehicleDropdownClosing(false);
       setShowVehicleDropdown(false);
+    }, 150);
+  }, []);
+
+  const closeQuantityDropdownWithAnimation = useCallback(() => {
+    setIsQuantityDropdownClosing(true);
+    setTimeout(() => {
+      setIsQuantityDropdownClosing(false);
+      setShowQuantityDropdown(false);
     }, 150);
   }, []);
 
@@ -872,6 +885,24 @@ const PartDetailModal = ({
                       </span>
                     </div>
                   )}
+                  {(viewingPart.quantity || 1) > 1 && (
+                    <div className="flex justify-between items-center">
+                      <span
+                        className={`text-sm ${
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
+                        }`}
+                      >
+                        Quantity
+                      </span>
+                      <span
+                        className={`text-lg font-semibold ${
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
+                        }`}
+                      >
+                        ×{viewingPart.quantity}
+                      </span>
+                    </div>
+                  )}
                   <div
                     className={`pt-3 mt-3 border-t flex justify-between items-center ${
                       darkMode ? 'border-gray-600' : 'border-gray-300'
@@ -884,13 +915,20 @@ const PartDetailModal = ({
                     >
                       Total
                     </span>
-                    <span
-                      className={`text-2xl font-bold ${
-                        darkMode ? 'text-green-400' : 'text-green-600'
-                      }`}
-                    >
-                      ${viewingPart.total.toFixed(2)}
-                    </span>
+                    <div className="text-right">
+                      <span
+                        className={`text-2xl font-bold ${
+                          darkMode ? 'text-green-400' : 'text-green-600'
+                        }`}
+                      >
+                        ${viewingPart.total.toFixed(2)}
+                      </span>
+                      {(viewingPart.quantity || 1) > 1 && (
+                        <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          ${viewingPart.price.toFixed(2)} × {viewingPart.quantity}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1238,7 +1276,7 @@ const PartDetailModal = ({
                     style={selectDropdownStyle}
                   >
                     <option value="">No Project</option>
-                    {projects.map((project) => (
+                    {projects.filter(p => !p.archived).map((project) => (
                       <option key={project.id} value={project.id}>
                         {project.name}
                       </option>
@@ -1501,91 +1539,180 @@ const PartDetailModal = ({
                   />
                 </div>
 
-                {/* Price */}
-                <div>
-                  <label
-                    className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-slate-700'
-                    }`}
-                  >
-                    Price ($)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    inputMode="decimal"
-                    value={editingPart.price}
-                    onChange={(e) =>
-                      setEditingPart({
-                        ...editingPart,
-                        price: e.target.value
-                      })
-                    }
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                      darkMode
-                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                    }`}
-                    placeholder="0.00"
-                  />
-                </div>
+                {/* Price, Shipping, Duties, Quantity - 2x2 grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Price */}
+                  <div>
+                    <label
+                      className={`block text-sm font-medium mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-slate-700'
+                      }`}
+                    >
+                      Price ($)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      inputMode="decimal"
+                      value={editingPart.price}
+                      onChange={(e) =>
+                        setEditingPart({
+                          ...editingPart,
+                          price: e.target.value
+                        })
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                      placeholder="0.00"
+                    />
+                  </div>
 
-                {/* Shipping */}
-                <div>
-                  <label
-                    className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-slate-700'
-                    }`}
-                  >
-                    Shipping ($)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    inputMode="decimal"
-                    value={editingPart.shipping}
-                    onChange={(e) =>
-                      setEditingPart({
-                        ...editingPart,
-                        shipping: e.target.value
-                      })
-                    }
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                      darkMode
-                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                    }`}
-                    placeholder="0.00"
-                  />
-                </div>
+                  {/* Shipping */}
+                  <div>
+                    <label
+                      className={`block text-sm font-medium mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-slate-700'
+                      }`}
+                    >
+                      Shipping ($)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      inputMode="decimal"
+                      value={editingPart.shipping}
+                      onChange={(e) =>
+                        setEditingPart({
+                          ...editingPart,
+                          shipping: e.target.value
+                        })
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                      placeholder="0.00"
+                    />
+                  </div>
 
-                {/* Duties */}
-                <div>
-                  <label
-                    className={`block text-sm font-medium mb-2 ${
-                      darkMode ? 'text-gray-300' : 'text-slate-700'
-                    }`}
-                  >
-                    Import Duties ($)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    inputMode="decimal"
-                    value={editingPart.duties}
-                    onChange={(e) =>
-                      setEditingPart({
-                        ...editingPart,
-                        duties: e.target.value
-                      })
-                    }
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                      darkMode
-                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
-                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
-                    }`}
-                    placeholder="0.00"
-                  />
+                  {/* Duties */}
+                  <div>
+                    <label
+                      className={`block text-sm font-medium mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-slate-700'
+                      }`}
+                    >
+                      Import Duties ($)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      inputMode="decimal"
+                      value={editingPart.duties}
+                      onChange={(e) =>
+                        setEditingPart({
+                          ...editingPart,
+                          duties: e.target.value
+                        })
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                      placeholder="0.00"
+                    />
+                  </div>
+
+                  {/* Quantity */}
+                  <div>
+                    <label
+                      className={`block text-sm font-medium mb-2 ${
+                        darkMode ? 'text-gray-300' : 'text-slate-700'
+                      }`}
+                    >
+                      Quantity
+                    </label>
+                    <div className="relative">
+                      <div className="flex">
+                        <input
+                          ref={quantityInputRef}
+                          type="number"
+                          pattern="[0-9]*"
+                          inputMode="numeric"
+                          min="1"
+                          value={editingPart.quantity || 1}
+                          onChange={(e) =>
+                            setEditingPart({
+                              ...editingPart,
+                              quantity: parseInt(e.target.value) || 1
+                            })
+                          }
+                          onFocus={() => setShowQuantityDropdown(false)}
+                          className={`w-full px-4 py-2 border rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                            darkMode
+                              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                              : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                          }`}
+                          placeholder="1"
+                        />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (showQuantityDropdown) {
+                            closeQuantityDropdownWithAnimation();
+                          } else {
+                            setShowQuantityDropdown(true);
+                          }
+                        }}
+                        className={`px-3 border-y border-r rounded-r-lg transition-colors ${
+                          darkMode
+                            ? 'bg-gray-600 border-gray-600 text-gray-300 hover:bg-gray-500'
+                            : 'bg-slate-100 border-slate-300 text-slate-600 hover:bg-slate-200'
+                        }`}
+                      >
+                        <ChevronDown className={`w-4 h-4 transition-transform ${showQuantityDropdown ? 'rotate-180' : ''}`} />
+                      </button>
+                    </div>
+                    {showQuantityDropdown && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-10"
+                          onClick={closeQuantityDropdownWithAnimation}
+                        />
+                        <div
+                          className={`absolute right-0 z-20 mt-1 rounded-lg border shadow-lg py-1 max-h-48 overflow-y-auto w-full ${
+                            isQuantityDropdownClosing ? 'dropdown-fade-out' : 'dropdown-fade-in'
+                          } ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-slate-50 border-slate-300'}`}
+                        >
+                          {[1, 2, 3, 4, 5, 6, 8, 10, 12, 20].map(qty => (
+                            <button
+                              key={qty}
+                              type="button"
+                              onClick={() => {
+                                setEditingPart({ ...editingPart, quantity: qty });
+                                closeQuantityDropdownWithAnimation();
+                              }}
+                              className={`w-full px-4 py-2 text-left text-sm ${
+                                (editingPart.quantity || 1) === qty
+                                  ? 'bg-blue-600 text-white'
+                                  : darkMode
+                                    ? 'hover:bg-gray-600 text-gray-100'
+                                    : 'hover:bg-gray-100 text-gray-900'
+                              }`}
+                            >
+                              {qty}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Price Breakdown Box - aligned to bottom */}
@@ -1611,12 +1738,19 @@ const PartDetailModal = ({
                     >
                       $
                       {(
-                        (parseFloat(editingPart.price) || 0) +
+                        ((parseFloat(editingPart.price) || 0) * (parseInt(editingPart.quantity) || 1)) +
                         (parseFloat(editingPart.shipping) || 0) +
                         (parseFloat(editingPart.duties) || 0)
                       ).toFixed(2)}
                     </span>
                   </div>
+                  {(parseInt(editingPart.quantity) || 1) > 1 && (
+                    <div className={`text-xs mt-1 text-right ${
+                      darkMode ? 'text-gray-400' : 'text-gray-500'
+                    }`}>
+                      ${(parseFloat(editingPart.price) || 0).toFixed(2)} × {parseInt(editingPart.quantity) || 1}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1707,8 +1841,9 @@ const PartDetailModal = ({
                     price: parseFloat(editingPart.price) || 0,
                     shipping: parseFloat(editingPart.shipping) || 0,
                     duties: parseFloat(editingPart.duties) || 0,
+                    quantity: parseInt(editingPart.quantity) || 1,
                     total:
-                      (parseFloat(editingPart.price) || 0) +
+                      ((parseFloat(editingPart.price) || 0) * (parseInt(editingPart.quantity) || 1)) +
                       (parseFloat(editingPart.shipping) || 0) +
                       (parseFloat(editingPart.duties) || 0),
                     delivered: editingPart.status === 'delivered',

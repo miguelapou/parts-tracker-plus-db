@@ -39,6 +39,7 @@ const useParts = (userId, toast, isDemo = false) => {
     price: '',
     shipping: '',
     duties: '',
+    quantity: 1,
     tracking: '',
     status: 'pending',
     projectId: null,
@@ -76,6 +77,7 @@ const useParts = (userId, toast, isDemo = false) => {
           price: parseFloat(part.price) || 0,
           shipping: parseFloat(part.shipping) || 0,
           duties: parseFloat(part.duties) || 0,
+          quantity: parseInt(part.quantity) || 1,
           total: parseFloat(part.total) || 0,
           tracking: part.tracking || '',
           projectId: part.project_id || null,
@@ -180,14 +182,15 @@ const useParts = (userId, toast, isDemo = false) => {
     const costValidation = validatePartCosts({
       price: newPart.price,
       shipping: newPart.shipping,
-      duties: newPart.duties
+      duties: newPart.duties,
+      quantity: newPart.quantity
     }, toast);
 
     if (!costValidation.isValid) {
       return; // Toast already shown by validatePartCosts
     }
 
-    const { price, shipping, duties, total } = costValidation.values;
+    const { price, shipping, duties, quantity, total } = costValidation.values;
     const statusMap = {
       delivered: { delivered: true, shipped: true, purchased: true },
       shipped: { delivered: false, shipped: true, purchased: true },
@@ -209,6 +212,7 @@ const useParts = (userId, toast, isDemo = false) => {
           price,
           shipping,
           duties,
+          quantity,
           total,
           tracking: newPart.tracking,
           projectId: newPart.projectId || null,
@@ -226,6 +230,7 @@ const useParts = (userId, toast, isDemo = false) => {
           price: '',
           shipping: '',
           duties: '',
+          quantity: 1,
           tracking: '',
           status: 'pending',
           projectId: null,
@@ -243,6 +248,7 @@ const useParts = (userId, toast, isDemo = false) => {
         price,
         shipping,
         duties,
+        quantity,
         total,
         tracking: newPart.tracking,
         project_id: newPart.projectId || null,
@@ -259,6 +265,7 @@ const useParts = (userId, toast, isDemo = false) => {
         price,
         shipping,
         duties,
+        quantity,
         total,
         tracking: newPart.tracking,
         projectId: newPart.projectId || null,
@@ -274,6 +281,7 @@ const useParts = (userId, toast, isDemo = false) => {
         price: '',
         shipping: '',
         duties: '',
+        quantity: 1,
         tracking: '',
         status: 'pending',
         projectId: null,
@@ -308,7 +316,9 @@ const useParts = (userId, toast, isDemo = false) => {
     const price = parseFloat(partData.price) || 0;
     const shipping = parseFloat(partData.shipping) || 0;
     const duties = parseFloat(partData.duties) || 0;
-    const total = price + shipping + duties;
+    const quantity = parseInt(partData.quantity) || 1;
+    // Quantity only multiplies price, not shipping/duties (those are per-order costs)
+    const total = (price * quantity) + shipping + duties;
 
     try {
       const createdAt = new Date().toISOString();
@@ -323,6 +333,7 @@ const useParts = (userId, toast, isDemo = false) => {
           price,
           shipping,
           duties,
+          quantity,
           total,
           tracking: partData.tracking || '',
           projectId: partData.projectId || null,
@@ -346,6 +357,7 @@ const useParts = (userId, toast, isDemo = false) => {
         price,
         shipping,
         duties,
+        quantity,
         total,
         tracking: partData.tracking || '',
         project_id: partData.projectId || null,
@@ -362,6 +374,7 @@ const useParts = (userId, toast, isDemo = false) => {
         price,
         shipping,
         duties,
+        quantity,
         total,
         tracking: partData.tracking || '',
         projectId: partData.projectId || null,
@@ -520,14 +533,15 @@ const useParts = (userId, toast, isDemo = false) => {
     const costValidation = validatePartCosts({
       price: editingPart.price,
       shipping: editingPart.shipping,
-      duties: editingPart.duties
+      duties: editingPart.duties,
+      quantity: editingPart.quantity
     }, toast);
 
     if (!costValidation.isValid) {
       return; // Toast already shown by validatePartCosts
     }
 
-    const { price, shipping, duties, total } = costValidation.values;
+    const { price, shipping, duties, quantity, total } = costValidation.values;
     const statusMap = {
       delivered: { delivered: true, shipped: true, purchased: true },
       shipped: { delivered: false, shipped: true, purchased: true },
@@ -553,6 +567,7 @@ const useParts = (userId, toast, isDemo = false) => {
         price,
         shipping,
         duties,
+        quantity,
         total,
         tracking: editingPart.tracking,
         project_id: editingPart.projectId || null,
@@ -579,6 +594,7 @@ const useParts = (userId, toast, isDemo = false) => {
             price,
             shipping,
             duties,
+            quantity,
             total,
             tracking: editingPart.tracking,
             projectId: editingPart.projectId || null,
@@ -812,7 +828,9 @@ const useParts = (userId, toast, isDemo = false) => {
       const price = Math.max(0, parseFloat(partData.price) || 0);
       const shipping = Math.max(0, parseFloat(partData.shipping) || 0);
       const duties = Math.max(0, parseFloat(partData.duties) || 0);
-      const total = price + shipping + duties;
+      const quantity = Math.max(1, parseInt(partData.quantity) || 1);
+      // Quantity only multiplies price, not shipping/duties (those are per-order costs)
+      const total = (price * quantity) + shipping + duties;
       const statusMap = {
         delivered: { delivered: true, shipped: true, purchased: true },
         shipped: { delivered: false, shipped: true, purchased: true },
@@ -831,6 +849,7 @@ const useParts = (userId, toast, isDemo = false) => {
           price,
           shipping,
           duties,
+          quantity,
           total,
           tracking: partData.tracking || '',
           project_id: partData.projectId || null,
@@ -847,6 +866,7 @@ const useParts = (userId, toast, isDemo = false) => {
           price,
           shipping,
           duties,
+          quantity,
           total,
           tracking: partData.tracking || '',
           projectId: partData.projectId || null,
