@@ -559,14 +559,14 @@ const AddPartModal = ({
                   <span className={`text-xl font-bold ${
                     darkMode ? 'text-green-400' : 'text-green-600'
                   }`}>
-                    ${(((parseFloat(newPart.price) || 0) + (parseFloat(newPart.shipping) || 0) + (parseFloat(newPart.duties) || 0)) * (parseInt(newPart.quantity) || 1)).toFixed(2)}
+                    ${(((parseFloat(newPart.price) || 0) * (parseInt(newPart.quantity) || 1)) + (parseFloat(newPart.shipping) || 0) + (parseFloat(newPart.duties) || 0)).toFixed(2)}
                   </span>
                 </div>
                 {(parseInt(newPart.quantity) || 1) > 1 && (
                   <div className={`text-xs mt-1 text-right ${
                     darkMode ? 'text-gray-400' : 'text-gray-500'
                   }`}>
-                    ${((parseFloat(newPart.price) || 0) + (parseFloat(newPart.shipping) || 0) + (parseFloat(newPart.duties) || 0)).toFixed(2)} × {parseInt(newPart.quantity) || 1}
+                    ${(parseFloat(newPart.price) || 0).toFixed(2)} × {parseInt(newPart.quantity) || 1}
                   </div>
                 )}
               </div>

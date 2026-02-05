@@ -925,7 +925,7 @@ const PartDetailModal = ({
                       </span>
                       {(viewingPart.quantity || 1) > 1 && (
                         <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                          ${((viewingPart.price + viewingPart.shipping + viewingPart.duties)).toFixed(2)} each
+                          ${viewingPart.price.toFixed(2)} × {viewingPart.quantity}
                         </div>
                       )}
                     </div>
@@ -1735,10 +1735,9 @@ const PartDetailModal = ({
                     >
                       $
                       {(
-                        ((parseFloat(editingPart.price) || 0) +
+                        ((parseFloat(editingPart.price) || 0) * (parseInt(editingPart.quantity) || 1)) +
                         (parseFloat(editingPart.shipping) || 0) +
-                        (parseFloat(editingPart.duties) || 0)) *
-                        (parseInt(editingPart.quantity) || 1)
+                        (parseFloat(editingPart.duties) || 0)
                       ).toFixed(2)}
                     </span>
                   </div>
@@ -1746,7 +1745,7 @@ const PartDetailModal = ({
                     <div className={`text-xs mt-1 text-right ${
                       darkMode ? 'text-gray-400' : 'text-gray-500'
                     }`}>
-                      ${((parseFloat(editingPart.price) || 0) + (parseFloat(editingPart.shipping) || 0) + (parseFloat(editingPart.duties) || 0)).toFixed(2)} × {parseInt(editingPart.quantity) || 1}
+                      ${(parseFloat(editingPart.price) || 0).toFixed(2)} × {parseInt(editingPart.quantity) || 1}
                     </div>
                   )}
                 </div>
@@ -1841,10 +1840,9 @@ const PartDetailModal = ({
                     duties: parseFloat(editingPart.duties) || 0,
                     quantity: parseInt(editingPart.quantity) || 1,
                     total:
-                      ((parseFloat(editingPart.price) || 0) +
+                      ((parseFloat(editingPart.price) || 0) * (parseInt(editingPart.quantity) || 1)) +
                       (parseFloat(editingPart.shipping) || 0) +
-                      (parseFloat(editingPart.duties) || 0)) *
-                      (parseInt(editingPart.quantity) || 1),
+                      (parseFloat(editingPart.duties) || 0),
                     delivered: editingPart.status === 'delivered',
                     shipped:
                       editingPart.status === 'delivered' ||

@@ -317,7 +317,8 @@ const useParts = (userId, toast, isDemo = false) => {
     const shipping = parseFloat(partData.shipping) || 0;
     const duties = parseFloat(partData.duties) || 0;
     const quantity = parseInt(partData.quantity) || 1;
-    const total = (price + shipping + duties) * quantity;
+    // Quantity only multiplies price, not shipping/duties (those are per-order costs)
+    const total = (price * quantity) + shipping + duties;
 
     try {
       const createdAt = new Date().toISOString();
@@ -828,7 +829,8 @@ const useParts = (userId, toast, isDemo = false) => {
       const shipping = Math.max(0, parseFloat(partData.shipping) || 0);
       const duties = Math.max(0, parseFloat(partData.duties) || 0);
       const quantity = Math.max(1, parseInt(partData.quantity) || 1);
-      const total = (price + shipping + duties) * quantity;
+      // Quantity only multiplies price, not shipping/duties (those are per-order costs)
+      const total = (price * quantity) + shipping + duties;
       const statusMap = {
         delivered: { delivered: true, shipped: true, purchased: true },
         shipped: { delivered: false, shipped: true, purchased: true },

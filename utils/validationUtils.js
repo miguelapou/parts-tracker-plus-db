@@ -167,8 +167,8 @@ export const validatePartCosts = (costs, toast) => {
     return { isValid: false, values: null };
   }
 
-  const unitCost = priceResult.value + shippingResult.value + dutiesResult.value;
-  const total = unitCost * quantity;
+  // Quantity only multiplies price, not shipping/duties (those are per-order costs)
+  const total = (priceResult.value * quantity) + shippingResult.value + dutiesResult.value;
 
   return {
     isValid: true,
