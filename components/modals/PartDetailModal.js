@@ -872,6 +872,24 @@ const PartDetailModal = ({
                       </span>
                     </div>
                   )}
+                  {(viewingPart.quantity || 1) > 1 && (
+                    <div className="flex justify-between items-center">
+                      <span
+                        className={`text-sm ${
+                          darkMode ? 'text-gray-400' : 'text-slate-600'
+                        }`}
+                      >
+                        Quantity
+                      </span>
+                      <span
+                        className={`text-lg font-semibold ${
+                          darkMode ? 'text-gray-100' : 'text-slate-800'
+                        }`}
+                      >
+                        ×{viewingPart.quantity}
+                      </span>
+                    </div>
+                  )}
                   <div
                     className={`pt-3 mt-3 border-t flex justify-between items-center ${
                       darkMode ? 'border-gray-600' : 'border-gray-300'
@@ -884,13 +902,20 @@ const PartDetailModal = ({
                     >
                       Total
                     </span>
-                    <span
-                      className={`text-2xl font-bold ${
-                        darkMode ? 'text-green-400' : 'text-green-600'
-                      }`}
-                    >
-                      ${viewingPart.total.toFixed(2)}
-                    </span>
+                    <div className="text-right">
+                      <span
+                        className={`text-2xl font-bold ${
+                          darkMode ? 'text-green-400' : 'text-green-600'
+                        }`}
+                      >
+                        ${viewingPart.total.toFixed(2)}
+                      </span>
+                      {(viewingPart.quantity || 1) > 1 && (
+                        <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          ${((viewingPart.price + viewingPart.shipping + viewingPart.duties)).toFixed(2)} each
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1588,6 +1613,36 @@ const PartDetailModal = ({
                   />
                 </div>
 
+                {/* Quantity */}
+                <div>
+                  <label
+                    className={`block text-sm font-medium mb-2 ${
+                      darkMode ? 'text-gray-300' : 'text-slate-700'
+                    }`}
+                  >
+                    Quantity
+                  </label>
+                  <input
+                    type="number"
+                    step="1"
+                    min="1"
+                    inputMode="numeric"
+                    value={editingPart.quantity || 1}
+                    onChange={(e) =>
+                      setEditingPart({
+                        ...editingPart,
+                        quantity: parseInt(e.target.value) || 1
+                      })
+                    }
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                      darkMode
+                        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400'
+                        : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                    }`}
+                    placeholder="1"
+                  />
+                </div>
+
                 {/* Price Breakdown Box - aligned to bottom */}
                 <div
                   className={`mt-auto border rounded-lg p-4 ${
@@ -1611,12 +1666,20 @@ const PartDetailModal = ({
                     >
                       $
                       {(
-                        (parseFloat(editingPart.price) || 0) +
+                        ((parseFloat(editingPart.price) || 0) +
                         (parseFloat(editingPart.shipping) || 0) +
-                        (parseFloat(editingPart.duties) || 0)
+                        (parseFloat(editingPart.duties) || 0)) *
+                        (parseInt(editingPart.quantity) || 1)
                       ).toFixed(2)}
                     </span>
                   </div>
+                  {(parseInt(editingPart.quantity) || 1) > 1 && (
+                    <div className={`text-xs mt-1 text-right ${
+                      darkMode ? 'text-gray-400' : 'text-gray-500'
+                    }`}>
+                      ${((parseFloat(editingPart.price) || 0) + (parseFloat(editingPart.shipping) || 0) + (parseFloat(editingPart.duties) || 0)).toFixed(2)} × {parseInt(editingPart.quantity) || 1}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1707,10 +1770,12 @@ const PartDetailModal = ({
                     price: parseFloat(editingPart.price) || 0,
                     shipping: parseFloat(editingPart.shipping) || 0,
                     duties: parseFloat(editingPart.duties) || 0,
+                    quantity: parseInt(editingPart.quantity) || 1,
                     total:
-                      (parseFloat(editingPart.price) || 0) +
+                      ((parseFloat(editingPart.price) || 0) +
                       (parseFloat(editingPart.shipping) || 0) +
-                      (parseFloat(editingPart.duties) || 0),
+                      (parseFloat(editingPart.duties) || 0)) *
+                      (parseInt(editingPart.quantity) || 1),
                     delivered: editingPart.status === 'delivered',
                     shipped:
                       editingPart.status === 'delivered' ||

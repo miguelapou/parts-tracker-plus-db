@@ -60,6 +60,7 @@ const AddPartModal = ({
       parseFloat(newPart.price) > 0 ||
       parseFloat(newPart.shipping) > 0 ||
       parseFloat(newPart.duties) > 0 ||
+      (parseInt(newPart.quantity) || 1) !== 1 ||
       newPart.projectId ||
       newPart.vehicleId ||
       newPart.status !== 'pending'
@@ -451,6 +452,25 @@ const AddPartModal = ({
                 />
               </div>
 
+              {/* Quantity */}
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${
+                  darkMode ? 'text-gray-300' : 'text-slate-700'
+                }`}>
+                  Quantity
+                </label>
+                <input
+                  type="number"
+                  step="1"
+                  min="1"
+                  inputMode="numeric"
+                  value={newPart.quantity}
+                  onChange={(e) => setNewPart({ ...newPart, quantity: parseInt(e.target.value) || 1 })}
+                  className={inputClasses(darkMode, '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none')}
+                  placeholder="1"
+                />
+              </div>
+
               {/* Calculated Total - aligned to bottom */}
               <div className={`mt-auto border rounded-lg p-4 ${
                 darkMode
@@ -466,9 +486,16 @@ const AddPartModal = ({
                   <span className={`text-xl font-bold ${
                     darkMode ? 'text-green-400' : 'text-green-600'
                   }`}>
-                    ${((parseFloat(newPart.price) || 0) + (parseFloat(newPart.shipping) || 0) + (parseFloat(newPart.duties) || 0)).toFixed(2)}
+                    ${(((parseFloat(newPart.price) || 0) + (parseFloat(newPart.shipping) || 0) + (parseFloat(newPart.duties) || 0)) * (parseInt(newPart.quantity) || 1)).toFixed(2)}
                   </span>
                 </div>
+                {(parseInt(newPart.quantity) || 1) > 1 && (
+                  <div className={`text-xs mt-1 text-right ${
+                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                  }`}>
+                    ${((parseFloat(newPart.price) || 0) + (parseFloat(newPart.shipping) || 0) + (parseFloat(newPart.duties) || 0)).toFixed(2)} × {parseInt(newPart.quantity) || 1}
+                  </div>
+                )}
               </div>
             </div>
           </div>

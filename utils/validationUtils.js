@@ -131,11 +131,11 @@ export const validateOdometer = (value, fieldName = 'Odometer') => {
 };
 
 /**
- * Validates part cost fields (price, shipping, duties)
+ * Validates part cost fields (price, shipping, duties) and optional quantity
  * Returns all validated values or first error encountered
- * @param {Object} costs - Object with price, shipping, duties
+ * @param {Object} costs - Object with price, shipping, duties, and optional quantity
  * @param {Object} toast - Toast notification object
- * @returns {{ isValid: boolean, values: { price: number, shipping: number, duties: number, total: number } | null }}
+ * @returns {{ isValid: boolean, values: { price: number, shipping: number, duties: number, quantity: number, total: number } | null }}
  */
 export const validatePartCosts = (costs, toast) => {
   const priceResult = validateCurrency(costs.price, 'Price');
@@ -156,7 +156,19 @@ export const validatePartCosts = (costs, toast) => {
     return { isValid: false, values: null };
   }
 
-  const total = priceResult.value + shippingResult.value + dutiesResult.value;
+  // Validate quantity (default to 1 if not provided)
+  const quantity = parseInt(costs.quantity) || 1;
+  if (quantity < 1) {
+    toast?.warning('Quantity must be at least 1');
+    return { isValid: false, values: null };
+  }
+  if (quantity > 9999) {
+    toast?.warning('Quantity exceeds maximum allowed value');
+    return { isValid: false, values: null };
+  }
+
+  const unitCost = priceResult.value + shippingResult.value + dutiesResult.value;
+  const total = unitCost * quantity;
 
   return {
     isValid: true,
@@ -164,6 +176,7 @@ export const validatePartCosts = (costs, toast) => {
       price: priceResult.value,
       shipping: shippingResult.value,
       duties: dutiesResult.value,
+      quantity,
       total
     }
   };
