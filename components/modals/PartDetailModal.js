@@ -1276,7 +1276,7 @@ const PartDetailModal = ({
                     style={selectDropdownStyle}
                   >
                     <option value="">No Project</option>
-                    {projects.map((project) => (
+                    {projects.filter(p => !p.archived).map((project) => (
                       <option key={project.id} value={project.id}>
                         {project.name}
                       </option>
